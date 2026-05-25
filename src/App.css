@@ -1,0 +1,17 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins&family=Roboto&family=Montserrat&family=Playfair+Display&display=swap');
+
+:root {
+    --fonte-principal: 'Poppins';
+}
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    text-decoration: none;
+}
+
+h2{
+    font-size: var(--fonte-principal);
+}

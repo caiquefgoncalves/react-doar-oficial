@@ -1,0 +1,81 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter&family=Poppins&family=Roboto&family=Montserrat&family=Playwrite+US+Trad&family=Playfair+Display&display=swap');
+:root {
+    --fonte-titulo: 'Inter';
+    --fonte-texto: 'Inter';
+    --cor-primaria: #167cbf;
+    --cor-secundaria: #f65682;
+    --cor-terciaria: #f7b567;
+    --cor-texto: #1f1f1f;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: var(--fonte-titulo);
+}
+
+p,
+span,
+button,
+input,
+textarea,
+label,
+a,
+nav{
+    font-family: var(--fonte-texto);
+    color: var(--cor-texto);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    text-decoration: none;
+}
+
+
+.div {
+    background-color: #f8f9fa;
+    border: 1px solid #e0e0e0;
+    border-radius: 50px;
+    padding: 4px;
+    overflow: hidden;
+}
+
+.btnong {
+    border: none;
+    border-radius: 50px;
+    padding: 10px 30px;
+    font-weight: bold;
+    transition: 0.3s;
+    background-color: transparent;
+    color: #6c757d;
+}
+.btndoador{
+    border: none;
+    border-radius: 50px;
+    padding: 10px 30px;
+    font-weight: bold;
+    transition: 0.3s;
+    background-color: transparent;
+    color: #6c757d;
+}
+
+
+.btnong.ativo {
+    background: #FCE5C9;
+    color: #F69B2F;
+}
+
+.btndoador.ativo {
+    background-color: #FCECEF;
+    color: #F77CA8;
+}
+
+label{
+    font-weight: 700 !important;
+    font-size: 0.9rem !important;
+}
