@@ -1,0 +1,80 @@
+.titulo{
+    margin-top: 4rem;
+}
+
+.titulo p{
+    text-align: center;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.botoes{
+    display: flex;
+    max-width: 15rem;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 2rem;
+    margin-left: 6rem;
+
+
+}
+.conteudo{
+    margin-top: 2rem;
+    display: flex;
+    justify-content: center;
+    gap: 10rem;
+}
+
+.mensagem{
+    width: 30rem;
+    margin-bottom: 4rem;
+}
+
+.imagem{
+    width: auto;
+    height: 500px;
+}
+
+@media (max-width: 769px) {
+    .imagem{
+        display: none;
+    }
+
+    .mensagem{
+
+    }
+    .botoes{
+        margin-left: 7rem;
+
+    }
+}
+@media (max-width: 426px) {
+    .conteudo{
+        margin-top: 0;
+    }
+    .imagem{
+        display: none;
+    }
+
+    .corpo{
+        background-color: var(--cor-secundaria);
+    }
+
+    .titulo p{
+        color: white;
+        max-width: 15rem;
+    }
+
+    .mensagem{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .botoes{
+        margin-left: 0 ;
+        flex-direction: column;
+        margin-top: 1rem;
+    }
+}

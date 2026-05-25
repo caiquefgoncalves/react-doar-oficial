@@ -1,0 +1,217 @@
+.secao {
+    width: 100%;
+    min-height: auto;
+    padding: 0;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+.colunaFormulario {
+    min-height: 32rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.conteudoFormulario {
+    width: 40rem;
+    height: 45rem;
+    max-width: 50rem;
+    padding: 3rem 2.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.formulario {
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.campo {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.link {
+    text-decoration: none;
+    color: #9A9A9A;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.areaBotao {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+    flex-direction: column;
+    gap: 1.5rem;
+    align-items: center;
+
+}
+
+.p {
+    margin: 0 !important;
+    font-size: 1rem;
+}
+
+.colunaImagem {
+    min-height: 20rem;
+    max-height: 50rem;
+    display: flex;
+    align-items: stretch;
+    justify-content: flex-end;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+}
+
+.imagem {
+    width: 40rem;
+    height: 45rem;
+    object-fit: cover;
+    display: block;
+}
+
+
+@media (max-width: 769px) {
+    .colunaFormulario {
+        min-height: 28rem;
+
+    }
+
+    .conteudoFormulario {
+        max-width: 25rem;
+        padding: 2.5rem 2rem;
+
+    }
+
+    .formulario {
+        margin-top: 1.5rem;
+        gap: 1.2rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .imagem {
+        width: 34rem;
+        height: 37rem;
+        object-fit: cover;
+        display: block;
+    }
+
+    .p {
+        font-size: 1.3rem;
+    }
+
+}
+
+
+@media (max-width: 426px) {
+    .secao {
+        background-color: var(--cor-primaria);
+        min-height: auto;
+    }
+
+    .colunaFormulario {
+        background-color: var(--cor-primaria);
+        min-height: auto;
+        padding: 0;
+    }
+
+    .conteudoFormulario {
+        max-width: 100%;
+        padding: 3rem 1.2rem 3rem;
+        align-items: flex-start;
+    }
+
+    .formulario {
+        margin-top: 1.5rem;
+        gap: 1rem;
+    }
+
+
+    .link {
+        color: #ffffff;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+
+    .areaBotao {
+        margin-top: 1.2rem;
+
+    }
+
+    .areaBotao button {
+        min-width: 150px;
+        padding: 12px 34px;
+        border-radius: 999px;
+    }
+
+    .cadastro {
+        gap: 0.2rem;
+    }
+
+    .p {
+        font-size: 1rem;
+        color: white;
+        text-align: center;
+    }
+
+    .cadastro button {
+        background: none !important;
+        border: none !important;
+        box-shadow: none !important;
+        color: var(--cor-terciaria) !important;
+        padding: 0 !important;
+        min-width: unset !important;
+        font-weight: 700;
+        cursor: pointer;
+    }
+
+    .colunaImagem {
+        display: none;
+    }
+}
+
+
+@media (max-width: 321px) {
+    .conteudoFormulario {
+        padding: 2.3rem 1rem 2.5rem;
+    }
+
+    .formulario {
+        gap: 0.9rem;
+    }
+
+    .link {
+        font-size: 0.8rem;
+    }
+
+    .areaBotao button {
+        min-width: 140px;
+        padding: 11px 30px;
+    }
+
+    .p {
+        font-size: 0.95rem;
+    }
+
+    .cadastro button {
+        background: none !important;
+        border: none !important;
+        box-shadow: none !important;
+        color: var(--cor-terciaria) !important;
+        padding: 0 !important;
+        min-width: unset !important;
+        font-weight: 700;
+        cursor: pointer;
+    }
+}

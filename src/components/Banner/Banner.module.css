@@ -1,0 +1,99 @@
+@import url('https://fonts.googleapis.com/css2?family=Playwrite+US+Trad:wght@100..400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+.banner {
+    background-image: url("/banner.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    text-align: center;
+    padding-top: 100px;
+    height: 450px;
+}
+
+.textos {
+    max-width: 40rem;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    gap: 1rem;
+}
+
+.logo {
+    font-family: var(--fonte-logo);
+    font-size: 1.5rem;
+    color: var(--cor-texto);
+    font-weight: 300;
+}
+
+.logo span {
+    font-family: inherit;
+    color: var(--cor-secundaria);
+    font-weight: 400;
+}
+
+.titulo {
+    font-family: var(--fonte-titulo);
+    font-size: 2.5rem;
+    font-weight: 800;
+}
+
+.paragrafo {
+    font-family: var(--fonte-texto);
+    color: var(--cor-texto);
+    font-size: 1rem;
+    font-weight: 300;
+    max-width: 30rem;
+    margin-bottom: 1rem;
+}
+
+@media (max-width: 768px) {
+    .banner {
+        height: 400px;
+        padding-top: 80px;
+    }
+
+    .textos {
+        max-width: 30rem;
+        padding: 0 1rem;
+    }
+
+    .titulo {
+        font-size: 2rem;
+    }
+
+    .paragrafo {
+        font-size: 0.9rem;
+        max-width: 25rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .banner {
+        height: auto;
+        min-height: 380px;
+        padding-top: 60px;
+        padding-bottom: 40px;
+    }
+
+    .textos {
+        max-width: 85%;
+        padding: 0 0.5rem;
+    }
+
+    .logo {
+        font-size: 1.2rem;
+    }
+
+    .titulo {
+        font-size: 1.5rem;
+    }
+
+    .paragrafo {
+        font-size: 0.85rem;
+        max-width: 90%;
+    }
+}

@@ -1,0 +1,113 @@
+.inputGroup {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.label {
+    font-size: 1rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.inputFile {
+    display: none;
+}
+
+
+.botao {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.8rem;
+    border: 1px solid #CCCCCC;
+    background-color: #FFFFFF;
+    color: black;
+    cursor: pointer;
+    transition: 0.3s;
+    width: 100%;
+}
+
+
+
+.hint {
+    position: absolute;
+    bottom: 30px;
+    color: var(--cor-primaria);
+    font-weight: 800;
+    height: 2rem;
+    padding: 0.5rem;
+    border-radius: 3px;
+    font-size: 0.8rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity ease 0.3s;
+}
+
+.normaledicao{
+    display: none;
+}
+
+.botao {
+    position: relative;
+}
+
+.botao:hover .hint {
+    opacity: 1;
+}
+
+
+.botao:hover {
+    background-color: #e6e6e6;
+}
+
+
+.normal {
+    padding: 0.8rem;
+    font-size: 1rem;
+}
+
+
+.big {
+    padding: 1.2rem;
+    font-size: 1rem;
+    height: 9.4rem;
+}
+
+
+.nome {
+    margin-top: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--cor-texto);
+}
+
+
+
+@media (max-width: 769px) {
+    .label{
+        color: #FFFFFF;
+        font-size: 1rem;
+    }
+    .nome {
+        color: #FFFFFF;
+    }
+}
+@media (max-width: 426px) {
+
+    .label{
+        color: #FFFFFF;
+    }
+
+    .nome{
+        color: #FFFFFF;
+    }
+    .normal {
+        padding: 0.7rem;
+        font-size: 0.9rem;
+    }
+
+    .big {
+        padding: 1rem;
+        font-size: 1rem;
+    }
+}

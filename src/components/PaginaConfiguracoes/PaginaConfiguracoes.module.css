@@ -1,0 +1,379 @@
+/* PaginaConfiguracoes.module.css */
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 4rem;
+}
+
+.titulo {
+    padding: 4rem 0 3rem 0;
+}
+
+.organizar {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    width: 100%;
+    max-width: 500px;
+}
+
+.fonte {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.fonte label {
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.selectFonte {
+    width: 100%;
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid #dcdcdc;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: white;
+}
+
+.fileInput {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #dcdcdc;
+    border-radius: 12px;
+    font-size: 14px;
+    background-color: white;
+    cursor: pointer;
+
+}
+
+.fileInput:hover {
+    border-color: #f7b567;
+}
+
+.cores {
+    margin-top: 2rem;
+    width: 100%;
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.cores div {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.cores label {
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.inputColor {
+    width: 100%;
+    height: 35px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    background: none;
+}
+
+.botoesContainer {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin-top: 30px;
+    width: 100%;
+    max-width: 500px;
+}
+
+.btnRedefinir {
+    flex: 1;
+    padding: 12px 24px;
+    border: 2px solid #f65682;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    background-color: transparent;
+    color: #f65682;
+    transition: 0.2s;
+    text-align: center;
+    min-width: 180px;
+}
+
+.btnRedefinir:hover {
+    background-color: #f65682;
+    color: white;
+    transform: scale(1.03);
+}
+
+.btnRedefinir:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.botaoSalvar {
+    flex: 1;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    background-color: var(--cor-primaria, #167cbf);
+    color: white;
+    transition: 0.2s;
+    text-align: center;
+    min-width: 180px;
+}
+
+.botaoSalvar:hover:not(:disabled) {
+    transform: scale(1.03);
+}
+
+.botaoSalvar:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+textarea.selectFonte {
+    resize: vertical;
+    font-family: inherit;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .titulo {
+        padding: 2rem 0 2rem 0;
+    }
+
+    .organizar {
+        max-width: 90%;
+    }
+
+    .cores {
+        max-width: 90%;
+    }
+
+    .botoesContainer {
+        max-width: 90%;
+    }
+}
+
+@media (max-width: 480px) {
+    .botoesContainer {
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .btnRedefinir, .botaoSalvar {
+        min-width: auto;
+        width: 100%;
+        max-width: 280px;
+    }
+
+    .organizar {
+        max-width: 95%;
+    }
+
+    .cores {
+        max-width: 95%;
+    }
+}
+
+/* PaginaConfiguracoes.module.css */
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 4rem;
+}
+
+.titulo {
+    padding: 4rem 0 3rem 0;
+}
+
+.organizar {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    width: 100%;
+    max-width: 500px;
+}
+
+.fonte {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.fonte label {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #333;
+}
+
+.selectFonte {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #dcdcdc;
+    font-size: 14px;
+    cursor: pointer;
+    background-color: white;
+}
+
+.selectFonte:focus {
+    outline: none;
+    border-color: #f7b567;
+}
+
+.cores {
+    margin-top: 2rem;
+    width: 100%;
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.cores div {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.cores label {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #333;
+}
+
+.inputColor {
+    width: 100%;
+    height: 40px;
+    border: 1px solid #dcdcdc;
+    border-radius: 8px;
+    cursor: pointer;
+    background: white;
+    padding: 2px;
+}
+
+.inputColor:hover {
+    border-color: #f7b567;
+}
+
+.botoesContainer {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin-top: 30px;
+    width: 100%;
+    max-width: 500px;
+}
+
+.btnRedefinir {
+    flex: 1;
+    padding: 12px 24px;
+    border: 2px solid #f65682;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    background-color: transparent;
+    color: #f65682;
+    transition: 0.2s;
+    text-align: center;
+    min-width: 180px;
+}
+
+.btnRedefinir:hover {
+    background-color: #f65682;
+    color: white;
+    transform: scale(1.02);
+}
+
+.btnRedefinir:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.botaoSalvar {
+    flex: 1;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    background-color: #167cbf;
+    color: white;
+    transition: 0.2s;
+    text-align: center;
+    min-width: 180px;
+}
+
+.botaoSalvar:hover:not(:disabled) {
+    background-color: #0c598b;
+    transform: scale(1.02);
+}
+
+.botaoSalvar:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+textarea.selectFonte {
+    resize: vertical;
+    font-family: inherit;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .titulo {
+        padding: 2rem 0 2rem 0;
+    }
+
+    .organizar {
+        max-width: 90%;
+    }
+
+    .cores {
+        max-width: 90%;
+    }
+
+    .botoesContainer {
+        max-width: 90%;
+    }
+}
+
+@media (max-width: 480px) {
+    .botoesContainer {
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .btnRedefinir, .botaoSalvar {
+        min-width: auto;
+        width: 100%;
+        max-width: 280px;
+    }
+
+    .organizar {
+        max-width: 95%;
+    }
+
+    .cores {
+        max-width: 95%;
+    }
+}

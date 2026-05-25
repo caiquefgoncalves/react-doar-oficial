@@ -1,0 +1,185 @@
+.secao {
+    display: flex;
+    min-height: 100vh;
+}
+
+.conteudo {
+    flex: 1;
+    padding: 20px;
+    max-width: 40rem;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+
+.barraTopo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+
+.buscaInput {
+    display: flex;
+    align-items: center;
+    background: #fff;
+    border-radius: 25px;
+    padding: 8px 15px;
+    flex: 1;
+    max-width: 400px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    border: 1px solid #eee;
+}
+
+.inputBusca {
+    border: none;
+    outline: none;
+    flex: 1;
+    font-size: 14px;
+    padding: 5px;
+    background: transparent;
+}
+
+.btnBuscar {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    opacity: 0.6;
+}
+
+
+.filtro {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: #666;
+    border: 1px solid #e5e5e5;
+    padding: 6px 10px;
+    border-radius: 20px;
+    background: #fff;
+}
+
+.selectFiltro {
+    border: none;
+    background: transparent;
+    font-size: 13px;
+    outline: none;
+    cursor: pointer;
+}
+
+
+.cardsContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+
+.card {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    background: #fff;
+    border-radius: 16px;
+    padding: 16px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.06);
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.2s ease;
+}
+
+.cardImagem {
+    width: 60px;
+    height: 60px;
+    border-radius: 100%;
+    object-fit: cover;
+    background: #eee;
+}
+
+
+.cardInfo {
+    padding: 0;
+    flex: 1;
+}
+
+.cardNome {
+    font-size: 16px;
+    font-weight: 700;
+    color: #222;
+    margin: 0 0 0 0 !important;
+}
+
+.cardDesc {
+    font-size: 13px;
+    color: #666;
+    margin: 0 0 8px 0;
+    line-height: 1.5;
+}
+
+
+.cardCategoria {
+    display: inline-block;
+    font-size: 12px;
+    border: 1px solid var(--cor-primaria);
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 999px;
+}
+
+
+span {
+    color: var(--cor-primaria);
+}
+
+
+.vazio {
+    text-align: center;
+    padding: 60px 20px;
+    color: #999;
+}
+
+.botao{
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+}
+
+@media (max-width: 768px) {
+    .barraTopo {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .buscaInput {
+        max-width: 100%;
+        flex: 1 1 auto;
+        min-width: 0;
+    }
+    .filtro {
+        flex-shrink: 1;
+        min-width: 0;
+    }
+    .card {
+        flex-wrap: wrap;
+    }
+    .cardInfo {
+        min-width: 0;
+    }
+
+    .conteudo {
+        padding: 10px 20px;
+        margin: 0 !important;
+    }
+
+    .secao {
+        flex-direction: column;
+        padding-top: 15px;
+    }
+
+
+}

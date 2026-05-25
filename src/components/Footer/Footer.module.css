@@ -1,0 +1,51 @@
+.footerDoarBg{
+    background-color: #4B4D4A;
+    color: #ffffff;
+    font-family: var(--fonte-texto);
+}
+
+.footerLogo {
+    font-family: var(--fonte-logo);
+    font-size: 2rem;
+    font-weight: 400;
+    line-height: 1;
+    margin-bottom: 1.5rem;
+}
+
+.footerLogo span {
+    font-family: inherit;
+    color: var(--cor-secundaria);
+    font-weight: 400;
+    margin-left: 0.1rem;
+}
+
+.textoCinza{
+    color: #C3C2C2;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+a.textoCinza:hover{
+    color: #ffffff;
+}
+
+.borderCustomFaint {
+    border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.botaoDoar{
+    background-color: var(--cor-secundaria);
+    color: #ffffff;
+    border: none;
+    border-radius: 50px;
+    padding: 1rem 2rem;
+    font-weight: 700;
+    font-size: 1rem;
+    transition: background-color 0.3s ease, transform 0.2s;
+}
+
+.botaoDoar:hover{
+    background-color: var(--cor-secundaria);
+    color: #ffffff;
+    transform: scale(1.05);
+}
