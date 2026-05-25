@@ -1,0 +1,56 @@
+.container {
+    background-image: url(./public/agradecimento.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    text-align: center;
+    padding-top: 100px;
+    height: 600px;
+}
+
+.titulo {
+    margin-top: 4rem;
+    max-width: 25rem;
+    margin-left: 10rem;
+}
+
+.botoes {
+    margin-top: 3rem;
+    display: flex;
+    flex-direction: column;
+    margin-left: 15rem;
+    gap: 1rem;
+    max-width: 15rem;
+    margin-bottom: 10rem;
+}
+
+
+@media (max-width: 426px) {
+    .container {
+        background-image: none;
+        background-color: #F77CA8;
+        height: auto;
+        min-height: 100vh;
+        padding: 2rem 1rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .titulo {
+        margin: 0;
+        max-width: 100%;
+    }
+
+    .botoes {
+        margin: 2rem 0 0 0;
+        width: 100%;
+        max-width: 280px;
+        align-items: center;
+    }
+
+    .botoes > * {
+        width: 100%;
+    }
+}

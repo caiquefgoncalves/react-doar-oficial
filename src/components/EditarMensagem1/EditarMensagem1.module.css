@@ -1,0 +1,138 @@
+/* src/components/EditarMensagem/EditarMensagem.module.css */
+.containerSection {
+    width: 100%;
+    min-height: 100vh;
+    background-color: #ffffff;
+    padding: 30px;
+}
+
+.titulo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 5rem;
+    margin-bottom: 3rem;
+}
+
+.titulo h2, .titulo h1 {
+    color: #167cbf !important;
+}
+
+.formulario {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 30px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.botaoContainer {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.loading {
+    text-align: center;
+    padding: 50px;
+    font-size: 18px;
+    color: #666;
+}
+
+.infoBox {
+    background-color: #e8f4f8;
+    border-left: 4px solid #167cbf;
+    padding: 15px 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.infoTexto {
+    margin: 0;
+    color: #167cbf;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+/* Estilos para o campo obrigatório */
+.campoObrigatorio {
+    margin-bottom: 20px;
+}
+
+.labelObrigatorio {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #333;
+    font-size: 0.9rem;
+}
+
+.asterisco {
+    color: #f65682;
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+.textarea {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: inherit;
+    resize: vertical;
+    transition: all 0.2s;
+    box-sizing: border-box;
+}
+
+.textarea:focus {
+    outline: none;
+    border-color: #f7b567;
+    box-shadow: 0 0 0 2px rgba(247, 181, 103, 0.2);
+}
+
+.textarea::placeholder {
+    color: #bbb;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .containerSection {
+        padding: 20px;
+    }
+
+    .titulo {
+        margin-top: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .formulario {
+        padding: 20px;
+    }
+
+    .infoBox {
+        padding: 12px 15px;
+    }
+
+    .infoTexto {
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 425px) {
+    .containerSection {
+        padding: 15px;
+    }
+
+    .titulo h1, .titulo h2 {
+        font-size: 1.2rem;
+    }
+
+    .formulario {
+        padding: 15px;
+    }
+
+    .textarea {
+        font-size: 0.85rem;
+    }
+}

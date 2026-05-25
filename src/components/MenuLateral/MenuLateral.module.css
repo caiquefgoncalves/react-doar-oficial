@@ -1,0 +1,136 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    padding-top: 5rem;
+    padding-left: 2rem;
+    padding-right: 3rem;
+    gap: 1.5rem;
+    height: 100vh;
+    position: sticky;
+    top: 0;
+    border-right: 1px solid #ccc;
+    overflow-x: hidden;
+    overflow-y: auto;
+    box-sizing: border-box;
+}
+
+.funcoes {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    cursor: pointer;
+    padding: 10px 12px;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+    white-space: nowrap;
+}
+
+.funcoes:hover {
+    background-color: #f0f0f0;
+}
+
+.funcoes h2 {
+    font-size: 1.2rem;
+    font-weight: 900;
+    color: var(--cor-primaria);
+    margin: 0;
+}
+
+.funcoes img {
+    width: 2rem;
+    height: 2rem;
+    flex-shrink: 0;
+}
+
+
+.container::-webkit-scrollbar {
+    width: 5px;
+}
+
+.container::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.container::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 10px;
+}
+
+.container::-webkit-scrollbar-thumb:hover {
+    background: #999;
+}
+
+@media (max-width: 768px) {
+    .container {
+        height: auto;
+        position: fixed !important;
+        top: 86vh;
+        width: 100%;
+        padding: 0.9rem;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1rem;
+        background-color: white;
+        z-index: 1;
+    }
+
+    .funcoes {
+        padding: 8px 10px;
+    }
+
+    .funcoes h2 {
+        font-size: 0.9rem;
+    }
+
+    .desktop {
+        display: none;
+    }
+
+    .funcoes img {
+        width: 3rem;
+        height: auto
+    }
+}
+
+@media (max-width: 426px) {
+    .container {
+        height: auto;
+        position: fixed !important;
+        top: 84vh;
+        width: 100%;
+        padding: 0.5rem;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1rem;
+        background-color: white;
+    }
+
+    .funcoes {
+        padding: 8px 10px;
+    }
+
+    .funcoes h2 {
+        font-size: 0.9rem;
+    }
+
+    .desktop {
+        display: none;
+    }
+
+    .funcoes img {
+        width: 3rem;
+        height: auto
+    }
+}
+
+@media (max-width: 321px) {
+    .funcoes img {
+        width: 2.2rem;
+    }
+
+    .container {
+        top: 87vh;
+    }
+}

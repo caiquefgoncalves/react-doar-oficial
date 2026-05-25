@@ -1,0 +1,86 @@
+.secao {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 5rem;
+    gap: 1rem;
+    flex-direction: column;
+    padding: 0 2rem;
+}
+
+.tituloprincipal {
+    margin-bottom: 2rem;
+}
+
+.tabelaContainer {
+    width: 100%;
+    max-width: 900px;
+}
+
+.cabecalho {
+    grid-template-columns: 2fr 1fr 1fr;
+    background-color: #fff;
+    padding: 15px 20px;
+    border-radius: 8px 8px 0 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.informacoes{
+    display: flex;
+    gap: 17rem;
+}
+.colunaNome {
+    text-align: left;
+    font-weight: 400;
+    color: #333;
+    font-size: 14px;
+}
+
+.colunaData {
+    text-align: center;
+    font-weight: 400;
+    color: #333;
+    font-size: 14px;
+}
+
+.colunaAcoes {
+    text-align: center;
+    font-weight: 400;
+    color: #333;
+    font-size: 14px;
+}
+
+.cards {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 2rem;
+}
+
+.semPendencias {
+    text-align: center;
+    padding: 2rem;
+}
+
+.loading {
+    text-align: center;
+    padding: 2rem;
+}
+
+@media (max-width: 768px) {
+    .cabecalho {
+        grid-template-columns: 1fr 1fr;
+    }
+    .colunaAcoes {
+        display: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .cabecalho {
+        display: none;
+    }
+    .colunaData {
+        display: none;
+    }
+
+}

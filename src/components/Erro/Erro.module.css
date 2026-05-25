@@ -1,0 +1,127 @@
+
+.fundo {
+    padding: 5rem;
+}
+
+.logo {
+    color: #f28c28;
+    font-family: var(--fonte-titulo);
+    margin: 0;
+    text-align: center;
+    font-size: 3rem;
+}
+
+.text {
+    font-size: 3rem;
+    color: #9A9A9A;
+}
+
+.titulo {
+    color: var(--cor-terciaria);
+    font-weight: bold;
+    margin: 0;
+    font-size: 2rem;
+}
+
+.descricao {
+    max-width: 20rem;
+    width: 100%;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+.botao {
+    color: var(--cor-terciaria);
+    font-weight: bold;
+    text-decoration: none;
+    font-size: 1.2rem;
+}
+
+.botao:hover {
+    text-decoration: underline;
+    color: var(--cor-terciaria);
+}
+
+
+@media (max-width: 320px) {
+    .fundo {
+        padding: 20px 14px;
+    }
+
+    .logo {
+        font-size: 1.8rem;
+    }
+
+    .text {
+        font-size: 1.6rem;
+    }
+
+    .titulo {
+        font-size: 1.2rem;
+    }
+
+    .descricao {
+        max-width: 100%;
+        font-size: 0.9rem;
+    }
+
+    .botao {
+        font-size: 0.95rem;
+    }
+}
+
+
+@media (min-width: 321px) and (max-width: 480px) {
+    .fundo {
+        padding: 24px 18px;
+    }
+
+    .logo {
+        font-size: 2.1rem;
+    }
+
+    .text {
+        font-size: 2rem;
+    }
+
+    .titulo {
+        font-size: 1.4rem;
+    }
+
+    .descricao {
+        max-width: 100%;
+        font-size: 0.95rem;
+    }
+
+    .botao {
+        font-size: 1rem;
+    }
+}
+
+
+@media (min-width: 481px) and (max-width: 768px) {
+    .fundo {
+        padding: 30px 24px;
+    }
+
+    .logo {
+        font-size: 2.5rem;
+    }
+
+    .text {
+        font-size: 2.3rem;
+    }
+
+    .titulo {
+        font-size: 1.7rem;
+    }
+
+    .descricao {
+        max-width: 90%;
+        font-size: 1rem;
+    }
+
+    .botao {
+        font-size: 1.1rem;
+    }
+}

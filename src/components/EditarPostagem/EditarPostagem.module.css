@@ -1,0 +1,38 @@
+.secao {
+    width: 100%;
+    min-height: 100vh;
+    padding: 2.5rem 1.5rem 4rem;
+    box-sizing: border-box;
+}
+
+
+.formulario {
+    width: 100%;
+    max-width: 950px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    column-gap: 1.5rem;
+    row-gap: 1.5rem;
+}
+
+.formulario > div {
+    flex: 1 1 360px;
+    max-width: 420px;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.botao {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 2.5rem;
+}
+
+.botao button {
+    padding: 14px 45px;
+    border-radius: 999px;
+}

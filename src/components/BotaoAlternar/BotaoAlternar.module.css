@@ -1,0 +1,41 @@
+.div {
+    background-color: #f8f9fa;
+    border: 1px solid #e0e0e0;
+    border-radius: 50px;
+    display: inline-flex;
+    padding: 4px;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    margin-: 4px;
+}
+
+.btnong {
+    border: none;
+    border-radius: 50px;
+    padding: 10px 30px;
+    font-weight: bold;
+    transition: 0.3s;
+    background-color: transparent;
+    color: #6c757d;
+}
+.btndoador{
+    border: none;
+    border-radius: 50px;
+    padding: 10px 30px;
+    font-weight: bold;
+    transition: 0.3s;
+    background-color: transparent;
+    color: #6c757d;
+}
+
+
+.btnong.ativo {
+    background: #FCE5C9;
+    color: var(--cor-terciaria);
+}
+
+.btndoador.ativo {
+    background-color: #FCECEF;
+    color: var(--cor-secundaria);
+}

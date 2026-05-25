@@ -1,0 +1,163 @@
+.inputGroup {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-bottom: 0.5rem;
+}
+
+.label {
+    font-size: 1rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.inputSenha {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.olho {
+    position: absolute;
+    right: 10px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.olho img {
+    height: 1rem;
+    width: 1rem;
+}
+
+.normal {
+    border-radius: 2rem;
+    border: 1px solid #CCCCCC;
+    width: 100%;
+    padding: 0.8rem 1rem;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background-color: white;
+    box-sizing: border-box;
+}
+
+.Big {
+    border-radius: 0.8rem;
+    border: 1px solid #CCCCCC;
+    width: 100%;
+    font-size: 1rem;
+    height: 8.9rem;
+    background-color: white;
+    box-sizing: border-box;
+    padding: 0.8rem 1rem;
+    resize: none;
+    outline: none;
+    vertical-align: top;
+    display: block;
+    line-height: 1.4;
+}
+
+.inputGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    width: 100%;
+}
+
+.label {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--cor-texto);
+}
+
+.normal {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 0.8rem;
+    font-size: 14px;
+    box-sizing: border-box;
+    height: 45px;
+}
+
+.Big {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+    box-sizing: border-box;
+    min-height: 120px;
+    resize: vertical;
+    font-family: inherit;
+}
+
+select.normal, select.Big {
+    height: 45px;
+}
+
+.label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+}
+
+.asterisco {
+    color: red;
+    font-weight: normal;
+}
+
+@media (max-width: 769px) {
+    .label{
+        color: #FFFFFF;
+        font-size: 1rem;
+    }
+}
+@media (max-width: 426px) {
+    .label {
+        font-size: 0.9rem;
+        color: white;
+        margin-bottom: 0.3rem;
+    }
+
+    .normal, .Big {
+        padding: 0.7rem 1rem;
+        font-size: 0.9rem;
+        border: none;
+        border-radius: 1rem;
+        margin-bottom: 0.8rem;
+        width: 23rem;
+    }
+
+    .Big {
+        height: 6rem;
+    }
+
+    .normal::placeholder, .Big::placeholder {
+        color: #999;
+    }
+}
+
+@media (max-width: 376px) {
+    .normal, .Big{
+        padding: 0.7rem 1rem;
+        font-size: 0.9rem;
+        border: none;
+        border-radius: 1rem;
+        margin-bottom: 0.8rem;
+        width: 20rem
+    }
+
+}
+
+@media (max-width: 321px) {
+    .normal, .Big{
+        padding: 0.7rem 1rem;
+        font-size: 0.9rem;
+        border: none;
+        border-radius: 1rem;
+        margin-bottom: 0.8rem;
+        width: 18rem;
+    }
+}

@@ -1,0 +1,82 @@
+.containerSection {
+    width: 100%;
+    min-height: 100vh;
+    background-color: #ffffff;
+    padding: 30px;
+}
+
+.titulo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 5rem;
+    margin-bottom: 3rem;
+}
+
+.titulo h2, .titulo h1 {
+    color: var(--cor-primaria) !important;
+}
+
+.formulario {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 30px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.linha {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    margin-bottom: 20px;
+}
+
+.campos {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+
+.campos input,
+.campos textarea,
+.campos select {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+    font-family: inherit;
+    box-sizing: border-box;
+}
+
+.campos textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.botaoContainer {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.loading {
+    text-align: center;
+    padding: 50px;
+    font-size: 18px;
+    color: #666;
+}
+
+@media (max-width: 768px) {
+    .linha {
+        grid-template-columns: 1fr;
+    }
+    .containerSection {
+        padding: 20px;
+    }
+    .formulario {
+        padding: 20px;
+    }
+}

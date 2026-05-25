@@ -1,0 +1,45 @@
+.doacao {
+    background-color: transparent;
+    border: 1px solid var(--cor-terciaria);
+    border-radius: 2rem;
+    padding: 0.5rem 1rem;
+    color: var(--cor-terciaria);
+    font-weight: 700;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.doacao:hover {
+    background-color: var(--cor-terciaria);
+    color: white;
+}
+
+.voluntario{
+    background-color: transparent;
+    border: 1px solid var(--cor-secundaria);
+    border-radius: 2rem;
+    padding: 0.5rem 1rem;
+    color: var(--cor-secundaria);
+    font-weight: 700;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.voluntario:hover{
+    background-color: var(--cor-secundaria);
+    color: white;
+}
+
+.voluntariadoFeito {
+    background-color: var(--cor-secundaria);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: default;
+    font-weight: 600;
+    font-size: 13px;
+    opacity: 0.8;
+}

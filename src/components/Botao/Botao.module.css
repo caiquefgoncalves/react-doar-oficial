@@ -1,0 +1,184 @@
+.amarelo {
+    background-color: var(--cor-terciaria);
+    border: 2px solid var(--cor-terciaria);
+    border-radius: 2rem;
+    width: 15rem;
+    padding: 0.7rem;
+    color: white;
+    font-family: var(--fonte-texto);
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+}
+
+.amarelo-menor {
+    background-color: var(--cor-terciaria);
+    border: 2px solid var(--cor-terciaria);
+    border-radius: 2rem;
+    width: 10rem;
+    padding: 0.7rem;
+    color: white;
+    font-family: var(--fonte-texto);
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+}
+
+.amarelo:hover {
+    background-color: var(--cor-terciaria);
+    transform: scale(1.02);
+}
+
+.vazado {
+    background-color: var(--cor-primaria);
+    border: 2px solid white;
+    border-radius: 2rem;
+    padding: 0.7rem;
+    width: 15rem;
+    color: white;
+    font-family: var(--fonte-texto);
+    font-weight: 900;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.vazado:hover {
+    background-color: var(--cor-primaria);
+    transform: scale(1.02);
+}
+
+.vermelho {
+    background-color: red;
+    border: 2px solid darkred;
+    border-radius: 2rem;
+    width: 15rem;
+    padding: 0.7rem;
+    color: white;
+    font-family: var(--fonte-texto);
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+}
+
+.vazadoamarelo {
+    background-color: transparent;
+    border: 2px solid var(--cor-terciaria);
+    border-radius: 2rem;
+    padding: 0.7rem 3.8rem;
+    color: var(--cor-terciaria);
+    font-weight: 900;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.vazadoamarelo:hover {
+    background-color: var(--cor-terciaria);
+    color: white;
+}
+
+.rosa {
+    background-color: var(--cor-secundaria);
+    border: none;
+    border-radius: 2rem;
+    width: 15rem;
+    padding: 0.7rem;
+    color: white;
+    font-family: var(--fonte-texto);
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+}
+
+
+
+.rosa:hover {
+    background-color: var(--cor-secundaria);
+    transform: scale(1.02);
+}
+
+.vazadorosa {
+    background-color: transparent;
+    border: 2px solid var(--cor-secundaria);
+    border-radius: 2rem;
+    padding: 0.7rem 2rem;
+    color: var(--cor-secundaria);
+    font-weight: 900;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.vazadorosa2 {
+    background-color: transparent;
+    border: 2px solid var(--cor-secundaria);
+    border-radius: 2rem;
+    padding: 0.7rem 2rem;
+    color: var(--cor-secundaria);
+    font-weight: 900;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.azul{
+    background-color: var(--cor-primaria);
+    border: none;
+    border-radius: 2rem;
+    width: 15rem;
+    padding: 0.7rem;
+    color: white;
+    font-family: var(--fonte-texto);
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+}
+
+.azul:hover {
+    background-color: var(--cor-primaria);
+    transform: scale(1.02);
+}
+
+.seguir{
+    background-color: transparent;
+    border: 1px solid  var(--cor-primaria);
+    border-radius: 2rem;
+    padding: 0.3rem 1rem;
+    color: var(--cor-primaria);
+    font-weight: 700;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+@media (max-width: 480px) {
+    .amarelo, .vazado, .rosa {
+        width: 100%;
+        max-width: 280px;
+        padding: 0.8rem;
+        font-size: 1rem;
+    }
+
+    .vazadoamarelo {
+        padding: 0.6rem 1.2rem;
+        font-size: 1rem;
+        background-color: white;
+        width: 12rem;
+    }
+
+    .vazadorosa{
+        background-color: var(--cor-secundaria);
+        color: #FFFFFF;
+
+    }
+
+    .vazadorosa2{
+        background-color: var(--cor-secundaria);
+        color:#F65682;
+        border: none;
+    }
+}

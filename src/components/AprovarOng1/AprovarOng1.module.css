@@ -1,0 +1,155 @@
+.containerSection {
+    width: 100%;
+    min-height: 100vh;
+    background-color: #FFFFFF;
+    padding: 50px 30px 30px 30px;
+}
+
+.titulo {
+    margin-top: 2rem;
+}
+
+.formulario {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #fff;
+
+    padding: 30px;
+
+    max-width: 1200px;
+    margin: 0 auto;
+    margin-bottom: 3rem;
+}
+
+.linha {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4rem;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 30px;
+}
+
+.campos {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+    max-width: 500px;
+}
+
+.botoes {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 1rem;
+}
+
+.motivoReprovacao {
+    margin-top: 2rem;
+    padding: 20px;
+    background-color: #fff5f5;
+    border-radius: 8px;
+    border-left: 4px solid #f44336;
+    width: 100%;
+    max-width: 600px;
+}
+
+.botaoConfirmar {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: 1.5rem;
+}
+
+.loading, .erro {
+    text-align: center;
+    padding: 50px;
+    font-size: 18px;
+    color: #666;
+}
+
+.campos input:disabled,
+.campos textarea:disabled,
+.campos select:disabled {
+    color: #999 !important;
+    background-color: #fafafa !important;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+
+
+@media (max-width: 768px) {
+    .containerSection {
+        padding: 40px 20px 20px 20px;
+    }
+
+    .linha {
+        gap: 2rem;
+    }
+
+    .campos {
+        max-width: 450px;
+    }
+
+    .formulario {
+        padding: 20px;
+    }
+
+    .botoes {
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .containerSection {
+        background-color: #F69B2F;
+        padding: 20px 0 0 0;
+    }
+
+    .titulo {
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .formulario {
+        background-color: #F69B2F;
+        margin: 0;
+        padding: 0 2rem;
+        padding-bottom: 2rem;
+        border-radius: 0;
+        box-shadow: none;
+    }
+
+    .linha {
+        flex-direction: column;
+        gap: 0;
+        width: 100%;
+    }
+
+    .campos {
+        max-width: 100%;
+        width: 100%;
+        gap: 0;
+    }
+
+    .botoes {
+        margin-top: 1rem;
+    }
+}
+
+@media (max-width: 321px) {
+    .formulario {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 0 1rem;
+        padding-bottom: 2rem;
+    }
+}

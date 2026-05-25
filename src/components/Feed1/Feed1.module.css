@@ -1,0 +1,738 @@
+.secao {
+    display: flex;
+    min-height: 100vh;
+    background-color: #ffffff;
+}
+
+.conteudo {
+    flex: 1;
+    padding: 30px;
+    max-width: 900px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.botao-ler-mais {
+    display: none;
+}
+
+.barraTopo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.buscaInput {
+    display: flex;
+    align-items: center;
+    background: #fff;
+    border-radius: 25px;
+    padding: 8px 15px;
+    flex: 1;
+    max-width: 400px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
+
+.inputBusca {
+    border: none;
+    outline: none;
+    flex: 1;
+    font-size: 14px;
+    padding: 5px;
+    background: transparent;
+}
+
+.btnBuscar {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.filtro {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: #666;
+    border: 1px solid #e5e5e5;
+    padding: 6px 10px;
+    border-radius: 20px;
+    background: #fff;
+}
+
+.selectFiltro {
+    border: none;
+    background: transparent;
+    font-size: 13px;
+    outline: none;
+    cursor: pointer;
+}
+
+/* Tabs de Feed */
+.tabsFeed {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid #dbdbdb;
+    margin-bottom: 20px;
+}
+
+.tabFeed {
+    flex: 1;
+    padding: 12px 0;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    color: #8e8e8e;
+    transition: all 0.2s ease;
+    text-align: center;
+}
+
+.tabFeed:hover {
+    color: var(--cor-primaria);
+    background-color: #fafafa;
+}
+
+.tabAtivo {
+    color: var(--cor-primaria);
+    font-weight: 600;
+    border-bottom: 2px solid var(--cor-primaria);
+}
+
+.tabAtivo:hover {
+    color: var(--cor-primaria);
+}
+
+.cardAtualizacao {
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 18px 20px;
+    text-decoration: none;
+    color: inherit;
+}
+
+.fotoOng {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.headerInfo {
+    flex: 1;
+}
+
+.nomeOng {
+    font-size: 16px;
+    font-weight: 700;
+    color: #222;
+    margin: 0 0 2px 0;
+}
+
+.data {
+    font-size: 12px;
+    color: #999;
+}
+
+.corpo {
+    padding: 0 20px 18px 20px;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+}
+
+.tituloAtualizacao {
+    font-size: 18px;
+    font-weight: 700;
+    color: #333;
+    margin: 0 0 10px 0;
+}
+
+.textoAtualizacao {
+    font-size: 14px;
+    color: #555;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.fotoAtualizacao {
+    width: 220px;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+    flex-shrink: 0;
+}
+
+.vazio {
+    text-align: center;
+    padding: 80px 20px;
+    color: #999;
+}
+
+.vazio p {
+    margin: 5px 0;
+    font-size: 16px;
+}
+
+.textoContainer {
+    flex: 1;
+    width: 100%;
+}
+
+/* Botão Voltar ao Topo */
+.botaoVoltar {
+    position: fixed !important;
+    bottom: 30px !important;
+    right: 30px !important;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background-color: var(--cor-primaria);
+    color: white;
+    border: none;
+    font-size: 22px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    z-index: 9999 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    top: auto !important;
+    left: auto !important;
+}
+
+.botaoVoltar:hover {
+    background-color: var(--cor-primaria);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+}
+
+.botaoVoltar:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilos para comentários */
+.comentariosSecao {
+    border-top: 1px solid #eee;
+    padding: 12px 20px;
+    box-sizing: border-box;
+    overflow: hidden;
+    width: 100%;
+    max-width: 100%;
+}
+
+.btnComentarios {
+    background: none;
+    border: none;
+    color: #666;
+    font-size: 14px;
+    cursor: pointer;
+    padding: 5px 0;
+    transition: color 0.2s;
+}
+
+.btnComentarios:hover {
+    color: var(--cor-primaria);
+}
+
+.comentariosContainer {
+    margin-top: 12px;
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+.comentario {
+    padding: 10px 0;
+    border-bottom: 1px solid #f0f0f0;
+    width: 100%;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+.comentario:last-child {
+    border-bottom: none;
+}
+
+.comentarioHeader {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 5px;
+    width: 100%;
+}
+
+.comentarioFoto {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.comentarioInfo {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    flex: 1;
+    overflow: hidden;
+}
+
+.comentarioNome {
+    font-size: 13px;
+    font-weight: 600;
+    color: #333;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.comentarioData {
+    font-size: 11px;
+    color: #999;
+}
+
+.comentarioTexto {
+    font-size: 14px;
+    color: #555;
+    margin: 0;
+    padding-left: 40px;
+    line-height: 1.4;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.novoComentario {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.inputComentario {
+    flex: 1;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    font-size: 13px;
+    outline: none;
+    transition: border-color 0.2s;
+    min-width: 0;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.inputComentario:focus {
+    border-color: var(--cor-primaria);
+}
+
+.btnEnviarComentario {
+    padding: 8px 16px;
+    background-color: var(--cor-primaria);
+    color: white;
+    border: none;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.btnEnviarComentario:hover {
+    background-color: var(--cor-primaria);
+}
+
+.msgDoador {
+    font-size: 13px;
+    color: #999;
+    text-align: center;
+    margin: 10px 0 0 0;
+}
+
+.msgLogin {
+    font-size: 13px;
+    color: #666;
+    text-align: center;
+    margin: 10px 0 0 0;
+}
+
+.msgLogin a {
+    color: var(--cor-primaria);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.msgLogin a:hover {
+    text-decoration: underline;
+}
+
+.infoPost {
+    font-size: 13px;
+    color: #999;
+    margin: 5px 0;
+}
+
+/* ============================================ */
+/* MODAL DA POSTAGEM */
+/* ============================================ */
+
+.overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.modalPost {
+    width: 90%;
+    max-width: 1100px;
+    height: 85vh;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    position: relative;
+}
+
+.modalFechar {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: rgba(0,0,0,0.5);
+    color: white;
+    border: none;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    font-size: 18px;
+    cursor: pointer;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+}
+
+.modalFechar:hover {
+    background: rgba(0,0,0,0.8);
+}
+
+.modalEsquerda {
+    flex: 1.1;
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modalImagem {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.modalDireita {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 30px;
+    overflow-y: auto;
+}
+
+.modalHeader {
+    display: flex;
+    align-items: center;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.cabecalho {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.infocabecalho h2 {
+    font-size: 1rem;
+    margin: 0;
+    font-weight: 600;
+}
+
+.infocabecalho p {
+    font-size: 0.8rem;
+    color: #999;
+    margin: 2px 0 0 0;
+}
+
+.modalFotoPerfil {
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.modalConteudo {
+    padding: 20px 0;
+    border-bottom: 1px solid #ede9e9;
+}
+
+.modalConteudo h1 {
+    font-size: 1.3rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+.modalConteudo p {
+    font-size: 0.95rem;
+    margin-bottom: 0.5rem;
+    color: #555;
+    line-height: 1.7;
+}
+
+.modalInfo {
+    font-size: 13px;
+    color: #999;
+    margin-top: 10px;
+}
+
+.modalComentarios {
+    padding: 20px 0;
+}
+
+.modalComentarios h3 {
+    font-size: 1.1rem;
+    padding-bottom: 1rem;
+    margin: 0;
+}
+
+.modalComentario {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.modalComentario strong {
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.modalComentario p {
+    font-size: 0.9rem;
+    line-height: 1.5;
+    font-weight: 400;
+    color: #555;
+    margin: 3px 0 0 0;
+}
+
+.modalComentarioFoto {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.modalInputArea {
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+}
+
+.modalInput {
+    width: 100%;
+    padding: 14px;
+    border-radius: 20px;
+    border: 1px solid #ccc;
+    outline: none;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+.modalInput:focus {
+    border-color: var(--cor-primaria);
+}
+
+.fim {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: lighter;
+    font-size: 1rem;
+}
+
+
+
+/* ============================================ */
+/* RESPONSIVIDADE */
+/* ============================================ */
+
+@media (max-width: 768px) {
+    .secao {
+        flex-direction: column;
+    }
+
+    .conteudo {
+        padding: 15px;
+    }
+
+    .barraTopo {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .buscaInput {
+        max-width: 100%;
+    }
+
+    .filtro {
+        max-width: 100%;
+    }
+
+    .corpo {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .fotoAtualizacao {
+        width: 100%;
+        height: auto;
+        max-height: 250px;
+    }
+
+    .botaoVoltar {
+        bottom: 120px !important;
+        right: 20px !important;
+        width: 40px;
+        height: 40px;
+        font-size: 20px;
+    }
+
+    .tabsFeed {
+        margin-bottom: 15px;
+    }
+
+    .tabFeed {
+        font-size: 13px;
+        padding: 10px 0;
+    }
+
+    /* Modal mobile */
+    .modalPost {
+        flex-direction: column;
+        width: 95%;
+        height: 90vh;
+        overflow: hidden;
+    }
+
+    .modalEsquerda {
+        height: 40%;
+        min-height: 220px;
+    }
+
+    .modalDireita {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        padding: 30px;
+        overflow-y: auto;
+        max-height: 100%;
+    }
+
+    .modalHeader {
+        padding-bottom: 10px;
+    }
+
+    .modalFotoPerfil {
+        width: 40px;
+        height: 40px;
+    }
+
+    .modalConteudo h1 {
+        font-size: 1.1rem;
+    }
+
+    .modalFechar {
+        top: 10px;
+        right: 10px;
+        width: 30px;
+        height: 30px;
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 425px) {
+    .botao-ler-mais {
+        display: inline-block;
+        background-color: var(--cor-primaria);
+        color: white;
+        border: none;
+        padding: 4px 10px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 11px;
+        font-weight: 600;
+        margin-left: 5px;
+    }
+
+    .conteudo {
+        padding: 10px 8px;
+    }
+
+    .botaoVoltar {
+        bottom: 110px !important;
+    }
+
+    .modalPost {
+        width: 90%;
+        height: 96vh;
+        border-radius: 12px;
+    }
+
+
+    .modalEsquerda {
+        height: 45%;
+    }
+
+    .modalDireita {
+        padding: 15px;
+    }
+}
+
+@media (max-width: 326px) {
+    .botaoVoltar {
+        bottom: 100px !important;
+        right: 15px !important;
+        width: 35px;
+        height: 35px;
+        font-size: 18px;
+    }
+}
