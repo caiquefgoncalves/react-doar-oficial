@@ -25,25 +25,26 @@
 .logo {
     font-family: var(--fonte-logo);
     font-size: 1.5rem;
-    color: var(--cor-texto);
+    color: #ffffff; /* Cor fixa branca */
     font-weight: 300;
 }
 
 .logo span {
     font-family: inherit;
-    color: var(--cor-secundaria);
+    color: var(--cor-secundaria); /* Span continua com cor secundária */
     font-weight: 400;
 }
 
 .titulo {
     font-family: var(--fonte-titulo);
+    color: #ffffff; /* Cor fixa branca */
     font-size: 2.5rem;
     font-weight: 800;
 }
 
 .paragrafo {
     font-family: var(--fonte-texto);
-    color: var(--cor-texto);
+    color: #ffffff; /* Cor fixa branca */
     font-size: 1rem;
     font-weight: 300;
     max-width: 30rem;

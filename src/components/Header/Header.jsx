@@ -25,23 +25,87 @@ export default function Header({ api }) {
 
             if (informacoes.empresa) {
                 setEmpresa(informacoes.empresa);
+
+                // Atualizar as variáveis CSS com as configurações do banco
+                if (informacoes.empresa.fonte_logo) {
+                    document.documentElement.style.setProperty('--fonte-logo', informacoes.empresa.fonte_logo);
+                }
+                if (informacoes.empresa.fonte_titulo) {
+                    document.documentElement.style.setProperty('--fonte-titulo', informacoes.empresa.fonte_titulo);
+                }
+                if (informacoes.empresa.fonte_texto) {
+                    document.documentElement.style.setProperty('--fonte-texto', informacoes.empresa.fonte_texto);
+                }
+                if (informacoes.empresa.cor_primaria) {
+                    document.documentElement.style.setProperty('--cor-primaria', informacoes.empresa.cor_primaria);
+                }
+                if (informacoes.empresa.cor_secundaria) {
+                    document.documentElement.style.setProperty('--cor-secundaria', informacoes.empresa.cor_secundaria);
+                }
+                if (informacoes.empresa.cor_terceria) {
+                    document.documentElement.style.setProperty('--cor-terciaria', informacoes.empresa.cor_terceria);
+                }
+                if (informacoes.empresa.fonte_cor) {
+                    document.documentElement.style.setProperty('--cor-texto', informacoes.empresa.fonte_cor);
+                }
             }
         } catch (erro) {
             console.error("Erro na requisição:", erro);
         }
     }
 
+    // Carregar configurações do localStorage ao iniciar
+    useEffect(() => {
+        const savedFonteLogo = localStorage.getItem('fonteLogo');
+        const savedFonteTitulo = localStorage.getItem('fonteTitulo');
+        const savedFonteTexto = localStorage.getItem('fonteTexto');
+        const savedCorPrimaria = localStorage.getItem('corPrimaria');
+        const savedCorSecundaria = localStorage.getItem('corSecundaria');
+        const savedCorTerciaria = localStorage.getItem('corTerciaria');
+        const savedCorTexto = localStorage.getItem('corTexto');
+
+        if (savedFonteLogo) document.documentElement.style.setProperty('--fonte-logo', savedFonteLogo);
+        if (savedFonteTitulo) document.documentElement.style.setProperty('--fonte-titulo', savedFonteTitulo);
+        if (savedFonteTexto) document.documentElement.style.setProperty('--fonte-texto', savedFonteTexto);
+        if (savedCorPrimaria) document.documentElement.style.setProperty('--cor-primaria', savedCorPrimaria);
+        if (savedCorSecundaria) document.documentElement.style.setProperty('--cor-secundaria', savedCorSecundaria);
+        if (savedCorTerciaria) document.documentElement.style.setProperty('--cor-terciaria', savedCorTerciaria);
+        if (savedCorTexto) document.documentElement.style.setProperty('--cor-texto', savedCorTexto);
+    }, []);
+
     // Buscar informações da empresa ao montar o componente e quando a rota mudar
     useEffect(() => {
         buscarInfo();
     }, [location.pathname]);
 
-    // Escutar mudanças na logo
+    // Escutar mudanças na logo e configurações
     useEffect(() => {
         const handleStorageChange = (e) => {
             if (e.key === 'logoAtualizada') {
                 buscarInfo();
                 localStorage.removeItem('logoAtualizada');
+            }
+            // Recarregar configurações do localStorage
+            if (e.key === 'fonteLogo' && e.newValue) {
+                document.documentElement.style.setProperty('--fonte-logo', e.newValue);
+            }
+            if (e.key === 'fonteTitulo' && e.newValue) {
+                document.documentElement.style.setProperty('--fonte-titulo', e.newValue);
+            }
+            if (e.key === 'fonteTexto' && e.newValue) {
+                document.documentElement.style.setProperty('--fonte-texto', e.newValue);
+            }
+            if (e.key === 'corPrimaria' && e.newValue) {
+                document.documentElement.style.setProperty('--cor-primaria', e.newValue);
+            }
+            if (e.key === 'corSecundaria' && e.newValue) {
+                document.documentElement.style.setProperty('--cor-secundaria', e.newValue);
+            }
+            if (e.key === 'corTerciaria' && e.newValue) {
+                document.documentElement.style.setProperty('--cor-terciaria', e.newValue);
+            }
+            if (e.key === 'corTexto' && e.newValue) {
+                document.documentElement.style.setProperty('--cor-texto', e.newValue);
             }
         };
 
@@ -177,7 +241,7 @@ export default function Header({ api }) {
         navigate('/');
     }
 
-    // URL da logo
+    // URL da logo - atualiza automaticamente quando empresa muda
     const urlLogo = empresa.logo
         ? `${api_url}/uploads/Empresas/${empresa.logo}`
         : "/logo.png";

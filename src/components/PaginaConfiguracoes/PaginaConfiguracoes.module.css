@@ -1,289 +1,41 @@
 /* PaginaConfiguracoes.module.css */
 
 .container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding-bottom: 4rem;
+    width: 100%;
+    min-height: 100vh;
+    background-color: #ffffff;
+    padding: 30px;
 }
 
 .titulo {
-    padding: 4rem 0 3rem 0;
-}
-
-.organizar {
     display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    width: 100%;
-    max-width: 500px;
-}
-
-.fonte {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
-.fonte label {
-    font-size: 1rem;
-    font-weight: 600;
-}
-
-.selectFonte {
-    width: 100%;
-    padding: 12px;
-    border-radius: 12px;
-    border: 1px solid #dcdcdc;
-    font-size: 16px;
-    cursor: pointer;
-    background-color: white;
-}
-
-.fileInput {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #dcdcdc;
-    border-radius: 12px;
-    font-size: 14px;
-    background-color: white;
-    cursor: pointer;
-
-}
-
-.fileInput:hover {
-    border-color: #f7b567;
-}
-
-.cores {
-    margin-top: 2rem;
-    width: 100%;
-    max-width: 500px;
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-}
-
-.cores div {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
-.cores label {
-    font-size: 1rem;
-    font-weight: 600;
-}
-
-.inputColor {
-    width: 100%;
-    height: 35px;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    background: none;
-}
-
-.botoesContainer {
-    display: flex;
-    gap: 20px;
-    justify-content: center;
-    margin-top: 30px;
-    width: 100%;
-    max-width: 500px;
-}
-
-.btnRedefinir {
-    flex: 1;
-    padding: 12px 24px;
-    border: 2px solid #f65682;
-    border-radius: 12px;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: 600;
-    background-color: transparent;
-    color: #f65682;
-    transition: 0.2s;
-    text-align: center;
-    min-width: 180px;
-}
-
-.btnRedefinir:hover {
-    background-color: #f65682;
-    color: white;
-    transform: scale(1.03);
-}
-
-.btnRedefinir:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
-
-.botaoSalvar {
-    flex: 1;
-    padding: 12px 24px;
-    border: none;
-    border-radius: 12px;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: 600;
-    background-color: var(--cor-primaria, #167cbf);
-    color: white;
-    transition: 0.2s;
-    text-align: center;
-    min-width: 180px;
-}
-
-.botaoSalvar:hover:not(:disabled) {
-    transform: scale(1.03);
-}
-
-.botaoSalvar:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
-
-textarea.selectFonte {
-    resize: vertical;
-    font-family: inherit;
-}
-
-/* Responsividade */
-@media (max-width: 768px) {
-    .titulo {
-        padding: 2rem 0 2rem 0;
-    }
-
-    .organizar {
-        max-width: 90%;
-    }
-
-    .cores {
-        max-width: 90%;
-    }
-
-    .botoesContainer {
-        max-width: 90%;
-    }
-}
-
-@media (max-width: 480px) {
-    .botoesContainer {
-        flex-direction: column;
-        align-items: center;
-        gap: 15px;
-    }
-
-    .btnRedefinir, .botaoSalvar {
-        min-width: auto;
-        width: 100%;
-        max-width: 280px;
-    }
-
-    .organizar {
-        max-width: 95%;
-    }
-
-    .cores {
-        max-width: 95%;
-    }
-}
-
-/* PaginaConfiguracoes.module.css */
-
-.container {
-    display: flex;
-    flex-direction: column;
     align-items: center;
-    padding-bottom: 4rem;
-}
-
-.titulo {
-    padding: 4rem 0 3rem 0;
-}
-
-.organizar {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    width: 100%;
-    max-width: 500px;
-}
-
-.fonte {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
-.fonte label {
-    font-size: 1rem;
-    font-weight: 600;
-    color: #333;
-}
-
-.selectFonte {
-    width: 100%;
-    padding: 12px;
-    border-radius: 8px;
-    border: 1px solid #dcdcdc;
-    font-size: 14px;
-    cursor: pointer;
-    background-color: white;
-}
-
-.selectFonte:focus {
-    outline: none;
-    border-color: #f7b567;
-}
-
-.cores {
-    margin-top: 2rem;
-    width: 100%;
-    max-width: 500px;
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-}
-
-.cores div {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
-.cores label {
-    font-size: 1rem;
-    font-weight: 600;
-    color: #333;
-}
-
-.inputColor {
-    width: 100%;
-    height: 40px;
-    border: 1px solid #dcdcdc;
-    border-radius: 8px;
-    cursor: pointer;
-    background: white;
-    padding: 2px;
-}
-
-.inputColor:hover {
-    border-color: #f7b567;
-}
-
-.botoesContainer {
-    display: flex;
-    gap: 20px;
     justify-content: center;
+    margin-top: 5rem;
+    margin-bottom: 3rem;
+}
+
+.titulo h2, .titulo h1 {
+    color: #167cbf !important;
+    font-size: 2.2rem !important;
+}
+
+.formulario {
+    border-radius: 8px;
+    padding: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.botaoContainer {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
     margin-top: 30px;
-    width: 100%;
-    max-width: 500px;
 }
 
 .btnRedefinir {
-    flex: 1;
-    padding: 12px 24px;
+    padding: 14px 32px;
     border: 2px solid #f65682;
     border-radius: 8px;
     cursor: pointer;
@@ -291,9 +43,8 @@ textarea.selectFonte {
     font-weight: 600;
     background-color: transparent;
     color: #f65682;
-    transition: 0.2s;
-    text-align: center;
-    min-width: 180px;
+    transition: all 0.2s;
+    min-width: 200px;
 }
 
 .btnRedefinir:hover {
@@ -305,11 +56,11 @@ textarea.selectFonte {
 .btnRedefinir:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+    transform: none;
 }
 
-.botaoSalvar {
-    flex: 1;
-    padding: 12px 24px;
+.btnSalvar {
+    padding: 14px 32px;
     border: none;
     border-radius: 8px;
     cursor: pointer;
@@ -317,63 +68,164 @@ textarea.selectFonte {
     font-weight: 600;
     background-color: #167cbf;
     color: white;
-    transition: 0.2s;
-    text-align: center;
-    min-width: 180px;
+    transition: all 0.2s;
+    min-width: 200px;
 }
 
-.botaoSalvar:hover:not(:disabled) {
+.btnSalvar:hover {
     background-color: #0c598b;
     transform: scale(1.02);
 }
 
-.botaoSalvar:disabled {
+.btnSalvar:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+    transform: none;
 }
 
-textarea.selectFonte {
-    resize: vertical;
+.loading {
+    text-align: center;
+    padding: 50px;
+    font-size: 18px;
+    color: #666;
+}
+
+/* Estilos dos inputs */
+.row {
+    width: 100%;
+    margin: 0;
+}
+
+.col-md-6, .col-12 {
+    padding: 0 15px;
+    margin-bottom: 20px;
+}
+
+.inputGroup {
+    width: 100%;
+}
+
+.inputGroup label {
+    display: block;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.required {
+    color: #f65682;
+    font-size: 1rem;
+    margin-left: 2px;
+}
+
+.inputGroup input,
+.inputGroup select {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 15px;
     font-family: inherit;
+    transition: border-color 0.2s;
+    box-sizing: border-box;
+}
+
+.inputGroup textarea {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 15px;
+    font-family: inherit;
+    transition: border-color 0.2s;
+    box-sizing: border-box;
+    resize: vertical;
+    min-height: 100px;
+}
+
+.inputGroup input:focus,
+.inputGroup select:focus,
+.inputGroup textarea:focus {
+    outline: none;
+    border-color: #f7b567;
+}
+
+/* Input de cor */
+.inputGroup input[type="color"] {
+    height: 45px;
+    padding: 5px;
+    cursor: pointer;
+}
+
+/* Placeholder */
+.inputGroup input::placeholder,
+.inputGroup textarea::placeholder,
+.inputGroup select::placeholder {
+    color: #aaa;
+    font-size: 14px;
 }
 
 /* Responsividade */
-@media (max-width: 768px) {
-    .titulo {
-        padding: 2rem 0 2rem 0;
+@media (max-width: 769px) {
+    .container {
+        padding: 10px;
+        background-color: #167cbf;
     }
-
-    .organizar {
-        max-width: 90%;
+    .formulario {
+        padding: 0.5rem;
     }
-
-    .cores {
-        max-width: 90%;
+    .titulo h2, .titulo h1 {
+        color: #FFFFFF !important;
+        font-size: 1.8rem !important;
     }
-
-    .botoesContainer {
-        max-width: 90%;
+    .botaoContainer {
+        flex-direction: column;
+        align-items: center;
+    }
+    .btnRedefinir, .btnSalvar {
+        width: 100%;
+        max-width: 280px;
+        padding: 12px 20px;
+        font-size: 15px;
+    }
+    .col-md-6 {
+        width: 100%;
+    }
+    .inputGroup label {
+        font-size: 0.95rem;
+        color: #ffffff;
+    }
+    .inputGroup input,
+    .inputGroup select,
+    .inputGroup textarea {
+        font-size: 14px;
+        padding: 10px 12px;
+    }
+    .inputGroup input::placeholder,
+    .inputGroup textarea::placeholder,
+    .inputGroup select::placeholder {
+        font-size: 13px;
+    }
+    .required {
+        color: #ffffff;
     }
 }
 
 @media (max-width: 480px) {
-    .botoesContainer {
-        flex-direction: column;
-        align-items: center;
-        gap: 15px;
+    .formulario {
+        padding: 0;
     }
-
-    .btnRedefinir, .botaoSalvar {
-        min-width: auto;
-        width: 100%;
-        max-width: 280px;
+    .titulo h2, .titulo h1 {
+        font-size: 1.5rem !important;
     }
-
-    .organizar {
-        max-width: 95%;
+    .inputGroup label {
+        font-size: 0.9rem;
     }
-
-    .cores {
-        max-width: 95%;
+    .inputGroup input,
+    .inputGroup select,
+    .inputGroup textarea {
+        font-size: 13px;
+        padding: 8px 10px;
     }
 }

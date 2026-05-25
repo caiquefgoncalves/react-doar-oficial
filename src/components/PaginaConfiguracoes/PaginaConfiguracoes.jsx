@@ -43,6 +43,16 @@ export default function PaginaConfiguracoes({ api }) {
     const [logo, setLogo] = useState(null);
     const [banner, setBanner] = useState(null);
 
+    function aplicarConfiguracoes(config) {
+        if (config.fonte_logo) document.documentElement.style.setProperty('--fonte-logo', config.fonte_logo);
+        if (config.fonte_titulo) document.documentElement.style.setProperty("--fonte-titulo", config.fonte_titulo);
+        if (config.fonte_texto) document.documentElement.style.setProperty("--fonte-texto", config.fonte_texto);
+        if (config.cor_primaria) document.documentElement.style.setProperty("--cor-primaria", config.cor_primaria);
+        if (config.cor_secundaria) document.documentElement.style.setProperty("--cor-secundaria", config.cor_secundaria);
+        if (config.cor_terceria) document.documentElement.style.setProperty("--cor-terciaria", config.cor_terceria);
+        if (config.fonte_cor) document.documentElement.style.setProperty("--cor-texto", config.fonte_cor);
+    }
+
     useEffect(() => {
         if (!api_url) {
             console.error('API URL não definida');
@@ -79,13 +89,15 @@ export default function PaginaConfiguracoes({ api }) {
                     if (empresa.fonte_texto) setFonteTexto(empresa.fonte_texto);
                     if (empresa.fonte_cor) setCorTexto(empresa.fonte_cor);
 
-                    document.documentElement.style.setProperty('--fonte-logo', empresa.fonte_logo || "Playwrite US Trad");
-                    document.documentElement.style.setProperty("--fonte-titulo", empresa.fonte_titulo || "Inter");
-                    document.documentElement.style.setProperty("--fonte-texto", empresa.fonte_texto || "Inter");
-                    document.documentElement.style.setProperty("--cor-primaria", empresa.cor_primaria || "#167cbf");
-                    document.documentElement.style.setProperty("--cor-secundaria", empresa.cor_secundaria || "#f65682");
-                    document.documentElement.style.setProperty("--cor-terciaria", empresa.cor_terceria || "#f7b567");
-                    document.documentElement.style.setProperty("--cor-texto", empresa.fonte_cor || "#1f1f1f");
+                    aplicarConfiguracoes({
+                        fonte_logo: empresa.fonte_logo,
+                        fonte_titulo: empresa.fonte_titulo,
+                        fonte_texto: empresa.fonte_texto,
+                        cor_primaria: empresa.cor_primaria,
+                        cor_secundaria: empresa.cor_secundaria,
+                        cor_terceria: empresa.cor_terceria,
+                        fonte_cor: empresa.fonte_cor
+                    });
                 }
             }
         } catch (error) {
@@ -96,16 +108,40 @@ export default function PaginaConfiguracoes({ api }) {
     }
 
     useEffect(() => {
-        document.documentElement.style.setProperty('--fonte-logo', fonteLogo);
-        document.documentElement.style.setProperty("--fonte-titulo", fonteTitulo);
-        document.documentElement.style.setProperty("--fonte-texto", fonteTexto);
-        document.documentElement.style.setProperty("--cor-primaria", corPrimaria);
-        document.documentElement.style.setProperty("--cor-secundaria", corSecundaria);
-        document.documentElement.style.setProperty("--cor-terciaria", corTerciaria);
-        document.documentElement.style.setProperty("--cor-texto", corTexto);
+        aplicarConfiguracoes({
+            fonte_logo: fonteLogo,
+            fonte_titulo: fonteTitulo,
+            fonte_texto: fonteTexto,
+            cor_primaria: corPrimaria,
+            cor_secundaria: corSecundaria,
+            cor_terceria: corTerciaria,
+            fonte_cor: corTexto
+        });
     }, [fonteLogo, fonteTitulo, fonteTexto, corPrimaria, corSecundaria, corTerciaria, corTexto]);
 
     async function salvarConfiguracoes() {
+        // Validações - TODOS OS CAMPOS OBRIGATÓRIOS
+        if (!nome.trim()) {
+            setMensagem({ texto: 'O nome da empresa é obrigatório', tipo: 'erro' });
+            return;
+        }
+        if (!spanNome.trim()) {
+            setMensagem({ texto: 'O span do nome é obrigatório', tipo: 'erro' });
+            return;
+        }
+        if (!descricao.trim()) {
+            setMensagem({ texto: 'A descrição da empresa é obrigatória', tipo: 'erro' });
+            return;
+        }
+        if (!textoBannerPrincipal.trim()) {
+            setMensagem({ texto: 'O texto do banner principal é obrigatório', tipo: 'erro' });
+            return;
+        }
+        if (!textoBannerSecundario.trim()) {
+            setMensagem({ texto: 'O texto do banner secundário é obrigatório', tipo: 'erro' });
+            return;
+        }
+
         setSalvando(true);
 
         const form = new FormData();
@@ -136,18 +172,27 @@ export default function PaginaConfiguracoes({ api }) {
             const data = await response.json();
 
             if (response.ok) {
-                localStorage.setItem('logoAtualizada', Date.now().toString());
-                window.dispatchEvent(new Event('storage'));
+                localStorage.setItem('fonteLogo', fonteLogo);
+                localStorage.setItem('fonteTitulo', fonteTitulo);
+                localStorage.setItem('fonteTexto', fonteTexto);
+                localStorage.setItem('corPrimaria', corPrimaria);
+                localStorage.setItem('corSecundaria', corSecundaria);
+                localStorage.setItem('corTerciaria', corTerciaria);
+                localStorage.setItem('corTexto', corTexto);
 
                 setMensagem({ texto: data.message || 'Configurações salvas com sucesso!', tipo: 'sucesso' });
-                setTimeout(() => navigate('/dashboardAdm'), 2000);
+
+                setTimeout(() => {
+                    navigate('/dashboardAdm');
+                    window.location.reload();
+                }, 1500);
             } else {
                 setMensagem({ texto: data.error || 'Erro ao salvar configurações', tipo: 'erro' });
+                setSalvando(false);
             }
         } catch (error) {
             console.error('Erro:', error);
             setMensagem({ texto: 'Erro de conexão com o servidor', tipo: 'erro' });
-        } finally {
             setSalvando(false);
         }
     }
@@ -165,15 +210,17 @@ export default function PaginaConfiguracoes({ api }) {
 
             if (response.ok) {
                 setMensagem({ texto: data.message || 'Configurações redefinidas com sucesso!', tipo: 'sucesso' });
-                await buscarConfiguracoes();
-                setTimeout(() => window.location.reload(), 2000);
+                setTimeout(() => {
+                    navigate('/dashboardAdm');
+                    window.location.reload();
+                }, 1500);
             } else {
                 setMensagem({ texto: data.error || 'Erro ao redefinir configurações', tipo: 'erro' });
+                setRedefinindo(false);
             }
         } catch (error) {
             console.error('Erro:', error);
             setMensagem({ texto: 'Erro de conexão com o servidor', tipo: 'erro' });
-        } finally {
             setRedefinindo(false);
         }
     }
@@ -198,170 +245,181 @@ export default function PaginaConfiguracoes({ api }) {
                 <Titulo titulo={'Configurações'} cor={'azul-claro'} />
             </div>
 
-            {/* INFORMAÇÕES DA EMPRESA */}
-            <div className={css.organizar}>
-                <div className={css.fonte}>
-                    <label>Nome da Empresa</label>
-                    <input
-                        type="text"
-                        value={nome}
-                        onChange={(e) => setNome(e.target.value)}
-                        className={css.selectFonte}
-                        placeholder="Digite o nome da empresa"
-                    />
-                </div>
-                <div className={css.fonte}>
-                    <label>Span do Nome (texto destacado)</label>
-                    <input
-                        type="text"
-                        value={spanNome}
-                        onChange={(e) => setSpanNome(e.target.value)}
-                        className={css.selectFonte}
-                        placeholder="Ex: +"
-                    />
-                </div>
-                <div className={css.fonte}>
-                    <label>Descrição da Empresa</label>
-                    <textarea
-                        value={descricao}
-                        onChange={(e) => setDescricao(e.target.value)}
-                        className={css.selectFonte}
-                        rows="3"
-                        placeholder="Descrição sobre a empresa"
-                    />
-                </div>
-                <div className={css.fonte}>
-                    <label>Texto do Banner Principal</label>
-                    <input
-                        type="text"
-                        value={textoBannerPrincipal}
-                        onChange={(e) => setTextoBannerPrincipal(e.target.value)}
-                        className={css.selectFonte}
-                        placeholder="Texto principal do banner"
-                    />
-                </div>
-                <div className={css.fonte}>
-                    <label>Texto do Banner Secundário</label>
-                    <input
-                        type="text"
-                        value={textoBannerSecundario}
-                        onChange={(e) => setTextoBannerSecundario(e.target.value)}
-                        className={css.selectFonte}
-                        placeholder="Texto secundário do banner"
-                    />
-                </div>
-            </div>
+            <div className={css.formulario}>
+                <div className={"row"}>
+                    {/* Nome da Empresa - OBRIGATÓRIO */}
+                    <div className={"col-md-6 col-12"}>
+                        <div className={css.inputGroup}>
+                            <label>Nome da Empresa <span className={css.required}>*</span></label>
+                            <input
+                                type="text"
+                                value={nome}
+                                onChange={(e) => setNome(e.target.value)}
+                                placeholder="Digite o nome da empresa"
+                                required
+                            />
+                        </div>
+                    </div>
 
+                    {/* Span do Nome - OBRIGATÓRIO */}
+                    <div className={"col-md-6 col-12"}>
+                        <div className={css.inputGroup}>
+                            <label>Span do Nome (texto destacado) <span className={css.required}>*</span></label>
+                            <input
+                                type="text"
+                                value={spanNome}
+                                onChange={(e) => setSpanNome(e.target.value)}
+                                placeholder="Ex: +"
+                                required
+                            />
+                        </div>
+                    </div>
 
-            <div className={css.organizar}>
-                <div className={css.fonte}>
+                    {/* Descrição da Empresa - OBRIGATÓRIA */}
+                    <div className={"col-12"}>
+                        <div className={css.inputGroup}>
+                            <label>Descrição da Empresa <span className={css.required}>*</span></label>
+                            <textarea
+                                value={descricao}
+                                onChange={(e) => setDescricao(e.target.value)}
+                                rows="4"
+                                placeholder="Descrição sobre a empresa"
+                                required
+                            />
+                        </div>
+                    </div>
 
-                    <InputArquivo
-                        tamanho={'normal'}
-                        tipo={'normaledicao'}
-                        label={'Logo da empresa'}
-                        alterarInput={(e) => setLogo(e.target.files[0])}
-                    />
-                </div>
-                <div className={css.fonte}>
+                    {/* Texto do Banner Principal - OBRIGATÓRIO */}
+                    <div className={"col-md-6 col-12"}>
+                        <div className={css.inputGroup}>
+                            <label>Texto do Banner Principal <span className={css.required}>*</span></label>
+                            <input
+                                type="text"
+                                value={textoBannerPrincipal}
+                                onChange={(e) => setTextoBannerPrincipal(e.target.value)}
+                                placeholder="Texto principal do banner"
+                                required
+                            />
+                        </div>
+                    </div>
 
-                    <InputArquivo
-                        tamanho={'normal'}
-                        tipo={'normaledicao'}
-                        label={'Banner da empresa'}
-                        alterarInput={(e) => setBanner(e.target.files[0])}
-                    />
-                </div>
-            </div>
+                    {/* Texto do Banner Secundário - OBRIGATÓRIO */}
+                    <div className={"col-md-6 col-12"}>
+                        <div className={css.inputGroup}>
+                            <label>Texto do Banner Secundário <span className={css.required}>*</span></label>
+                            <input
+                                type="text"
+                                value={textoBannerSecundario}
+                                onChange={(e) => setTextoBannerSecundario(e.target.value)}
+                                placeholder="Texto secundário do banner"
+                                required
+                            />
+                        </div>
+                    </div>
 
-            {/* FONTES */}
-            <div className={css.organizar}>
-                <div className={css.fonte}>
-                    <label>Fonte do Logo</label>
-                    <select
-                        value={fonteLogo}
-                        onChange={(e) => setFonteLogo(e.target.value)}
-                        className={css.selectFonte}
-                    >
-                        {fontes.map((item) => (
-                            <option key={item} value={item}>{item}</option>
-                        ))}
-                    </select>
-                </div>
-                <div className={css.fonte}>
-                    <label>Fonte dos títulos</label>
-                    <select
-                        value={fonteTitulo}
-                        onChange={(e) => setFonteTitulo(e.target.value)}
-                        className={css.selectFonte}
-                    >
-                        {fontes.map((item) => (
-                            <option key={item} value={item}>{item}</option>
-                        ))}
-                    </select>
-                </div>
-                <div className={css.fonte}>
-                    <label>Fonte dos textos</label>
-                    <select
-                        value={fonteTexto}
-                        onChange={(e) => setFonteTexto(e.target.value)}
-                        className={css.selectFonte}
-                    >
-                        {fontes.map((item) => (
-                            <option key={item} value={item}>{item}</option>
-                        ))}
-                    </select>
-                </div>
-            </div>
+                    {/* Logo da Empresa */}
+                    <div className={"col-md-6 col-12"}>
+                        <div className={css.inputGroup}>
+                            <label>Logo da Empresa</label>
+                            <InputArquivo
+                                tamanho={'normal'}
+                                tipo={'normaledicao'}
+                                label={''}
+                                alterarInput={(e) => setLogo(e.target.files[0])}
+                            />
+                        </div>
+                    </div>
 
-            {/* CORES */}
-            <div className={css.cores}>
-                <div>
-                    <label>Cor primária</label>
-                    <input
-                        type="color"
-                        value={corPrimaria}
-                        onChange={(e) => setCorPrimaria(e.target.value)}
-                        className={css.inputColor}
-                    />
-                </div>
-                <div>
-                    <label>Cor secundária</label>
-                    <input
-                        type="color"
-                        value={corSecundaria}
-                        onChange={(e) => setCorSecundaria(e.target.value)}
-                        className={css.inputColor}
-                    />
-                </div>
-                <div>
-                    <label>Cor terciária</label>
-                    <input
-                        type="color"
-                        value={corTerciaria}
-                        onChange={(e) => setCorTerciaria(e.target.value)}
-                        className={css.inputColor}
-                    />
-                </div>
-                <div>
-                    <label>Cor dos textos</label>
-                    <input
-                        type="color"
-                        value={corTexto}
-                        onChange={(e) => setCorTexto(e.target.value)}
-                        className={css.inputColor}
-                    />
-                </div>
-            </div>
+                    {/* Banner da Empresa */}
+                    <div className={"col-md-6 col-12"}>
+                        <div className={css.inputGroup}>
+                            <label>Banner da Empresa</label>
+                            <InputArquivo
+                                tamanho={'normal'}
+                                tipo={'normaledicao'}
+                                label={''}
+                                alterarInput={(e) => setBanner(e.target.files[0])}
+                            />
+                        </div>
+                    </div>
 
-            {/* BOTÕES */}
-            <div className={css.botoesContainer}>
-                <button className={css.btnRedefinir} onClick={redefinirConfiguracoes} disabled={redefinindo}>
-                    {redefinindo ? 'Redefinindo...' : 'Restaurar Padrão'}
-                </button>
-                <button className={css.botaoSalvar} onClick={salvarConfiguracoes} disabled={salvando}>
-                    {salvando ? 'Salvando...' : 'Salvar'}
-                </button>
+                    {/* Fonte do Logo */}
+                    <div className={"col-md-6 col-12"}>
+                        <div className={css.inputGroup}>
+                            <label>Fonte do Logo</label>
+                            <select value={fonteLogo} onChange={(e) => setFonteLogo(e.target.value)}>
+                                {fontes.map((item) => (
+                                    <option key={item} value={item}>{item}</option>
+                                ))}
+                            </select>
+                        </div>
+                    </div>
+
+                    {/* Fonte dos Títulos */}
+                    <div className={"col-md-6 col-12"}>
+                        <div className={css.inputGroup}>
+                            <label>Fonte dos Títulos</label>
+                            <select value={fonteTitulo} onChange={(e) => setFonteTitulo(e.target.value)}>
+                                {fontes.map((item) => (
+                                    <option key={item} value={item}>{item}</option>
+                                ))}
+                            </select>
+                        </div>
+                    </div>
+
+                    {/* Fonte dos Textos */}
+                    <div className={"col-md-6 col-12"}>
+                        <div className={css.inputGroup}>
+                            <label>Fonte dos Textos</label>
+                            <select value={fonteTexto} onChange={(e) => setFonteTexto(e.target.value)}>
+                                {fontes.map((item) => (
+                                    <option key={item} value={item}>{item}</option>
+                                ))}
+                            </select>
+                        </div>
+                    </div>
+
+                    {/* Cor Primária */}
+                    <div className={"col-md-6 col-12"}>
+                        <div className={css.inputGroup}>
+                            <label>Cor primária</label>
+                            <input type="color" value={corPrimaria} onChange={(e) => setCorPrimaria(e.target.value)} />
+                        </div>
+                    </div>
+
+                    {/* Cor Secundária */}
+                    <div className={"col-md-6 col-12"}>
+                        <div className={css.inputGroup}>
+                            <label>Cor secundária</label>
+                            <input type="color" value={corSecundaria} onChange={(e) => setCorSecundaria(e.target.value)} />
+                        </div>
+                    </div>
+
+                    {/* Cor Terciária */}
+                    <div className={"col-md-6 col-12"}>
+                        <div className={css.inputGroup}>
+                            <label>Cor terciária</label>
+                            <input type="color" value={corTerciaria} onChange={(e) => setCorTerciaria(e.target.value)} />
+                        </div>
+                    </div>
+
+                    {/* Cor dos Textos */}
+                    <div className={"col-md-6 col-12"}>
+                        <div className={css.inputGroup}>
+                            <label>Cor dos textos (fora do banner)</label>
+                            <input type="color" value={corTexto} onChange={(e) => setCorTexto(e.target.value)} />
+                        </div>
+                    </div>
+                </div>
+
+                <div className={css.botaoContainer}>
+                    <button className={css.btnRedefinir} onClick={redefinirConfiguracoes} disabled={redefinindo}>
+                        {redefinindo ? 'Redefinindo...' : 'Restaurar Padrão'}
+                    </button>
+                    <button className={css.btnSalvar} onClick={salvarConfiguracoes} disabled={salvando}>
+                        {salvando ? 'Salvando...' : 'Salvar'}
+                    </button>
+                </div>
             </div>
         </div>
     )
