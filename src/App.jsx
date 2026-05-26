@@ -42,8 +42,10 @@ import Agradecimento from "./pages/Agradecimento.jsx";
 import MensagemVoluntario from "./pages/MensagemVoluntario.jsx";
 import EditarMensagem from './pages/EditarMensagem.jsx';
 import Configuracoes from "./pages/Configuracoes.jsx";
+import RelatorioDoador from './pages/RelatorioDoador.jsx';
+import RelatorioOng from './pages/RelatorioOng.jsx';
 
-const API_URL = "http://10.92.3.133:5000"
+const API_URL = "http://10.92.3.131:5000"
 
 export default function App() {
     return (
@@ -88,6 +90,8 @@ export default function App() {
                 <Route path="/relatorios" element={<RelatoriosAdm api={API_URL} />} />
                 <Route path="/editarMensagem" element={<EditarMensagem api={API_URL} />} />
                 <Route path="/configuracoes" element={<Configuracoes api={API_URL} />} />
+                <Route path="/relatorio_doador" element={<RelatorioDoador api={API_URL} />} />
+                <Route path="/relatorio_ong" element={<RelatorioOng api={API_URL} />} />
                 <Route path="/*" element={<TelaErro/>} />
             </Routes>
             <Footer api={API_URL}/>
