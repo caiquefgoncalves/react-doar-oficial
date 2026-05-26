@@ -282,8 +282,8 @@ export default function Feed({ api }) {
                                     {tipoFeed === 'seguindo' ? (
                                         <>
                                             <p>Nenhuma postagem das ONGs que você segue.</p>
-                                            <p style={{ fontSize: '13px', color: '#999' }}>Siga ONGs para ver as novidades delas aqui!</p>
-                                            <Link to="/ongs" style={{ color: '#167cbf', textDecoration: 'none', fontWeight: '600' }}>Encontrar ONGs</Link>
+                                            <p style={{ fontSize: '13px', color: 'color-mix(in srgb, var(--cor-texto) 54%, #ffffff);\n' }}>Siga ONGs para ver as novidades delas aqui!</p>
+                                            <Link to="/ongs" style={{ color: 'var(--cor-primaria)', textDecoration: 'none', fontWeight: '600' }}>Encontrar ONGs</Link>
                                         </>
                                     ) : <p>Nenhuma atualização encontrada.</p>}
                                 </div>
@@ -348,7 +348,7 @@ export default function Feed({ api }) {
                                                                     <p className={css.comentarioTexto}>{comentario.texto}</p>
                                                                 </div>
                                                             ))
-                                                        ) : <p style={{ fontSize: '13px', color: '#999', textAlign: 'center', padding: '10px' }}>Nenhum comentário ainda. Seja o primeiro!</p>}
+                                                        ) : <p style={{ fontSize: '13px', color: 'color-mix(in srgb, var(--cor-texto) 54%, #ffffff)', textAlign: 'center', padding: '10px' }}>Nenhum comentário ainda. Seja o primeiro!</p>}
 
                                                         {/* Input de comentário - apenas doadores */}
                                                         {usuarioTipo === 1 ? (
@@ -418,7 +418,7 @@ export default function Feed({ api }) {
                                 {isMobile && modalPostagem.texto.length > 100 && (
                                     <button
                                         onClick={() => setTextoAberto(!textoAberto)}
-                                        style={{ backgroundColor: '#167cbf', color: 'white', border: 'none', padding: '4px 10px', borderRadius: '10px', cursor: 'pointer', fontSize: '11px', fontWeight: '600', marginLeft: '5px' }}
+                                        style={{ backgroundColor: 'var(--cor-primaria)', color: 'white', border: 'none', padding: '4px 10px', borderRadius: '10px', cursor: 'pointer', fontSize: '11px', fontWeight: '600', marginLeft: '5px' }}
                                     >
                                         {textoAberto ? "Ler menos" : "Ler mais"}
                                     </button>
@@ -434,7 +434,7 @@ export default function Feed({ api }) {
                                             <div><strong>{comentario.usuario_nome}</strong><p>{comentario.texto}</p></div>
                                         </div>
                                     ))
-                                ) : <p style={{ fontSize: '13px', color: '#999', textAlign: 'center', padding: '20px' }}>Nenhum comentário ainda. Seja o primeiro!</p>}
+                                ) : <p style={{ fontSize: '13px', color: 'color-mix(in srgb, var(--cor-texto) 54%, #ffffff);', textAlign: 'center', padding: '20px' }}>Nenhum comentário ainda. Seja o primeiro!</p>}
                             </div>
                             <div className={css.modalInputArea}>
                                 {usuarioTipo === 1 ? (

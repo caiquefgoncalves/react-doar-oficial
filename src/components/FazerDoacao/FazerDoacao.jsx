@@ -46,16 +46,19 @@ export default function FazerDoacao({ api }) {
     async function gerarQrCode() {
         let valorNumerico = valor.replace(/\D/g, '');
         valorNumerico = parseFloat(valorNumerico) / 100;
-        valorNumerico = Math.round(valorNumerico);
+
+
 
         if (!valorNumerico || valorNumerico <= 0) {
             setMensagem({ texto: 'Digite um valor válido', tipo: 'erro' });
             return;
         }
 
-        let retorno = await fetch(`${api_url}/doar_projeto/${id}`, {
+        const token = localStorage.getItem('token');
+
+        let retorno = await fetch(`${api_url}/doar_projeto/${id}?token=${token}`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ valor: valorNumerico }),
             credentials: 'include'
         });
@@ -63,7 +66,7 @@ export default function FazerDoacao({ api }) {
 
         if (retorno.message) {
             setPix(retorno.pix);
-            setChavePix(retorno.chave_pix)
+            setChavePix(retorno.chave_pix);
             setMensagem({ texto: retorno.message || 'QR code gerado com sucesso', tipo: 'sucesso' });
         } else {
             setMensagem({ texto: retorno.error || 'Erro ao gerar QR code', tipo: 'erro' });

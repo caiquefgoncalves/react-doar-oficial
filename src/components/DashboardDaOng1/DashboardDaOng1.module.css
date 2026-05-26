@@ -25,7 +25,6 @@
 .acoes {
     display: flex;
     gap: 1rem;
-    justify-content: center;
     align-items: center;
 }
 
@@ -121,7 +120,7 @@
 .cardAdmNome {
     font-size: 14px;
     font-weight: 600;
-    color: #333;
+    color: var(--cor-texto);
     margin: 0 0 2px 0;
     text-align: center;
 }
@@ -239,7 +238,7 @@
 .modalTitulo {
     font-size: 20px;
     font-weight: 700;
-    color: #333;
+    color: var(--cor-texto);
     margin: 0 0 15px 0;
 }
 
@@ -324,7 +323,7 @@
 .cardOng:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    border-color: #167cbf;
+    border-color: var(--cor-primaria);
 }
 
 .cardOngImagem {
@@ -362,7 +361,7 @@
 .cardOngCategoria {
     display: inline-block;
     font-size: 11px;
-    color: #167cbf;
+    color: var(--cor-primaria);
     font-weight: 600;
     background: #f0f7ff;
     padding: 3px 10px;

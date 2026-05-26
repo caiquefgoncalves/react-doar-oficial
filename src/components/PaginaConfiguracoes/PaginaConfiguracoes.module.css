@@ -1,231 +1,239 @@
-/* PaginaConfiguracoes.module.css */
-
 .container {
     width: 100%;
     min-height: 100vh;
-    background-color: #ffffff;
-    padding: 30px;
+    padding: 2rem 1rem 4rem 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-sizing: border-box;
 }
 
 .titulo {
+    width: 100%;
     display: flex;
-    align-items: center;
     justify-content: center;
-    margin-top: 5rem;
+    align-items: center;
     margin-bottom: 3rem;
-}
-
-.titulo h2, .titulo h1 {
-    color: #167cbf !important;
-    font-size: 2.2rem !important;
+    margin-top: 2rem;
 }
 
 .formulario {
-    border-radius: 8px;
-    padding: 30px;
-    max-width: 1200px;
-    margin: 0 auto;
+    width: 100%;
+    max-width: 1100px;
 }
+
+
+.linha {
+    width: 100%;
+}
+
+
+.colunas {
+    width: 100%;
+    display: flex;
+    gap: 2rem;
+    align-items: flex-start;
+}
+
+.colunaEsquerda {
+    flex: 4;
+}
+
+.colunaDireita {
+    flex: 1;
+    position: sticky;
+    top: 20px;
+}
+
+.coresContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+
+.col-md-6,
+.col-12 {
+    margin-bottom: 0.8rem;
+    box-sizing: border-box;
+}
+
+
+.inputArquivo {
+    margin-top: 0.4rem;
+}
+
+.row > .col-md-6:has(input[type="file"]),
+.row > .col-12:has(input[type="file"]) {
+    margin-top: 0.8rem;
+    margin-bottom: 1.6rem;
+}
+
+
+input[type="color"] {
+    width: 100% !important;
+    height: 58px !important;
+    border-radius: 14px !important;
+    padding: 4px !important;
+    border: 1px solid #d9d9d9;
+    cursor: pointer;
+    background: transparent;
+}
+
+input[type="color"]::-webkit-color-swatch-wrapper {
+    padding: 0;
+    border-radius: 12px;
+}
+
+input[type="color"]::-webkit-color-swatch {
+    border: none;
+    border-radius: 12px;
+}
+
+input[type="color"]::-moz-color-swatch {
+    border: none;
+    border-radius: 12px;
+}
+
 
 .botaoContainer {
+    width: 100%;
     display: flex;
     justify-content: center;
-    gap: 20px;
-    margin-top: 30px;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 3rem;
+    flex-wrap: wrap;
 }
 
-.btnRedefinir {
-    padding: 14px 32px;
-    border: 2px solid #f65682;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: 600;
-    background-color: transparent;
-    color: #f65682;
-    transition: all 0.2s;
-    min-width: 200px;
+.botaoWrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.btnRedefinir:hover {
-    background-color: #f65682;
-    color: white;
-    transform: scale(1.02);
+
+.botaoContainer button {
+    min-width: 220px !important;
+    height: 52px !important;
+    padding: 0 24px !important;
+    border-radius: 999px !important;
+    font-size: 15px !important;
+    font-weight: 600 !important;
+    transition: 0.2s ease;
 }
 
-.btnRedefinir:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    transform: none;
+.botaoContainer button:hover {
+    transform: translateY(-1px);
 }
 
-.btnSalvar {
-    padding: 14px 32px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: 600;
-    background-color: #167cbf;
-    color: white;
-    transition: all 0.2s;
-    min-width: 200px;
-}
-
-.btnSalvar:hover {
-    background-color: #0c598b;
-    transform: scale(1.02);
-}
-
-.btnSalvar:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    transform: none;
-}
 
 .loading {
+    width: 100%;
     text-align: center;
-    padding: 50px;
-    font-size: 18px;
+    padding: 4rem 0;
     color: #666;
-}
-
-/* Estilos dos inputs */
-.row {
-    width: 100%;
-    margin: 0;
-}
-
-.col-md-6, .col-12 {
-    padding: 0 15px;
-    margin-bottom: 20px;
-}
-
-.inputGroup {
-    width: 100%;
-}
-
-.inputGroup label {
-    display: block;
     font-size: 1rem;
-    font-weight: 600;
-    color: #333;
-    margin-bottom: 8px;
 }
 
-.required {
-    color: #f65682;
-    font-size: 1rem;
-    margin-left: 2px;
-}
 
-.inputGroup input,
-.inputGroup select {
-    width: 100%;
-    padding: 12px 15px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    font-size: 15px;
-    font-family: inherit;
-    transition: border-color 0.2s;
-    box-sizing: border-box;
-}
+@media (max-width: 768px) {
 
-.inputGroup textarea {
-    width: 100%;
-    padding: 12px 15px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    font-size: 15px;
-    font-family: inherit;
-    transition: border-color 0.2s;
-    box-sizing: border-box;
-    resize: vertical;
-    min-height: 100px;
-}
-
-.inputGroup input:focus,
-.inputGroup select:focus,
-.inputGroup textarea:focus {
-    outline: none;
-    border-color: #f7b567;
-}
-
-/* Input de cor */
-.inputGroup input[type="color"] {
-    height: 45px;
-    padding: 5px;
-    cursor: pointer;
-}
-
-/* Placeholder */
-.inputGroup input::placeholder,
-.inputGroup textarea::placeholder,
-.inputGroup select::placeholder {
-    color: #aaa;
-    font-size: 14px;
-}
-
-/* Responsividade */
-@media (max-width: 769px) {
-    .container {
-        padding: 10px;
-        background-color: #167cbf;
+    .colunas {
+        flex-direction: column;
+        gap: 2rem;
     }
-    .formulario {
-        padding: 0.5rem;
+
+
+    .colunaEsquerda {
+        width: 100%;
+        order: 1;
     }
-    .titulo h2, .titulo h1 {
-        color: #FFFFFF !important;
+
+    .colunaDireita {
+        width: 100%;
+        order: 2;
+        position: relative;
+        top: unset;
+    }
+
+    .coresContainer {
+        width: 100%;
+    }
+    .titulo {
+        margin-bottom: 2rem;
+    }
+
+    .titulo h1,
+    .titulo h2 {
+        text-align: center;
         font-size: 1.8rem !important;
     }
+
+    .row {
+        row-gap: 1.5rem;
+    }
+
+    .col-md-6,
+    .col-12 {
+        margin-bottom: 0.3rem;
+    }
+
+
+    .row > .col-md-6:has(input[type="file"]),
+    .row > .col-12:has(input[type="file"]) {
+        margin-bottom: 2rem;
+    }
+
+
+    input[type="color"] {
+        height: 44px !important;
+    }
+
     .botaoContainer {
         flex-direction: column;
         align-items: center;
+        gap: 0.8rem;
+        margin-top: 2rem;
     }
-    .btnRedefinir, .btnSalvar {
-        width: 100%;
-        max-width: 280px;
-        padding: 12px 20px;
-        font-size: 15px;
-    }
-    .col-md-6 {
-        width: 100%;
-    }
-    .inputGroup label {
-        font-size: 0.95rem;
-        color: #ffffff;
-    }
-    .inputGroup input,
-    .inputGroup select,
-    .inputGroup textarea {
-        font-size: 14px;
-        padding: 10px 12px;
-    }
-    .inputGroup input::placeholder,
-    .inputGroup textarea::placeholder,
-    .inputGroup select::placeholder {
-        font-size: 13px;
-    }
-    .required {
-        color: #ffffff;
+
+    .botaoContainer button {
+        width: 100% !important;
+        max-width: 320px;
     }
 }
 
-@media (max-width: 480px) {
-    .formulario {
-        padding: 0;
+@media (max-width: 426px) {
+
+    .container {
+        background-color: var(--cor-primaria);
+        padding: 2rem;
+        width: 100%;
     }
-    .titulo h2, .titulo h1 {
+
+    .titulo h1,
+    .titulo h2 {
         font-size: 1.5rem !important;
     }
-    .inputGroup label {
-        font-size: 0.9rem;
+
+    .row {
+        row-gap: 1.2rem;
     }
-    .inputGroup input,
-    .inputGroup select,
-    .inputGroup textarea {
-        font-size: 13px;
-        padding: 8px 10px;
+    .formulario{
+        width: auto;
+    }
+
+    input[type="color"] {
+        height: 50px !important;
+        border-radius: 12px !important;
+    }
+
+    .botaoContainer {
+        margin-top: 1.5rem;
+    }
+
+    .botaoContainer button {
+        height: 50px !important;
+        font-size: 14px !important;
     }
 }

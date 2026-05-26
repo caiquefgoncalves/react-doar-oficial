@@ -95,7 +95,7 @@
     color: #bbb;
 }
 
-/* Responsividade */
+/* Responsividade Tablet */
 @media (max-width: 768px) {
     .containerSection {
         padding: 20px;
@@ -119,20 +119,60 @@
     }
 }
 
-@media (max-width: 425px) {
+/* Responsividade Mobile - IGUAL AO FAZER DOACAO */
+@media (max-width: 426px) {
     .containerSection {
-        padding: 15px;
+        background-color: var(--cor-primaria, #167cbf);
+        padding: 0;
+        margin: 0;
+    }
+
+    .titulo {
+        margin-top: 0;
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+        background-color: var(--cor-primaria, #167cbf);
     }
 
     .titulo h1, .titulo h2 {
-        font-size: 1.2rem;
+        color: #FFFFFF !important;
     }
 
     .formulario {
-        padding: 15px;
+        background-color: var(--cor-primaria, #167cbf);
+        padding: 0 1.5rem;
+        padding-bottom: 2rem;
+        margin: 0;
+        border-radius: 0;
+    }
+
+    .botaoContainer {
+        margin-top: 1rem;
+        padding-bottom: 2rem;
+    }
+
+    .labelObrigatorio {
+        color: #ffffff;
     }
 
     .textarea {
-        font-size: 0.85rem;
+        background-color: white;
+        border: 1px solid #ffffff;
+    }
+
+    .textarea:focus {
+        border-color: #f7b567;
+    }
+}
+
+/* Mobile pequeno - 320px */
+@media (max-width: 320px) {
+    .formulario {
+        padding: 0 1rem;
+        padding-bottom: 2rem;
+    }
+
+    .botaoContainer {
+        margin-top: 0.5rem;
     }
 }

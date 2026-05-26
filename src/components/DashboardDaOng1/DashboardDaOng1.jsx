@@ -198,7 +198,7 @@ export default function DashboardDaOng1({api}) {
                             <div style={{
                                 width: '30px',
                                 height: `${Math.max((valor / maxValor) * 160, 4)}px`,
-                                backgroundColor: valor > 0 ? '#f7b567' : '#f0f0f0',
+                                backgroundColor: valor > 0 ? 'var(--cor-terciaria)' : '#f0f0f0',
                                 borderRadius: '6px 6px 0 0'
                             }} />
                             <span style={{ fontSize: '9px', color: '#999' }}>{mes}</span>
@@ -211,7 +211,21 @@ export default function DashboardDaOng1({api}) {
 
     function renderGraficoPizza() {
         const meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
-        const coresMeses = ['#f7b567', '#167cbf', '#f65682', '#4CAF50', '#9C27B0', '#FF9800', '#00BCD4', '#795548', '#607D8B', '#E91E63', '#3F51B5', '#8BC34A'];
+        const coresMeses = [
+
+            "var(--cor-terciaria)",
+            "var(--cor-primaria)",
+            "var(--cor-secundaria)",
+            "color-mix(in srgb, var(--cor-primaria) 30%, #7cfc00)",
+            "color-mix(in srgb, var(--cor-primaria) 40%, var(--cor-secundaria))",
+            "color-mix(in srgb, var(--cor-terciaria) 85%, #ff0000)",
+            "color-mix(in srgb, var(--cor-primaria) 60%, #00ffcc)",
+            "color-mix(in srgb, var(--cor-terciaria) 50%, #4b0082)",
+            "color-mix(in srgb, var(--cor-primaria) 50%, #555555)",
+            "color-mix(in srgb, var(--cor-secundaria) 80%, #ff0000)",
+            "color-mix(in srgb, var(--cor-primaria) 65%, #000080)",
+            "color-mix(in srgb, var(--cor-primaria) 20%, #ffff00)"
+        ];
         const mesesComDados = dadosGrafico.filter(d => d.valor > 0);
         const total = mesesComDados.reduce((acc, d) => acc + d.valor, 0);
 
@@ -278,6 +292,7 @@ export default function DashboardDaOng1({api}) {
                     <Acoes cor={'amarelo'} texto={'Criar Projeto'} pagina={'/criarProjeto'}/>
                     <Acoes cor={'amarelo'} texto={'Criar Atualização'} pagina={'/criarAtualizacao'}/>
                     <Acoes cor={'amarelo'} texto={'Agradecimento'} pagina={'/editarMensagem'}/>
+                    <Acoes cor={'amarelo'} texto={'Ver Relatório'} pagina={'/relatorio_ong'} />
                 </div>
 
                 {/* Projetos Ativos */}
@@ -289,7 +304,7 @@ export default function DashboardDaOng1({api}) {
                                 <img src={projeto.foto ? `${api_url}/uploads/Projetos/${projeto.foto}` : '/projeto-default.png'} alt={projeto.titulo} className={css.cardAdmImagem} onError={(e) => { e.currentTarget.src = '/sem_imagem.webp'; }} />
                                 <h3 className={css.cardAdmNome}>{projeto.titulo}</h3>
                             </div>
-                            <span className={css.cardAdmStatus} style={{ color: '#167cbf' }}>{projeto.status || 'Ativo'}</span>
+                            <span className={css.cardAdmStatus} style={{ color: 'var(--cor-primaria)' }}>{projeto.status || 'Ativo'}</span>
                             <div className={css.cardAdmBotoes}>
                                 <button className={css.btnEditar} onClick={() => navigate(`/editarProjeto/${projeto.id}`)}>Editar projeto</button>
                                 <button className={css.btnExcluir} onClick={() => confirmarExcluirProjeto(projeto)}>Excluir projeto</button>
@@ -314,7 +329,7 @@ export default function DashboardDaOng1({api}) {
                                 <img src={atualizacao.foto ? `${api_url}/uploads/Atualizacoes/${atualizacao.foto}` : '/atualizacao-default.png'} alt={atualizacao.titulo} className={css.cardAdmImagem} onError={(e) => { e.currentTarget.src = '/sem_imagem.webp'; }} />
                                 <h3 className={css.cardAdmNome}>{atualizacao.titulo}</h3>
                             </div>
-                            <span className={css.cardAdmStatus} style={{ color: '#167cbf' }}>{atualizacao.data || 'Sem data'}</span>
+                            <span className={css.cardAdmStatus} style={{ color: 'var(--cor-primaria)' }}>{atualizacao.data || 'Sem data'}</span>
                             <div className={css.cardAdmBotoes}>
                                 <button className={css.btnEditar} onClick={() => navigate(`/editarAtualizacao/${atualizacao.id}`)}>Editar atualização</button>
                                 <button className={css.btnExcluir} onClick={() => confirmarExcluirAtualizacao(atualizacao)}>Excluir atualização</button>
@@ -334,13 +349,13 @@ export default function DashboardDaOng1({api}) {
                 <div className={css.titulos}><Titulo titulo={'Doadores'} cor={'preto'}/></div>
                 <div className={css.cardsAdm}>
                     {doadoresPaginados.length === 0 ? <p>Nenhum doador ainda</p> : doadoresPaginados.map((doador) => (
-                        <div key={doador.id} className={css.cardAdm} style={{ borderTop: '4px solid #167cbf' }}>
+                        <div key={doador.id} className={css.cardAdm}>
                             <div className={css.cardAdmTopo}>
                                 <img src={`${api_url}/uploads/Usuarios/${doador.foto}`} alt={doador.nome} className={css.cardAdmImagem} onError={(e) => { e.target.onerror = null; e.currentTarget.src = '/sem_imagem.webp'; }} />
                                 <h3 className={css.cardAdmNome}>{doador.nome}</h3>
                             </div>
-                            <span className={css.cardAdmStatus} style={{ color: '#167cbf' }}>Último: {doador.ultimo_valor}</span>
-                            <p style={{ fontSize: '10px', color: '#888', textAlign: 'center', marginTop: '5px' }}>Última: {doador.ultima_doacao}</p>
+                            <span className={css.cardAdmStatus} style={{ color: 'var(--cor-primaria)' }}>Último: {doador.ultimo_valor}</span>
+                            <p style={{ fontSize: '10px', color: 'color-mix(in srgb, var(--cor-texto) 60%, #ffffff)', textAlign: 'center', marginTop: '5px' }}>Última: {doador.ultima_doacao}</p>
                         </div>
                     ))}
                 </div>

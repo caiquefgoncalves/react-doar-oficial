@@ -133,7 +133,7 @@
 .cardAdmNome {
     font-size: 14px;
     font-weight: 600;
-    color: #333;
+    color: var(--cor-texto);
     margin: 0 0 2px 0;
     text-align: center;
 }
@@ -171,7 +171,7 @@
 .btnInativar:hover { background-color: var(--cor-secundaria); }
 .btnAtivar { background-color: #4CAF50; color: #fff; }
 .btnAtivar:hover { background-color: #388E3C; }
-.btnExcluir { background-color: #333; color: #fff; }
+.btnExcluir { background-color: var(--cor-texto); color: #fff; }
 .btnExcluir:hover { background-color: #555; }
 
 .inicio{
@@ -250,7 +250,7 @@
 .cardAdmNome {
     font-size: 14px;
     font-weight: 600;
-    color: #333;
+    color: var(--cor-texto);
     margin: 0 0 2px 0;
     text-align: center;
 }
@@ -357,7 +357,7 @@
 .modalTitulo {
     font-size: 20px;
     font-weight: 700;
-    color: #333;
+    color: var(--cor-texto);
     margin: 0 0 15px 0;
 }
 
@@ -434,7 +434,6 @@
 
 .modalBtnAtivar:hover { background: #388E3C; }
 
-/* Substitua TODO o conteúdo do @media (max-width: 768px) por este: */
 @media (max-width: 768px) {
     .secao {
         flex-direction: column;
@@ -535,6 +534,9 @@
         font-size: 1.2rem;
     }
 
+    .inicio{
+        gap: 10rem;
+    }
     .acoes {
         gap: 10px;
         padding-bottom: 10px;
@@ -656,6 +658,9 @@
         box-sizing: border-box;
     }
 
+    .inicio {
+        gap: 4.2rem
+    }
     .acoesRapidas {
         font-size: 1.1rem;
     }

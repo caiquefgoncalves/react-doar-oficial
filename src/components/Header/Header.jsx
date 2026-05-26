@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import css from './Header.module.css';
 import {Link, useLocation, useNavigate} from "react-router-dom";
 import SeloVoluntario from "../SeloVoluntario/SeloVoluntario.jsx";
+import Botao from "../Botao/Botao.jsx";
 
 export default function Header({ api }) {
     const api_url = api;
@@ -276,13 +277,7 @@ export default function Header({ api }) {
                             <img
                                 src={getFotoUsuario()}
                                 onClick={irParaPerfil}
-                                style={{
-                                    width: '50px',
-                                    height: '50px',
-                                    borderRadius: '50%',
-                                    objectFit: 'cover',
-                                    border: '2px solid #167cbf'
-                                }}
+                                className={css.foto}
                                 alt="Perfil"
                                 onError={(e) => {
                                     e.target.onerror = null;

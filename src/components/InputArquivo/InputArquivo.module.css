@@ -4,6 +4,7 @@
     width: 100%;
 }
 
+
 .label {
     font-size: 1rem;
     font-weight: bold;
@@ -79,13 +80,13 @@
     margin-top: 0.5rem;
     font-size: 0.85rem;
     color: var(--cor-texto);
+    margin-bottom: 1rem;
 }
 
 
 
 @media (max-width: 769px) {
     .label{
-        color: #FFFFFF;
         font-size: 1rem;
     }
     .nome {

@@ -85,7 +85,7 @@ export default function Ongs({api}) {
                     </div>
                 </div>
 
-                <p style={{ fontSize: '14px', color: '#666', margin: '0 0 15px 0' }}>{ongs.length} ONG(s) encontrada(s)</p>
+                <p style={{ fontSize: '14px', color: 'var(--cor-texto)', margin: '0 0 15px 0' }}>{ongs.length} ONG(s) encontrada(s)</p>
 
                 <div className={css.cardsContainer}>
                     {ongs.length === 0 ? (

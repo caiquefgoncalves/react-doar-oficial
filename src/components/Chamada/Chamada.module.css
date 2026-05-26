@@ -11,19 +11,19 @@
     height: 20rem;
 }
 .rosaClaro {
-    background-color: #FFD4E0;
+    background-color: color-mix(in srgb, var(--cor-secundaria) 15%, #ffffff);
     padding: 3rem;
     border-radius: 0 2rem 2rem 0;
 }
 
 .rosaMedio {
-    background-color: #F77CA8;
+    background-color: color-mix(in srgb, var(--cor-secundaria) 75%, #ffffff);
     border-radius: 1rem;
 
 }
 
 .rosaEscuro {
-    background-color: #F65682;
+    background-color: var(--cor-secundaria);
     border-radius: 1rem 0 0 1rem;
 
 }
@@ -33,7 +33,7 @@
 } */
 
 .tituloh4 {
-    color: #F65682;
+    color: var(--cor-secundaria);
     font-size: 3rem;
     font-weight: 800;
     text-align: start;
@@ -47,7 +47,7 @@
 
 @media (max-width:769px) {
 
-    .rosaMedio{
+    .rosaMedio {
         display: none;
     }
 
@@ -64,5 +64,4 @@
     .espacamento {
         margin: 0;
     }
-
 }

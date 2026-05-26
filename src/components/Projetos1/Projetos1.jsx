@@ -66,7 +66,7 @@ export default function Projetos({api}) {
 
                 <div className={css.barraTopo}>
                     <div className={css.buscaInput}>
-                        <input type="text" placeholder="Buscar por Projeto..." value={busca} onChange={(e) => setBusca(e.target.value)} className={css.inputBusca} />
+                        <input  type="text" placeholder="Buscar por Projeto..."  value={busca} onChange={(e) => setBusca(e.target.value)} className={css.inputBusca} />
                         <button className={css.btnBuscar}></button>
                     </div>
                     <div className={css.filtro}>
@@ -80,7 +80,7 @@ export default function Projetos({api}) {
                     </div>
                 </div>
 
-                <p style={{ fontSize: '14px', color: '#666', margin: 0 }}>{projetos.length} projeto(s) encontrado(s)</p>
+                <p style={{ fontSize: '14px', color: 'var(--cor-texto);', margin: 0 }}>{projetos.length} projeto(s) encontrado(s)</p>
 
                 <div className={css.cardsContainer}>
                     {projetos.length === 0 ? (
@@ -97,7 +97,7 @@ export default function Projetos({api}) {
                                     <p className={css.cardDesc}>{projeto.descricao?.substring(0, 80)}...</p>
                                     <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
                                         <span className={css.cardCategoria}>{projeto.status}</span>
-                                        <span style={{ fontSize: '11px', color: '#999' }}>{projeto.ong_nome}</span>
+                                        <span style={{ fontSize: '11px', color: 'var(--cor-texto);' }}>{projeto.ong_nome}</span>
                                     </div>
                                     <div className={css.botao}>
                                         <BotaoProjetos status={projeto.tipo_ajuda} projetoId={projeto.id} usuarioTipo={usuarioTipo} apiUrl={api_url}/>

@@ -21,7 +21,7 @@ export default function BotaoSeguir({ idOng, apiUrl, onStatusChange, onMensagem 
     async function verificarStatus() {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`${apiUrl}/verificar_seguindo/${idOng}`, {
+            const response = await fetch(`http://10.92.3.131:5000/verificar_seguindo/${idOng}`, {
                 method: 'GET',
                 credentials: 'include',
                 headers: {
@@ -45,7 +45,7 @@ export default function BotaoSeguir({ idOng, apiUrl, onStatusChange, onMensagem 
             if (!token) { setLoading(false); return; }
 
             const endpoint = seguindo ? 'desseguir' : 'seguir';
-            const response = await fetch(`${apiUrl}/${endpoint}/${idOng}`, {
+            const response = await fetch(`http://10.92.3.131:5000/${endpoint}/${idOng}`, {
                 method: 'POST',
                 credentials: 'include',
                 headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }

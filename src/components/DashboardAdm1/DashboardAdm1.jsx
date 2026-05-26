@@ -159,9 +159,9 @@ export default function DashboardAdm1({ api }) {
     }
 
     function getCorStatus(codigo) {
-        if (codigo === 0) return { cor: '#f7b567', texto: 'Pendente' };
-        if (codigo === 1) return { cor: '#167cbf', texto: 'Aprovada' };
-        if (codigo === 2) return { cor: '#f65682', texto: 'Reprovada' };
+        if (codigo === 0) return { cor: 'var(--cor-terciaria)', texto: 'Pendente' };
+        if (codigo === 1) return { cor: 'var(--cor-primaria)', texto: 'Aprovada' };
+        if (codigo === 2) return { cor: 'var(--cor-secundaria)', texto: 'Reprovada' };
         return { cor: '#999', texto: 'Desconhecido' };
     }
 
@@ -196,7 +196,7 @@ export default function DashboardAdm1({ api }) {
                             <div style={{
                                 width: '30px',
                                 height: `${Math.max((valor / maxValor) * 160, 4)}px`,
-                                backgroundColor: valor > 0 ? '#f7b567' : '#f0f0f0',
+                                backgroundColor: valor > 0 ? 'var(--cor-terciaria)' : '#f0f0f0',
                                 borderRadius: '6px 6px 0 0'
                             }} />
                             <span style={{ fontSize: '9px', color: '#999' }}>{mes}</span>
@@ -209,7 +209,20 @@ export default function DashboardAdm1({ api }) {
 
     function renderGraficoPizza() {
         const meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
-        const coresMeses = ['#f7b567', '#167cbf', '#f65682', '#4CAF50', '#9C27B0', '#FF9800', '#00BCD4', '#795548', '#607D8B', '#E91E63', '#3F51B5', '#8BC34A'];
+        const coresMeses = [
+            "var(--cor-terciaria)",
+            "var(--cor-primaria)",
+            "var(--cor-secundaria)",
+            "color-mix(in srgb, var(--cor-primaria) 30%, #7cfc00)",
+            "color-mix(in srgb, var(--cor-primaria) 40%, var(--cor-secundaria))",
+            "color-mix(in srgb, var(--cor-terciaria) 85%, #ff0000)",
+            "color-mix(in srgb, var(--cor-primaria) 60%, #00ffcc)",
+            "color-mix(in srgb, var(--cor-terciaria) 50%, #4b0082)",
+            "color-mix(in srgb, var(--cor-primaria) 50%, #555555)",
+            "color-mix(in srgb, var(--cor-secundaria) 80%, #ff0000)",
+            "color-mix(in srgb, var(--cor-primaria) 65%, #000080)",
+            "color-mix(in srgb, var(--cor-primaria) 20%, #ffff00)"
+        ];
         const mesesComDados = dadosGrafico.filter(d => d.valor > 0);
         const total = mesesComDados.reduce((acc, d) => acc + d.valor, 0);
 
@@ -305,7 +318,7 @@ export default function DashboardAdm1({ api }) {
                     {ongsPaginadas.length === 0 ? <p>Nenhuma ONG cadastrada</p> : ongsPaginadas.map((ong) => {
                         const status = getCorStatus(ong.codigo_aprovacao);
                         return (
-                            <div key={ong.id} className={css.cardAdm} style={{ borderTop: `4px solid ${status.cor}` }}>
+                            <div key={ong.id} className={css.cardAdm}>
                                 <div className={css.cardAdmTopo}>
                                     <img src={getImagemUrl(ong.id)} alt={ong.nome} className={css.cardAdmImagem} onError={(e) => { e.target.onerror = null; e.currentTarget.src = '/sem_imagem.webp'; }} />
                                     <h3 className={css.cardAdmNome}>{ong.nome}</h3>
@@ -338,7 +351,7 @@ export default function DashboardAdm1({ api }) {
                 <div className={css.titulos}><Titulo titulo={'Doadores'} cor={'preto'} /></div>
                 <div className={css.cardsAdm}>
                     {doadoresPaginados.length === 0 ? <p>Nenhum doador cadastrado</p> : doadoresPaginados.map((doador) => (
-                        <div key={doador[0]} className={css.cardAdm} style={{ borderTop: `4px solid ${doador[15] === 1 ? '#167cbf' : '#f65682'}` }}>
+                        <div key={doador[0]} className={css.cardAdm} style={{ borderTop: `4px solid ${doador[15] === 1 ? 'var(--cor-primaria)' : 'var(--cor-secundaria)'}` }}>
                             <div className={css.cardAdmTopo}>
                                 <div style={{ position: 'relative', display: 'inline-block' }}>
                                     <img src={getImagemUrl(doador[0])} alt={doador[1]} className={css.cardAdmImagem} onError={(e) => { e.target.onerror = null; e.currentTarget.src = '/sem_imagem.webp'; }} />
@@ -346,7 +359,7 @@ export default function DashboardAdm1({ api }) {
                                 </div>
                                 <h3 className={css.cardAdmNome}>{doador[1]}</h3>
                             </div>
-                            <span className={css.cardAdmStatus} style={{ color: doador[15] === 1 ? '#167cbf' : '#f65682' }}>{doador[15] === 1 ? 'Ativo' : 'Inativo'}</span>
+                            <span className={css.cardAdmStatus} style={{ color: doador[15] === 1 ? 'var(--cor-primaria)' : 'var(--cor-secundaria)' }}>{doador[15] === 1 ? 'Ativo' : 'Inativo'}</span>
                             <div className={css.cardAdmBotoes}>
                                 <button className={css.btnEditar} onClick={() => navigate(`/editarDoador/${doador[0]}`)}>Editar Doador</button>
                                 <button className={doador[15] === 1 ? css.btnInativar : css.btnAtivar} onClick={() => abrirModalBloqueio({ id: doador[0], nome: doador[1], ativo: doador[15] === 1 }, 'doador')}>{doador[15] === 1 ? 'Bloquear Doador' : 'Desbloquear Doador'}</button>
@@ -367,12 +380,12 @@ export default function DashboardAdm1({ api }) {
                 <div className={css.titulos}><Titulo titulo={'Administradores'} cor={'preto'} /></div>
                 <div className={css.cardsAdm}>
                     {admsPaginados.length === 0 ? <p>Nenhum ADM cadastrado</p> : admsPaginados.map((adm) => (
-                        <div key={adm[0]} className={css.cardAdm} style={{ borderTop: `4px solid ${adm[15] === 1 ? '#167cbf' : '#f65682'}` }}>
+                        <div key={adm[0]} className={css.cardAdm} style={{ borderTop: `4px solid ${adm[15] === 1 ? 'var(--cor-primaria)' : 'var(--cor-secundaria)'}` }}>
                             <div className={css.cardAdmTopo}>
                                 <img src={getImagemUrl(adm[0])} alt={adm[1]} className={css.cardAdmImagem} onError={(e) => { e.target.onerror = null; e.currentTarget.src = '/sem_imagem.webp'; }} />
                                 <h3 className={css.cardAdmNome}>{adm[1]}</h3>
                             </div>
-                            <span className={css.cardAdmStatus} style={{ color: adm[15] === 1 ? '#167cbf' : '#f65682' }}>{adm[15] === 1 ? 'Ativo' : 'Inativo'}</span>
+                            <span className={css.cardAdmStatus} style={{ color: adm[15] === 1 ? 'var(--cor-primaria)' : 'var(--cor-secundaria)' }}>{adm[15] === 1 ? 'Ativo' : 'Inativo'}</span>
                             <div className={css.cardAdmBotoes}>
                                 <button className={css.btnEditar} onClick={() => navigate(`/editarAdm/${adm[0]}`)}>Editar ADM</button>
                                 <button className={adm[15] === 1 ? css.btnInativar : css.btnAtivar} onClick={() => abrirModalBloqueio({ id: adm[0], nome: adm[1], ativo: adm[15] === 1 }, 'adm')}>{adm[15] === 1 ? 'Bloquear ADM' : 'Desbloquear ADM'}</button>

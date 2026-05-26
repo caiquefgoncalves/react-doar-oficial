@@ -32,7 +32,9 @@ export default function Banner({ api }) {
     return (
         <section
             className={css.banner}
-            style={{ backgroundImage: `url("${urlDinâmica}"), url("${urlPadrao}")` }}
+            style={{
+                backgroundImage: `radial-gradient(circle at center 65%, rgba(128, 128, 128, 1) 0%, rgba(128, 128, 128, 0) 85%), url("${urlDinâmica}"), url("${urlPadrao}")`
+            }}
         >
             <div className={css.textos}>
                 <h2 className={css.logo}>{empresa.nome} <span>{empresa.span_nome}</span></h2>

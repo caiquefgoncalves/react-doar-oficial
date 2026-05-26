@@ -4,7 +4,7 @@ import BotaoSeguir from "../BotaoSeguir/BotaoSeguir.jsx";
 
 export default function Recomendacoes() {
 
-    const api_url = "http://10.92.3.133:5000";
+    const api_url = "http://10.92.3.131:5000";
 
     const [ongs, setOngs] = useState([]);
     const [carregando, setCarregando] = useState(true);

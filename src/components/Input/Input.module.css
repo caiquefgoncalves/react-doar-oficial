@@ -100,7 +100,7 @@ select.normal, select.Big {
 .label {
     font-size: 14px;
     font-weight: 600;
-    color: #333;
+    color: var(--cor-texto);
 }
 
 .asterisco {
@@ -110,7 +110,6 @@ select.normal, select.Big {
 
 @media (max-width: 769px) {
     .label{
-        color: #FFFFFF;
         font-size: 1rem;
     }
 }

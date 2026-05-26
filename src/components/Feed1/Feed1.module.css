@@ -46,6 +46,10 @@
     background: transparent;
 }
 
+inputBusca::placeholder {
+    color: var(--cor-texto) !important;
+}
+
 .btnBuscar {
     background: none;
     border: none;
@@ -58,7 +62,7 @@
     align-items: center;
     gap: 8px;
     font-size: 13px;
-    color: #666;
+    color: color-mix(in srgb, var(--cor-texto) 75%, #ffffff);
     border: 1px solid #e5e5e5;
     padding: 6px 10px;
     border-radius: 20px;
@@ -71,6 +75,7 @@
     font-size: 13px;
     outline: none;
     cursor: pointer;
+    color: var(--cor-texto);
 }
 
 /* Tabs de Feed */
@@ -90,7 +95,7 @@
     cursor: pointer;
     font-size: 14px;
     font-weight: 500;
-    color: #8e8e8e;
+    color: color-mix(in srgb, var(--cor-texto) 58%, #ffffff);
     transition: all 0.2s ease;
     text-align: center;
 }
@@ -140,13 +145,13 @@
 .nomeOng {
     font-size: 16px;
     font-weight: 700;
-    color: #222;
+    color: var(--cor-texto);
     margin: 0 0 2px 0;
 }
 
 .data {
     font-size: 12px;
-    color: #999;
+    color: color-mix(in srgb, var(--cor-texto) 54%, #ffffff);;
 }
 
 .corpo {
@@ -159,13 +164,13 @@
 .tituloAtualizacao {
     font-size: 18px;
     font-weight: 700;
-    color: #333;
+    color: var(--cor-texto);
     margin: 0 0 10px 0;
 }
 
 .textoAtualizacao {
     font-size: 14px;
-    color: #555;
+    color: color-mix(in srgb, var(--cor-texto) 85%, #ffffff);
     line-height: 1.6;
     margin: 0;
 }
@@ -181,7 +186,8 @@
 .vazio {
     text-align: center;
     padding: 80px 20px;
-    color: #999;
+    color: color-mix(in srgb, var(--cor-texto) 54%, #ffffff);
+
 }
 
 .vazio p {
@@ -233,7 +239,7 @@
 
 /* Estilos para comentários */
 .comentariosSecao {
-    border-top: 1px solid #eee;
+    border-top: 1px solid color-mix(in srgb, var(--cor-texto) 10%, #ffffff);
     padding: 12px 20px;
     box-sizing: border-box;
     overflow: hidden;
@@ -244,7 +250,7 @@
 .btnComentarios {
     background: none;
     border: none;
-    color: #666;
+    color: color-mix(in srgb, var(--cor-texto) 75%, #ffffff);
     font-size: 14px;
     cursor: pointer;
     padding: 5px 0;
@@ -310,7 +316,7 @@
 
 .comentarioData {
     font-size: 11px;
-    color: #999;
+    color: color-mix(in srgb, var(--cor-texto) 54%, #ffffff);
 }
 
 .comentarioTexto {
@@ -378,7 +384,7 @@
 
 .msgLogin {
     font-size: 13px;
-    color: #666;
+    color: color-mix(in srgb, var(--cor-texto) 75%, #ffffff);
     text-align: center;
     margin: 10px 0 0 0;
 }
@@ -395,7 +401,7 @@
 
 .infoPost {
     font-size: 13px;
-    color: #999;
+    color: color-mix(in srgb, var(--cor-texto) 54%, #ffffff);
     margin: 5px 0;
 }
 
@@ -473,7 +479,7 @@
     display: flex;
     align-items: center;
     padding-bottom: 15px;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid color-mix(in srgb, var(--cor-texto) 10%, #ffffff);;
 }
 
 .cabecalho {
@@ -490,7 +496,7 @@
 
 .infocabecalho p {
     font-size: 0.8rem;
-    color: #999;
+    color: color-mix(in srgb, var(--cor-texto) 54%, #ffffff);
     margin: 2px 0 0 0;
 }
 
@@ -515,13 +521,13 @@
 .modalConteudo p {
     font-size: 0.95rem;
     margin-bottom: 0.5rem;
-    color: #555;
+    color: color-mix(in srgb, var(--cor-texto) 85%, #ffffff);
     line-height: 1.7;
 }
 
 .modalInfo {
     font-size: 13px;
-    color: #999;
+    color: color-mix(in srgb, var(--cor-texto) 54%, #ffffff);
     margin-top: 10px;
 }
 
@@ -550,7 +556,7 @@
     font-size: 0.9rem;
     line-height: 1.5;
     font-weight: 400;
-    color: #555;
+    color: color-mix(in srgb, var(--cor-texto) 85%, #ffffff);
     margin: 3px 0 0 0;
 }
 
@@ -564,14 +570,14 @@
 
 .modalInputArea {
     padding-top: 15px;
-    border-top: 1px solid #eee;
+    border-top: 1px solid color-mix(in srgb, var(--cor-texto) 10%, #ffffff);;
 }
 
 .modalInput {
     width: 100%;
     padding: 14px;
     border-radius: 20px;
-    border: 1px solid #ccc;
+    border: 1px solid color-mix(in srgb, var(--cor-texto) 27%, #ffffff);;
     outline: none;
     font-size: 14px;
     box-sizing: border-box;

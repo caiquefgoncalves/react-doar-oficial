@@ -220,7 +220,9 @@ export default function PaginaOng1({api}) {
                                                 <p className={css.attTexto}>
                                                     {idsAbertos === att.id || att.texto.length <= 100 ? att.texto : att.texto.substring(0, 100) + "..."}
                                                     {att.texto.length > 100 && (
-                                                        <button onClick={() => setIdsAbertos(idsAbertos === att.id ? null : att.id)} style={{ backgroundColor: '#167cbf', color: 'white', border: 'none', padding: '4px 10px', borderRadius: '10px', cursor: 'pointer', fontSize: '11px', fontWeight: '600', marginLeft: '5px' }}>
+                                                        <button
+                                                            onClick={() => setIdsAbertos(idsAbertos === att.id ? null : att.id)}
+                                                            className={css.btnDoar}>
                                                             {idsAbertos === att.id ? "Ler menos" : "Ler mais"}
                                                         </button>
                                                     )}

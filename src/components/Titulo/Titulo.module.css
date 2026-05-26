@@ -42,7 +42,7 @@
 }
 
 .texto {
-    color: #9A9A9A;
+    color: color-mix(in srgb var(--cor-texto) 53% #ffffff);
     font-weight: 800;
     font-size: 1.25rem;
     max-width: 37.5rem;
@@ -51,7 +51,7 @@
 }
 
 .preto{
-    color: black;
+    color: var(--cor-texto);
     font-weight: 800;
     font-size: 2rem;
     text-align: center;
@@ -128,7 +128,7 @@
     }
     .texto{
         margin-top: 1rem;
-        color: #9A9A9A ;
+        color: color-mix(in srgb var(--cor-texto) 53% #ffffff);
         font-size: 1rem;
         font-weight: 500;
     }

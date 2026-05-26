@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import css from './Footer.module.css';
 import { Link } from "react-router-dom";
+import Botao from "../Botao/Botao.jsx";
 
 export default function Footer({ api }) {
     const api_url = api;
@@ -67,9 +68,10 @@ export default function Footer({ api }) {
                             </div>
                         </div>
                         <Link to="/feed">
-                            <button className={`shadow-sm ${css.botaoDoar}` }>
-                                Doar agora
-                            </button>
+                            <Botao pagina={"/feed"}
+                                   texto={"Doar agora"}
+                                   cor={"rosa"}
+                            />
                         </Link>
                     </div>
                 </div>
