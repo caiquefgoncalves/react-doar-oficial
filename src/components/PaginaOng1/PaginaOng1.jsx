@@ -25,6 +25,7 @@ export default function PaginaOng1({api}) {
     const [usuarioTipo, setUsuarioTipo] = useState(null);
     const [msgTexto, setMsgTexto] = useState('');
     const [msgTipo, setMsgTipo] = useState('');
+    const [temChavePix, setTemChavePix] = useState(false);
 
     // Estado local para seguidores
     const [qtdSeguidores, setQtdSeguidores] = useState(0);
@@ -33,15 +34,17 @@ export default function PaginaOng1({api}) {
     const projetosPorPagina = isMobile ? 1 : 2;
     const atualizacoesPorPagina = isMobile ? 1 : 2;
 
-    let [copiado, setCopiado] = useState("Copiar"); // Estado para o botão de copiar
+    let [copiado, setCopiado] = useState("Copiar");
 
     function copiarPix() {
-        navigator.clipboard.writeText(ong.chave_pix).then(() => {
-            setCopiado("Copiado!");
-            setTimeout(() => setCopiado("Copiar"), 2000);
-        }).catch(err => {
-            console.error("Erro ao copiar: ", err);
-        });
+        if (ong && ong.chave_pix) {
+            navigator.clipboard.writeText(ong.chave_pix).then(() => {
+                setCopiado("Copiado!");
+                setTimeout(() => setCopiado("Copiar"), 2000);
+            }).catch(err => {
+                console.error("Erro ao copiar: ", err);
+            });
+        }
     }
 
     useEffect(() => {
@@ -67,6 +70,10 @@ export default function PaginaOng1({api}) {
                 if (data.ong) {
                     setOng(data.ong);
                     setQtdSeguidores(data.ong.qtd_seguidores || 0);
+                    // Verificar se a ONG tem chave PIX
+                    if (data.ong.chave_pix && data.ong.chave_pix.trim() !== '') {
+                        setTemChavePix(true);
+                    }
                 }
                 if (data.projetos) setProjetos(data.projetos);
                 if (data.atualizacoes) setAtualizacoes(data.atualizacoes || []);
@@ -185,7 +192,13 @@ export default function PaginaOng1({api}) {
                                             <h3 className={css.attTitulo}>{proj.titulo}</h3>
                                             <p className={css.attTexto}>{proj.descricao?.substring(0, 100)}...</p>
                                             <span className={css.tipoAjuda}>{proj.tipo_ajuda}</span>
-                                            <BotaoProjetos status={proj.tipo_ajuda_numero} projetoId={proj.id} usuarioTipo={usuarioTipo} apiUrl={api_url}/>
+                                            <BotaoProjetos
+                                                status={proj.tipo_ajuda_numero}
+                                                projetoId={proj.id}
+                                                usuarioTipo={usuarioTipo}
+                                                apiUrl={api_url}
+                                                temChavePix={temChavePix}
+                                            />
                                         </div>
                                     ))}
                                 </div>
@@ -249,12 +262,14 @@ export default function PaginaOng1({api}) {
                         <div className={css.cardApoie}>
                             <Titulo titulo={`Apoie o ${ong.nome} diretamente!`} cor={'preto'}/>
                             <img className={css.pix} src={ong.pix ? `${api_url}/uploads/Pix/${ong.pix}` : '/sem_imagem.webp'} alt={`Pix ${ong.nome}`} onError={(e) => { e.target.onerror = null; e.currentTarget.src = '/sem_imagem.webp'; }} />
-                            <div className={css.pixContainer}>
-                                <p className={css.pixCode}>
-                                    {ong.chave_pix}
-                                </p>
-                                <Botao cor={'rosa'} acao={copiarPix} texto={copiado}/>
-                            </div>
+                            {temChavePix && ong.chave_pix && (
+                                <div className={css.pixContainer}>
+                                    <p className={css.pixCode}>
+                                        {ong.chave_pix}
+                                    </p>
+                                    <Botao cor={'rosa'} acao={copiarPix} texto={copiado}/>
+                                </div>
+                            )}
                             <div className={css.dadosBancarios}>
                                 <p><strong>Instituição:</strong><br/>{ong.cod_banco || 'Não informado'}</p>
                                 <p><strong>Agência:</strong><br/>{ong.num_agencia || 'Não informada'}</p>

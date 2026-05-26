@@ -6,6 +6,7 @@ import css from "./DashboardDaOng1.module.css";
 import Acoes from "../Acoes/Acoes.jsx";
 import MenuLateral from "../MenuLateral/MenuLateral.jsx";
 import Mensagem from "../Mensagem/Mensagem.jsx";
+import StoryUpload from "../Stories/StoryUpload.jsx";
 
 function decodificarToken(token) {
     try {
@@ -294,6 +295,7 @@ export default function DashboardDaOng1({api}) {
                     <Acoes cor={'amarelo'} texto={'Agradecimento'} pagina={'/editarMensagem'}/>
                     <Acoes cor={'amarelo'} texto={'Ver Relatório'} pagina={'/relatorio_ong'} />
                 </div>
+                <StoryUpload api={api_url} />
 
                 {/* Projetos Ativos */}
                 <div className={css.titulos}><Titulo titulo={'Projetos Ativos'} cor={'preto'}/></div>
