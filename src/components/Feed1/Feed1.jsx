@@ -7,11 +7,22 @@ import Curtida from "../Curtida/Curtida.jsx";
 import Mensagem from "../Mensagem/Mensagem.jsx";
 import Recomendacoes from "../Recomendacoes/Recomendacoes.jsx";
 import InfiniteScroll from 'react-infinite-scroll-component';
-import StoriesBar from "../Stories/StoriesBar.jsx";
 
+function decodificarToken(token) {
+    try {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+        return JSON.parse(jsonPayload);
+    } catch (error) { return null; }
+}
 
 export default function Feed({ api }) {
     const navigate = useNavigate();
+    const api_url = api;
+
     const [atualizacoes, setAtualizacoes] = useState([]);
     const [todasAtualizacoes, setTodasAtualizacoes] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -38,33 +49,39 @@ export default function Feed({ api }) {
     // Estado para modal de postagem
     const [modalPostagem, setModalPostagem] = useState(null);
 
-    // Estado para Story
-    const [stories, setStories] = useState([]);
-    const [storyAberto, setStoryAberto] = useState(null);
-
-    const api_url = api;
+    // Estado para Stories
+    const [storiesList, setStoriesList] = useState([]);
+    const [storySelecionado, setStorySelecionado] = useState(null);
+    const [storyIndex, setStoryIndex] = useState(0);
+    const [currentOngIndex, setCurrentOngIndex] = useState(0);
+    const [storiesVisualizados, setStoriesVisualizados] = useState({});
+    const [progressoAtivo, setProgressoAtivo] = useState(true);
+    const [timeoutId, setTimeoutId] = useState(null);
 
     useEffect(() => {
         const handleResize = () => {
             setIsMobile(window.innerWidth <= 768);
         };
-
         window.addEventListener('resize', handleResize);
-
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
+    // Carregar stories visualizados do localStorage ao iniciar
+    useEffect(() => {
+        const saved = localStorage.getItem('stories_visualizados');
+        if (saved) {
+            try {
+                setStoriesVisualizados(JSON.parse(saved));
+            } catch (e) {
+                console.error('Erro ao carregar stories visualizados:', e);
+            }
+        }
+    }, []);
 
-    function decodificarToken(token) {
-        try {
-            const base64Url = token.split('.')[1];
-            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-            const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-            }).join(''));
-            return JSON.parse(jsonPayload);
-        } catch (error) { return null; }
-    }
+    // Salvar stories visualizados no localStorage sempre que mudar
+    useEffect(() => {
+        localStorage.setItem('stories_visualizados', JSON.stringify(storiesVisualizados));
+    }, [storiesVisualizados]);
 
     function tokenExpirado(token) {
         try {
@@ -100,15 +117,124 @@ export default function Feed({ api }) {
         verificarUsuario();
         buscarStories();
         setTemMais(true);
-        setPagina(0)
+        setPagina(0);
         buscarAtualizacoes(0, false);
-
     }, [tipoFeed, filtro]);
+
+    // Buscar stories
+    const buscarStories = async () => {
+        try {
+            const resposta = await fetch(`${api_url}/feed_stories`);
+            const dados = await resposta.json();
+            if (resposta.ok) {
+                const lista = Array.isArray(dados.stories) ? dados.stories : [];
+                setStoriesList(lista);
+            }
+        } catch (erro) {
+            console.log(erro);
+        }
+    };
+
+    // Abrir story de uma ONG específica
+    const abrirStory = (story, index = 0) => {
+        // Marcar esta ONG como visualizada
+        setStoriesVisualizados(prev => ({ ...prev, [story.ong_id]: true }));
+
+        // Encontrar o índice desta ONG na lista completa
+        const ongIndex = storiesList.findIndex(s => s.ong_id === story.ong_id);
+        setCurrentOngIndex(ongIndex);
+        setStorySelecionado(story);
+        setStoryIndex(index);
+        setProgressoAtivo(true);
+
+        // Limpar timeout anterior se existir
+        if (timeoutId) clearTimeout(timeoutId);
+    };
+
+    // Próximo story (dentro da mesma ONG ou próxima ONG)
+    const nextStory = () => {
+        if (storySelecionado) {
+            // Se ainda tem stories na mesma ONG
+            if (storyIndex < storySelecionado.stories.length - 1) {
+                setStoryIndex(storyIndex + 1);
+                setProgressoAtivo(true);
+            } else {
+                // Vai para a próxima ONG
+                nextOng();
+            }
+        }
+    };
+
+    // Story anterior
+    const prevStory = () => {
+        if (storySelecionado) {
+            // Se não está no primeiro story da ONG atual
+            if (storyIndex > 0) {
+                setStoryIndex(storyIndex - 1);
+                setProgressoAtivo(true);
+            } else {
+                // Vai para a ONG anterior
+                prevOng();
+            }
+        }
+    };
+
+    // Ir para a próxima ONG
+    const nextOng = () => {
+        if (currentOngIndex < storiesList.length - 1) {
+            const nextIndex = currentOngIndex + 1;
+            const nextOngStory = storiesList[nextIndex];
+            if (nextOngStory) {
+                setStoriesVisualizados(prev => ({ ...prev, [nextOngStory.ong_id]: true }));
+                setCurrentOngIndex(nextIndex);
+                setStorySelecionado(nextOngStory);
+                setStoryIndex(0);
+                setProgressoAtivo(true);
+            } else {
+                fecharStory();
+            }
+        } else {
+            fecharStory();
+        }
+    };
+
+    // Ir para a ONG anterior
+    const prevOng = () => {
+        if (currentOngIndex > 0) {
+            const prevIndex = currentOngIndex - 1;
+            const prevOngStory = storiesList[prevIndex];
+            if (prevOngStory) {
+                setCurrentOngIndex(prevIndex);
+                setStorySelecionado(prevOngStory);
+                setStoryIndex(prevOngStory.stories.length - 1);
+                setProgressoAtivo(true);
+            }
+        }
+    };
+
+    // Fechar modal
+    const fecharStory = () => {
+        setStorySelecionado(null);
+        setStoryIndex(0);
+        setProgressoAtivo(false);
+        if (timeoutId) clearTimeout(timeoutId);
+    };
+
+    // Timer para avançar automaticamente (5 segundos por story)
+    useEffect(() => {
+        if (storySelecionado && progressoAtivo) {
+            if (timeoutId) clearTimeout(timeoutId);
+            const id = setTimeout(() => {
+                nextStory();
+            }, 5000);
+            setTimeoutId(id);
+            return () => clearTimeout(id);
+        }
+    }, [storySelecionado, storyIndex, progressoAtivo]);
 
     async function buscarAtualizacoes(novaPagina = 0, append = false) {
         try {
             setLoading(true);
-
             const token = localStorage.getItem('token');
             let url;
 
@@ -120,7 +246,6 @@ export default function Feed({ api }) {
                     setLoading(false);
                     return;
                 }
-
                 url = `${api_url}/feed_favoritas?filtro=${filtro}&pagina=${novaPagina}&limite=4`;
             } else {
                 url = `${api_url}/feed_atualizacoes?filtro=${filtro}&pagina=${novaPagina}&limite=4&token=${token || ''}`;
@@ -165,7 +290,6 @@ export default function Feed({ api }) {
                 if (!append) setTodasAtualizacoes([]);
                 setTemMais(false);
             }
-
         } catch (error) {
             console.error('Erro ao buscar:', error);
             setTemMais(false);
@@ -174,18 +298,6 @@ export default function Feed({ api }) {
         }
     }
 
-    async function buscarStories() {
-        try {
-            const resposta = await fetch(`${api_url}/feed_stories`);
-            const dados = await resposta.json();
-
-            if (resposta.ok) {
-                setStories(Array.isArray(dados.stories) ? dados.stories : []);
-            }
-        } catch (erro) {
-            console.log(erro);
-        }
-    }
     async function carregarComentariosAutomaticos(atualizacoesLista) {
         const token = localStorage.getItem('token');
         for (const item of atualizacoesLista) {
@@ -296,121 +408,117 @@ export default function Feed({ api }) {
 
     return (
         <section>
+            {/* Modal de visualização do story */}
+            {storySelecionado && (
+                <div className={css.storyModal}>
+                    <div className={css.storyModalContent}>
+                        {/* Barra de progresso dos stories da ONG atual */}
+                        <div className={css.storyProgress}>
+                            {storySelecionado.stories.map((_, idx) => (
+                                <div
+                                    key={idx}
+                                    className={`${css.storyProgressBar} ${idx === storyIndex ? css.active : (idx < storyIndex ? css.completed : '')}`}
+                                >
+                                    <div
+                                        className={css.storyProgressFill}
+                                        style={{
+                                            animation: idx === storyIndex && progressoAtivo ? 'progress 5s linear forwards' : 'none'
+                                        }}
+                                        onAnimationEnd={() => {
+                                            if (idx === storyIndex && progressoAtivo) {
+                                                nextStory();
+                                            }
+                                        }}
+                                    />
+                                </div>
+                            ))}
+                        </div>
 
-
-            {storyAberto && (
-                <div
-                    onClick={() => setStoryAberto(null)}
-                    style={{
-                        position: 'fixed',
-                        inset: 0,
-                        background: 'rgba(0,0,0,0.9)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        zIndex: 9999
-                    }}
-                >
-                    <div
-                        onClick={(e) => e.stopPropagation()}
-                        style={{
-                            width: '100vw',
-                            height: '100vh',
-                            background: '#000',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            color: '#fff',
-                            position: 'relative',
-                            padding: 20
-                        }}
-                    >
-                        <img
-                            src={`${api}/uploads/Usuarios/${storyAberto.ong_foto}`}
-                            style={{
-                                width: 60,
-                                height: 60,
-                                borderRadius: '50%',
-                                objectFit: 'cover',
-                                position: 'absolute',
-                                top: 20,
-                                left: 20,
-                                border: '2px solid white'
-                            }}
-                        />
-
-                        <h3 style={{ position: 'absolute', top: 35, left: 90 }}>
-                            {storyAberto.ong_nome}
-                        </h3>
-
-                        <p style={{ maxWidth: '80%', textAlign: 'center', fontSize: 18 }}>
-                            {storyAberto.stories?.[0]?.texto}
-                        </p>
-
-                        {storyAberto.stories?.[0]?.arquivo && (
-                            <img
-                                src={`${api}/uploads/Stories/${storyAberto.stories[0].arquivo}`}
-                                style={{
-                                    width: '100%',
-                                    height: '70vh',
-                                    objectFit: 'contain',
-                                    marginTop: 20
-                                }}
-                            />
+                        {/* Botões de navegação */}
+                        {storiesList.length > 1 && (
+                            <>
+                                <button className={css.storyPrev} onClick={(e) => { e.stopPropagation(); prevStory(); }}>‹</button>
+                                <button className={css.storyNext} onClick={(e) => { e.stopPropagation(); nextStory(); }}>›</button>
+                            </>
                         )}
 
-                        <h3>{storyAberto.ong_nome}</h3>
+                        {/* Cabeçalho */}
+                        <div className={css.storyHeader}>
+                            <img
+                                src={`${api_url}/uploads/Usuarios/${storySelecionado.ong_foto}`}
+                                alt={storySelecionado.ong_nome}
+                                onError={(e) => { e.target.src = '/sem_imagem.webp'; }}
+                            />
+                            <div>
+                                <h4>{storySelecionado.ong_nome}</h4>
+                                <span>{storyIndex + 1} de {storySelecionado.stories.length}</span>
+                            </div>
+                            <button className={css.storyClose} onClick={fecharStory}>✕</button>
+                        </div>
 
-                        <p>
-                            {storyAberto.stories?.[0]?.texto}
-                        </p>
-
-
-
-                        <button
-                            onClick={() => setStoryAberto(null)}
-                            style={{ marginTop: 10 }}
-                        >
-                            Fechar
-                        </button>
+                        {/* Conteúdo do story atual */}
+                        <div className={css.storyBody}>
+                            {storySelecionado.stories[storyIndex].arquivo && (
+                                storySelecionado.stories[storyIndex].arquivo.match(/\.(mp4|webm|ogg)$/i) ? (
+                                    <video
+                                        src={`${api_url}/uploads/Stories/${storySelecionado.stories[storyIndex].arquivo}`}
+                                        autoPlay
+                                        muted
+                                        className={css.storyMedia}
+                                    />
+                                ) : (
+                                    <img
+                                        src={`${api_url}/uploads/Stories/${storySelecionado.stories[storyIndex].arquivo}`}
+                                        alt="Story"
+                                        className={css.storyMedia}
+                                        onError={(e) => { e.target.src = '/sem_imagem.webp'; }}
+                                    />
+                                )
+                            )}
+                            {storySelecionado.stories[storyIndex].texto && (
+                                <p className={css.storyText}>{storySelecionado.stories[storyIndex].texto}</p>
+                            )}
+                        </div>
                     </div>
                 </div>
             )}
+
             <div>
                 <Mensagem tipo={msgTipo} texto={msgTexto} onClose={() => setMsgTexto('')} />
                 <section className={css.secao}>
                     <MenuLateral />
                     <div className={css.conteudo}>
-                        <div className={css.stories}>
-                            {Array.isArray(stories) && stories.length > 0 ? (
-                                stories.map((story) => (
-                                    <div
-                                        key={story.ong_id}
-                                        onClick={() => setStoryAberto(story)}
-                                        className={css.story}
-                                    >
-                                        <img
-                                            src={`${api}/uploads/Usuarios/${story.ong_foto}`}
-                                            alt={story.ong_nome}
-                                        />
-
-                                        <p>
-                                            {story.ong_nome}
-                                        </p>
-                                    </div>
-                                ))
-                            ) : (
-                                <p>Sem stories</p>
-                            )}
-
+                        {/* Stories */}
+                        <div className={css.storiesWrapper}>
+                            <div className={css.stories}>
+                                {Array.isArray(storiesList) && storiesList.length > 0 ? (
+                                    storiesList.map((story) => (
+                                        <div
+                                            key={story.ong_id}
+                                            onClick={() => abrirStory(story)}
+                                            className={css.story}
+                                        >
+                                            <div className={`${css.storyAvatar} ${storiesVisualizados[story.ong_id] ? css.visualizado : ''}`}>
+                                                <img
+                                                    src={`${api_url}/uploads/Usuarios/${story.ong_foto}`}
+                                                    alt={story.ong_nome}
+                                                    onError={(e) => { e.target.src = '/sem_imagem.webp'; }}
+                                                />
+                                            </div>
+                                            <p>{story.ong_nome}</p>
+                                        </div>
+                                    ))
+                                ) : (
+                                    <p className={css.semStories}>Nenhum story disponível</p>
+                                )}
+                            </div>
                         </div>
+
                         <div className={css.tabsFeed}>
                             <button className={`${css.tabFeed} ${tipoFeed === 'todas' ? css.tabAtivo : ''}`} onClick={() => handleMudarTipoFeed('todas')}>Todas as ONGs</button>
                             <button className={`${css.tabFeed} ${tipoFeed === 'seguindo' ? css.tabAtivo : ''}`} onClick={() => handleMudarTipoFeed('seguindo')}>Seguindo</button>
                         </div>
 
-                        {/* MUDANÇA 1: Recomendações acima da barra de busca apenas no Celular (d-block d-lg-none) */}
                         <div className="d-block d-lg-none mb-4">
                             <Recomendacoes api={api_url}/>
                         </div>
@@ -428,7 +536,6 @@ export default function Feed({ api }) {
                             </div>
                         </div>
 
-                        {/* Ajuste de colunas para responsividade */}
                         <div className={"row g-4"}>
                             <div className={"col-12 col-lg-8 d-flex flex-column gap-4"}>
                                 {atualizacoes.length === 0 ? (
@@ -436,7 +543,7 @@ export default function Feed({ api }) {
                                         {tipoFeed === 'seguindo' ? (
                                             <>
                                                 <p>Nenhuma postagem das ONGs que você segue.</p>
-                                                <p style={{ fontSize: '13px', color: 'color-mix(in srgb, var(--cor-texto) 54%, #ffffff);\n' }}>Siga ONGs para ver as novidades delas aqui!</p>
+                                                <p style={{ fontSize: '13px', color: 'color-mix(in srgb, var(--cor-texto) 54%, #ffffff)' }}>Siga ONGs para ver as novidades delas aqui!</p>
                                                 <Link to="/ongs" style={{ color: 'var(--cor-primaria)', textDecoration: 'none', fontWeight: '600' }}>Encontrar ONGs</Link>
                                             </>
                                         ) : <p>Nenhuma atualização encontrada.</p>}
@@ -449,10 +556,9 @@ export default function Feed({ api }) {
                                                 const proximaPagina = pagina + 1;
                                                 setPagina(proximaPagina);
                                                 buscarAtualizacoes(proximaPagina, true);
-                                            }, 1500); // 1500 milissegundos = 1.5 segundos de espera
+                                            }, 1500);
                                         }}
-                                        hasMore={temMais} // Bloqueia chamadas se a API retornar menos de 4 posts
-
+                                        hasMore={temMais}
                                         loader={
                                             <div className={css.fim}>
                                                 <p>Carregando próximos posts...</p>
@@ -470,7 +576,6 @@ export default function Feed({ api }) {
                                                         <h3 className={css.nomeOng}>{item.ong_nome}</h3>
                                                         <span className={css.data}>{item.data}</span>
                                                     </div>
-                                                    {/* Coração só aparece para doadores ou não logados */}
                                                     {(usuarioTipo === 1 || usuarioTipo === null) && (
                                                         <div onClick={(e) => e.stopPropagation()}>
                                                             <Curtida idAtualizacao={item.id} apiUrl={api_url} onStatusChange={(status) => handleCurtidaChange(item.id, status)} />
@@ -504,7 +609,6 @@ export default function Feed({ api }) {
                                                                 ))
                                                             ) : <p style={{ fontSize: '13px', color: 'color-mix(in srgb, var(--cor-texto) 54%, #ffffff)', textAlign: 'center', padding: '10px' }}>Nenhum comentário ainda. Seja o primeiro!</p>}
 
-                                                            {/* Input de comentário - apenas doadores */}
                                                             {usuarioTipo === 1 ? (
                                                                 <div className={css.novoComentario}>
                                                                     <input type="text" placeholder="Escreva um comentário..." value={novoComentario[item.id] || ''} onChange={(e) => setNovoComentario(prev => ({ ...prev, [item.id]: e.target.value }))} onKeyDown={(e) => { if (e.key === 'Enter') { enviarComentario(item.id); } }} className={css.inputComentario} />
@@ -525,11 +629,9 @@ export default function Feed({ api }) {
                                     </InfiniteScroll>
                                 )}
                             </div>
-                            {/* MUDANÇA 2: Barra lateral oculta no Celular com STICKY ADICIONADO */}
                             <div className={"col-12 col-lg-4 d-none d-lg-block"}>
-                                {/* A div abaixo faz o componente grudar na tela (top: 24px) ao dar scroll */}
                                 <div style={{ position: 'sticky', top: '24px' }}>
-                                    <Recomendacoes/>
+                                    <Recomendacoes api={api_url}/>
                                 </div>
                             </div>
                         </div>
@@ -545,13 +647,11 @@ export default function Feed({ api }) {
                                 <img src={modalPostagem.foto ? `${api_url}/uploads/Atualizacoes/${modalPostagem.foto}` : '/sem_imagem.webp'} alt={modalPostagem.titulo} className={css.modalImagem} onError={(e) => { e.currentTarget.src = '/sem_imagem.webp'; }} />
                             </div>
 
-
                             <div className={css.modalDireita}>
                                 <div className={css.modalHeader}>
-
                                     <div className={css.cabecalho}>
                                         <Link to={`/ong/${modalPostagem.ong_id}`} onClick={fecharPostagem}>
-                                            <img src={modalPostagem.ong_foto ? `${api_url}/uploads/Usuarios/${modalPostagem.ong_foto}` : "/ong-icon.png"} alt={modalPostagem.ong_nome} className={css.modalFotoPerfil} />
+                                            <img src={modalPostagem.ong_foto ? `${api_url}/uploads/Usuarios/${modalPostagem.ong_foto}` : "/ong-icon.png"} alt={modalPostagem.ong_nome} className={css.modalFotoPerfil} onError={(e) => { e.currentTarget.src = '/sem_imagem.webp'; }} />
                                         </Link>
                                         <div className={css.infocabecalho}>
                                             <Link to={`/ong/${modalPostagem.ong_id}`} onClick={fecharPostagem} style={{ textDecoration: 'none', color: 'inherit' }}><h2>{modalPostagem.ong_nome}</h2></Link>
@@ -561,15 +661,12 @@ export default function Feed({ api }) {
                                 </div>
                                 <div className={css.modalConteudo}>
                                     <h1>{modalPostagem.titulo}</h1>
-                                    {/* Exibição do Texto */}
                                     <p>
-                                        {isMobile && modalPostagem.texto.length > 100 && !textoAberto
+                                        {isMobile && modalPostagem.texto?.length > 100 && !textoAberto
                                             ? `${modalPostagem.texto.substring(0, 100)}...`
                                             : modalPostagem.texto}
                                     </p>
-
-                                    {/* Exibição do Botão (Apenas no Mobile) */}
-                                    {isMobile && modalPostagem.texto.length > 100 && (
+                                    {isMobile && modalPostagem.texto?.length > 100 && (
                                         <button
                                             onClick={() => setTextoAberto(!textoAberto)}
                                             style={{ backgroundColor: 'var(--cor-primaria)', color: 'white', border: 'none', padding: '4px 10px', borderRadius: '10px', cursor: 'pointer', fontSize: '11px', fontWeight: '600', marginLeft: '5px' }}
@@ -584,11 +681,11 @@ export default function Feed({ api }) {
                                     {comentarios[modalPostagem.id]?.length > 0 ? (
                                         comentarios[modalPostagem.id].map(comentario => (
                                             <div key={comentario.id} className={css.modalComentario}>
-                                                <img src={comentario.usuario_foto ? `${api_url}/uploads/Usuarios/${comentario.usuario_foto}` : "/user-icon.png"} alt="" className={css.modalComentarioFoto} />
+                                                <img src={comentario.usuario_foto ? `${api_url}/uploads/Usuarios/${comentario.usuario_foto}` : "/user-icon.png"} alt="" className={css.modalComentarioFoto} onError={(e) => { e.currentTarget.src = '/user-icon.png'; }} />
                                                 <div><strong>{comentario.usuario_nome}</strong><p>{comentario.texto}</p></div>
                                             </div>
                                         ))
-                                    ) : <p style={{ fontSize: '13px', color: 'color-mix(in srgb, var(--cor-texto) 54%, #ffffff);', textAlign: 'center', padding: '20px' }}>Nenhum comentário ainda. Seja o primeiro!</p>}
+                                    ) : <p style={{ fontSize: '13px', color: 'color-mix(in srgb, var(--cor-texto) 54%, #ffffff)', textAlign: 'center', padding: '20px' }}>Nenhum comentário ainda. Seja o primeiro!</p>}
                                 </div>
                                 <div className={css.modalInputArea}>
                                     {usuarioTipo === 1 ? (
@@ -602,15 +699,12 @@ export default function Feed({ api }) {
                                     )}
                                 </div>
                             </div>
-
                         </div>
                     </div>
                 )}
 
                 <button className={css.botaoVoltar} onClick={() => window.scrollTo(0, 0)}>↑</button>
-
             </div>
-
         </section>
     );
 }

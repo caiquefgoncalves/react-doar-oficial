@@ -75,9 +75,9 @@ export default function MenuLateral() {
             return;
         }
 
-        // Apenas doadores podem acessar chats
-        if (tokenData.tipo !== 1) {
-            alert('Apenas doadores podem acessar o chat');
+        // AGORA PERMITE AMBOS: Doador (tipo 1) e ONG (tipo 2)
+        if (tokenData.tipo !== 1 && tokenData.tipo !== 2) {
+            alert('Apenas doadores e ONGs podem acessar o chat');
             return;
         }
 

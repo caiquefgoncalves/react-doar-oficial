@@ -26,30 +26,32 @@ export default function Chats1({ api }) {
     const [usuarioTipo, setUsuarioTipo] = useState(null);
     const [usuarioId, setUsuarioId] = useState(null);
 
-    // Estado para conversas existentes
     const [conversas, setConversas] = useState([]);
     const [carregandoConversas, setCarregandoConversas] = useState(true);
     const [conversaSelecionada, setConversaSelecionada] = useState(null);
 
-    // Estado para mensagens
     const [mensagens, setMensagens] = useState([]);
     const [novaMensagem, setNovaMensagem] = useState('');
     const [carregandoMensagens, setCarregandoMensagens] = useState(false);
     const [enviando, setEnviando] = useState(false);
 
-    // Estado para feedback
     const [msgTexto, setMsgTexto] = useState('');
     const [msgTipo, setMsgTipo] = useState('');
     const [iniciando, setIniciando] = useState(false);
     const [socketConnected, setSocketConnected] = useState(false);
 
-    // Estado para status online do contato
-    const [contatoOnline, setContatoOnline] = useState(false);
-    const [ultimaAtividade, setUltimaAtividade] = useState(null);
-
     const mensagensEndRef = useRef(null);
     const socketRef = useRef(null);
     const mensagemIdsRef = useRef(new Set());
+    const mensagensContainerRef = useRef(null);
+
+    // Função para rolar para o final do chat
+    const scrollToBottom = () => {
+        if (mensagensContainerRef.current) {
+            const container = mensagensContainerRef.current;
+            container.scrollTop = container.scrollHeight;
+        }
+    };
 
     // Verificar se veio parâmetro na URL para abrir conversa direta
     useEffect(() => {
@@ -74,11 +76,7 @@ export default function Chats1({ api }) {
         }
     }, [conversas, location.search]);
 
-    // Obter token do localStorage
-    const getToken = () => {
-        const token = localStorage.getItem('token');
-        return token;
-    };
+    const getToken = () => localStorage.getItem('token');
 
     // Configurar Socket.IO
     useEffect(() => {
@@ -89,51 +87,30 @@ export default function Chats1({ api }) {
             transports: ['polling'],
             withCredentials: true,
             reconnection: true,
-            reconnectionAttempts: 3,
+            reconnectionAttempts: 5,
             reconnectionDelay: 2000,
             timeout: 10000
         });
         socketRef.current = socket;
 
         socket.on('connect', () => {
-            console.log('Socket.IO conectado');
+            console.log('Socket conectado');
             setSocketConnected(true);
             socket.emit('authenticate', { token });
         });
 
         socket.on('disconnect', () => {
-            console.log('Socket.IO desconectado');
+            console.log('Socket desconectado');
             setSocketConnected(false);
-            setContatoOnline(false);
         });
 
         socket.on('connect_error', (error) => {
-            console.error('Erro de conexão no Socket.IO:', error);
+            console.error('Erro no socket:', error);
             setSocketConnected(false);
         });
 
         socket.on('authenticated', (data) => {
-            console.log('Autenticado no socket:', data);
-        });
-
-        socket.on('user_status', (data) => {
-            console.log('Status do usuário:', data);
-            if (conversaSelecionada && data.usuario_id === conversaSelecionada.usuario_id) {
-                setContatoOnline(data.status);
-                if (!data.status && data.ultima_atividade) {
-                    setUltimaAtividade(data.ultima_atividade);
-                }
-            }
-            // Atualizar lista de conversas para mostrar indicador
-            carregarConversas();
-        });
-
-        socket.on('participant_status', (data) => {
-            console.log('Status do participante:', data);
-            setContatoOnline(data.status);
-            if (!data.status && data.ultima_atividade) {
-                setUltimaAtividade(data.ultima_atividade);
-            }
+            console.log('Autenticado:', data);
         });
 
         socket.on('new_message', (data) => {
@@ -142,17 +119,30 @@ export default function Chats1({ api }) {
             if (conversaSelecionada && data.conversa_id === conversaSelecionada.conversa_id) {
                 if (!mensagemIdsRef.current.has(data.id)) {
                     mensagemIdsRef.current.add(data.id);
-                    const novaMsg = {
-                        id: data.id,
-                        remetente_id: data.remetente_id,
-                        mensagem: data.mensagem,
-                        data: data.data,
-                        is_meu_envio: data.remetente_id === usuarioId
-                    };
-                    setMensagens(prev => [...prev, novaMsg].sort((a, b) => a.id - b.id));
+                    setMensagens(prev => {
+                        const existe = prev.some(msg => msg.id === data.id);
+                        if (!existe) {
+                            return [...prev, {
+                                id: data.id,
+                                remetente_id: data.remetente_id,
+                                mensagem: data.mensagem,
+                                data: data.data,
+                                is_meu_envio: data.remetente_id === usuarioId
+                            }].sort((a, b) => a.id - b.id);
+                        }
+                        return prev;
+                    });
                 }
             }
-            carregarConversas();
+
+            setConversas(prev => {
+                const conversaAtualizada = prev.find(c => c.conversa_id === data.conversa_id);
+                if (conversaAtualizada) {
+                    const outras = prev.filter(c => c.conversa_id !== data.conversa_id);
+                    return [{ ...conversaAtualizada, ultimo_texto: data.mensagem.substring(0, 35) }, ...outras];
+                }
+                return prev;
+            });
         });
 
         socket.on('error', (data) => {
@@ -166,14 +156,11 @@ export default function Chats1({ api }) {
                 socketRef.current.disconnect();
             }
         };
-    }, [api_url, autorizado, usuarioId]);
+    }, [api_url, autorizado, usuarioId, conversaSelecionada]);
 
-    // Entrar na sala da conversa selecionada
     useEffect(() => {
         if (socketConnected && conversaSelecionada && socketRef.current) {
             socketRef.current.emit('join_conversa', { conversa_id: conversaSelecionada.conversa_id });
-            setContatoOnline(false);
-            setUltimaAtividade(null);
         }
     }, [socketConnected, conversaSelecionada]);
 
@@ -200,7 +187,7 @@ export default function Chats1({ api }) {
             }
         }
 
-        if (tokenData.tipo !== 1) {
+        if (tokenData.tipo !== 1 && tokenData.tipo !== 2) {
             navigate('/dashboard');
             return;
         }
@@ -212,7 +199,6 @@ export default function Chats1({ api }) {
         carregarConversas(token);
     }, []);
 
-    // Carregar mensagens da conversa selecionada
     useEffect(() => {
         if (conversaSelecionada) {
             setMensagens([]);
@@ -220,13 +206,6 @@ export default function Chats1({ api }) {
             carregarMensagens(conversaSelecionada.conversa_id);
         }
     }, [conversaSelecionada]);
-
-    // Scroll automático
-    useEffect(() => {
-        if (mensagensEndRef.current) {
-            mensagensEndRef.current.scrollIntoView({ behavior: 'smooth' });
-        }
-    }, [mensagens]);
 
     async function carregarConversas(tokenParam) {
         const token = tokenParam || getToken();
@@ -236,9 +215,7 @@ export default function Chats1({ api }) {
             const response = await fetch(`${api_url}/dm/listar_conversas?token=${token}`, {
                 method: 'GET',
                 credentials: 'include',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
+                headers: { 'Content-Type': 'application/json' }
             });
 
             if (response.ok) {
@@ -264,9 +241,7 @@ export default function Chats1({ api }) {
             const response = await fetch(`${api_url}/dm/mensagens/${conversaId}?token=${token}`, {
                 method: 'GET',
                 credentials: 'include',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
+                headers: { 'Content-Type': 'application/json' }
             });
 
             if (response.ok) {
@@ -291,12 +266,8 @@ export default function Chats1({ api }) {
             const response = await fetch(`${api_url}/dm/iniciar_conversa/${ongId}?token=${token}`, {
                 method: 'POST',
                 credentials: 'include',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
+                headers: { 'Content-Type': 'application/json' }
             });
-
-            const data = await response.json();
 
             if (response.ok) {
                 await carregarConversas();
@@ -308,6 +279,7 @@ export default function Chats1({ api }) {
                     }
                 }, 500);
             } else {
+                const data = await response.json();
                 setMsgTexto(data.error || 'Erro ao iniciar conversa');
                 setMsgTipo('erro');
             }
@@ -317,6 +289,18 @@ export default function Chats1({ api }) {
             setMsgTipo('erro');
         } finally {
             setIniciando(false);
+        }
+    }
+
+    function voltarParaConversas() {
+        setConversaSelecionada(null);
+        mensagemIdsRef.current.clear();
+    }
+
+    function handleKeyPress(e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            enviarMensagem();
         }
     }
 
@@ -332,7 +316,6 @@ export default function Chats1({ api }) {
         }
 
         const mensagemTexto = novaMensagem.trim();
-
         const mensagemTemp = {
             id: Date.now(),
             remetente_id: usuarioId,
@@ -342,8 +325,7 @@ export default function Chats1({ api }) {
                 month: '2-digit',
                 year: 'numeric',
                 hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit'
+                minute: '2-digit'
             }),
             is_meu_envio: true,
             isTemp: true
@@ -352,10 +334,9 @@ export default function Chats1({ api }) {
         setMensagens(prev => [...prev, mensagemTemp]);
         setNovaMensagem('');
 
+        // ROLA PARA O FINAL DO CHAT QUANDO ENVIA MENSAGEM
         setTimeout(() => {
-            if (mensagensEndRef.current) {
-                mensagensEndRef.current.scrollIntoView({ behavior: 'smooth' });
-            }
+            scrollToBottom();
         }, 50);
 
         setEnviando(true);
@@ -373,8 +354,8 @@ export default function Chats1({ api }) {
                 await carregarMensagens(conversaSelecionada.conversa_id);
                 await carregarConversas();
             } else {
-                const data = await response.json();
                 setMensagens(prev => prev.filter(msg => msg.id !== mensagemTemp.id));
+                const data = await response.json();
                 setMsgTexto(data.error || 'Erro ao enviar mensagem');
                 setMsgTipo('erro');
             }
@@ -388,31 +369,8 @@ export default function Chats1({ api }) {
         }
     }
 
-    function handleKeyPress(e) {
-        if (e.key === 'Enter' && !e.shiftKey) {
-            e.preventDefault();
-            enviarMensagem();
-        }
-    }
-
-    function voltarParaConversas() {
-        setConversaSelecionada(null);
-        mensagemIdsRef.current.clear();
-        setContatoOnline(false);
-        setUltimaAtividade(null);
-    }
-
     function getImagemUrl(id) {
         return `${api_url}/uploads/Usuarios/${id}.jpeg`;
-    }
-
-    function getStatusText() {
-        if (contatoOnline) {
-            return 'Online';
-        } else if (ultimaAtividade) {
-            return `Visto por último em ${ultimaAtividade}`;
-        }
-        return 'Offline';
     }
 
     if (!autorizado) return null;
@@ -425,42 +383,43 @@ export default function Chats1({ api }) {
                 <Mensagem tipo={msgTipo} texto={msgTexto} onClose={() => setMsgTexto('')} />
             )}
 
-            {!conversaSelecionada ? (
-                <div className={css.container}>
-                    {/* Conversas Existentes */}
-                    <div className={css.secaoConversas}>
-                        <Titulo titulo={"Minhas Conversas"} cor={"preto"}/>
-                        {carregandoConversas ? (
-                            <p className={css.carregando}>Carregando conversas...</p>
-                        ) : conversas.length === 0 ? (
-                            <p className={css.semConversas}>Nenhuma conversa ainda.</p>
-                        ) : (
-                            conversas.map(conv => (
-                                <div
-                                    key={conv.conversa_id}
-                                    className={css.conversaItem}
-                                    onClick={() => setConversaSelecionada(conv)}
-                                >
-                                    <img
-                                        className={css.imagem}
-                                        src={getImagemUrl(conv.usuario_id)}
-                                        onError={(e) => { e.target.src = '/sem_imagem.webp'; }}
-                                        alt={conv.usuario_nome}
-                                    />
-                                    <div className={css.conversaInfo}>
-                                        <p className={css.nome}>{conv.usuario_nome}</p>
-                                        <p className={css.mensagem}>{conv.ultimo_texto?.substring(0, 35) || 'Nenhuma mensagem'}</p>
-                                    </div>
-                                    <div className={`${css.statusDot} ${conv.online ? css.online : css.offline}`}></div>
+            <div className={css.container}>
+                {/* Conversas Existentes */}
+                <div className={css.secaoConversas}>
+                    <Titulo titulo={"Minhas Conversas"} cor={"preto"}/>
+                    {carregandoConversas ? (
+                        <p className={css.carregando}>Carregando conversas...</p>
+                    ) : conversas.length === 0 ? (
+                        <p className={css.semConversas}>Nenhuma conversa ainda.</p>
+                    ) : (
+                        conversas.map(conv => (
+                            <div
+                                key={conv.conversa_id}
+                                className={css.conversaItem}
+                                onClick={() => setConversaSelecionada(conv)}
+                            >
+                                <img
+                                    className={css.imagem}
+                                    src={getImagemUrl(conv.usuario_id)}
+                                    onError={(e) => { e.target.src = '/sem_imagem.webp'; }}
+                                    alt={conv.usuario_nome}
+                                />
+                                <div className={css.conversaInfo}>
+                                    <p className={css.nome}>{conv.usuario_nome}</p>
+                                    <p className={css.mensagem}>{conv.ultimo_texto?.substring(0, 35) || 'Nenhuma mensagem'}</p>
                                 </div>
-                            ))
-                        )}
-                    </div>
+                            </div>
+                        ))
+                    )}
                 </div>
-            ) : (
+            </div>
+
+            {conversaSelecionada ? (
                 <div className={css.chatArea}>
                     <div className={css.header}>
-                        <button className={css.btnVoltar} onClick={voltarParaConversas}>←</button>
+                        <button className={css.btnVoltar} onClick={voltarParaConversas}>
+                            <img src='/voltar.png' alt="Voltar" />
+                        </button>
                         <img
                             className={css.imagem}
                             src={getImagemUrl(conversaSelecionada.usuario_id)}
@@ -469,13 +428,10 @@ export default function Chats1({ api }) {
                         />
                         <div>
                             <p>{conversaSelecionada.usuario_nome}</p>
-                            <span className={`${css.statusText} ${contatoOnline ? css.statusOnline : css.statusOffline}`}>
-                                {getStatusText()}
-                            </span>
                         </div>
                     </div>
 
-                    <div className={css.mensagens}>
+                    <div className={css.mensagens} ref={mensagensContainerRef}>
                         {carregandoMensagens && mensagens.length === 0 ? (
                             <p style={{ textAlign: 'center', padding: '20px' }}>Carregando mensagens...</p>
                         ) : mensagens.length === 0 ? (
@@ -497,7 +453,7 @@ export default function Chats1({ api }) {
                         <div ref={mensagensEndRef} />
                     </div>
 
-                    <div className={css.chat}>
+                    <form className={css.chat} onSubmit={(e) => e.preventDefault()}>
                         <Input
                             placeholder="Digite uma mensagem..."
                             input={novaMensagem}
@@ -508,9 +464,17 @@ export default function Chats1({ api }) {
                             className={css.mandar}
                             onClick={enviarMensagem}
                             disabled={enviando || !novaMensagem.trim()}
+                            type="button"
                         >
                             <img src={"/mandar.png"} alt="Enviar mensagem" />
                         </button>
+                    </form>
+                </div>
+            ) : (
+                <div className={css.chatAreaVazio}>
+                    <div className={css.mensagemVazio}>
+                        <img src={"/baterPapo.png"} alt="Chats" />
+                        <p>Selecione uma conversa ou inicie uma nova com uma ONG</p>
                     </div>
                 </div>
             )}

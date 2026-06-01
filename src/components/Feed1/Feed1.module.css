@@ -1,3 +1,16 @@
+/* ============================================ */
+/* KEYFRAMES */
+/* ============================================ */
+
+@keyframes progress {
+    from { width: 0%; }
+    to { width: 100%; }
+}
+
+/* ============================================ */
+/* LAYOUT PRINCIPAL */
+/* ============================================ */
+
 .secao {
     display: flex;
     min-height: 100vh;
@@ -12,53 +25,239 @@
     display: flex;
     flex-direction: column;
     gap: 20px;
-    overflow: hidden;
+}
+
+/* ============================================ */
+/* STORIES - ESTILO WHATSAPP */
+/* ============================================ */
+
+.storiesWrapper {
+    margin-bottom: 20px;
+    width: 100%;
 }
 
 .stories {
     display: flex;
-    align-items: flex-start;
-    gap: 1rem;
-    flex-wrap: nowrap;
+    gap: 1.2rem;
     overflow-x: auto;
-    overflow-y: hidden;
-    scroll-behavior: smooth;
-    padding-bottom: 12px;
-    width: 100%;
-    max-width: 90vw;
-    box-sizing: border-box;
+    padding: 10px 0;
     scrollbar-width: thin;
-    scrollbar-color: #ccc transparent;
     -webkit-overflow-scrolling: touch;
 }
 
 .story {
     display: flex;
     flex-direction: column;
-    gap: 0.3rem;
     align-items: center;
-    flex: 0 0 auto;
-    width: 4rem;
+    gap: 0.5rem;
+    cursor: pointer;
+    flex-shrink: 0;
+    min-width: 85px;
+}
 
+.storyAvatar {
+    position: relative;
+}
+
+.storyAvatar img {
+    width: 85px;
+    height: 85px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--cor-primaria);
+    padding: 3px;
+}
+
+/* Borda cinza para stories já visualizados */
+.storyAvatar.visualizado img {
+    border-color: #9e9e9e;
 }
 
 .story p {
-    font-size: 12px;
+    font-size: 13px;
     color: var(--cor-texto);
+    text-align: center;
+    max-width: 85px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: 500;
 }
 
-.story img {
-    width: 4rem;
-    height: 4rem;
+.semStories {
+    color: #999;
+    font-size: 14px;
+    padding: 10px 0;
+}
+
+/* ============================================ */
+/* MODAL DO STORY */
+/* ============================================ */
+
+.storyModal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.95);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.storyModalContent {
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+    height: 100vh;
+    max-height: 850px;
+    background: #000;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Barra de progresso */
+.storyProgress {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    display: flex;
+    gap: 4px;
+    z-index: 10;
+}
+
+.storyProgressBar {
+    flex: 1;
+    height: 3px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.storyProgressBar.completed .storyProgressFill {
+    width: 100% !important;
+    background: white;
+}
+
+.storyProgressBar.active .storyProgressFill {
+    background: white;
+    animation: progress 5s linear forwards;
+}
+
+.storyProgressFill {
+    height: 100%;
+    width: 0%;
+    background: white;
+}
+
+/* Botões de navegação */
+.storyPrev, .storyNext {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    width: 60px;
+    height: 100px;
+    font-size: 50px;
+    cursor: pointer;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+}
+
+.storyPrev {
+    left: 0;
+    border-radius: 0 15px 15px 0;
+}
+
+.storyNext {
+    right: 0;
+    border-radius: 15px 0 0 15px;
+}
+
+.storyPrev:hover, .storyNext:hover {
+    background: rgba(0, 0, 0, 0.8);
+}
+
+/* Cabeçalho */
+.storyHeader {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    right: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    z-index: 15;
+}
+
+.storyHeader img {
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
     object-fit: cover;
-    border: 2px solid var(--cor-primaria);
-
+    border: 2px solid white;
 }
 
-.storiesWrapper {
-    margin-bottom: 20px;
+.storyHeader h4 {
+    color: white;
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
 }
+
+.storyHeader span {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 12px;
+}
+
+.storyClose {
+    margin-left: auto;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 28px;
+    cursor: pointer;
+}
+
+/* Corpo do story */
+.storyBody {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.storyMedia {
+    max-width: 100%;
+    max-height: 80vh;
+    object-fit: contain;
+}
+
+.storyText {
+    position: absolute;
+    bottom: 30px;
+    left: 20px;
+    right: 20px;
+    color: white;
+    background: rgba(0, 0, 0, 0.6);
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 16px;
+    text-align: center;
+}
+
+/* ============================================ */
+/* BARRA DE TOPO - BUSCA E FILTRO */
+/* ============================================ */
 
 .botao-ler-mais {
     display: none;
@@ -92,7 +291,7 @@
     background: transparent;
 }
 
-inputBusca::placeholder {
+.inputBusca::placeholder {
     color: var(--cor-texto) !important;
 }
 
@@ -124,7 +323,10 @@ inputBusca::placeholder {
     color: var(--cor-texto);
 }
 
-/* Tabs de Feed */
+/* ============================================ */
+/* TABS DE FEED */
+/* ============================================ */
+
 .tabsFeed {
     display: flex;
     gap: 0;
@@ -160,6 +362,10 @@ inputBusca::placeholder {
 .tabAtivo:hover {
     color: var(--cor-primaria);
 }
+
+/* ============================================ */
+/* CARD DE ATUALIZAÇÃO */
+/* ============================================ */
 
 .cardAtualizacao {
     background: #fff;
@@ -197,7 +403,7 @@ inputBusca::placeholder {
 
 .data {
     font-size: 12px;
-    color: color-mix(in srgb, var(--cor-texto) 54%, #ffffff);;
+    color: color-mix(in srgb, var(--cor-texto) 54%, #ffffff);
 }
 
 .corpo {
@@ -233,7 +439,6 @@ inputBusca::placeholder {
     text-align: center;
     padding: 80px 20px;
     color: color-mix(in srgb, var(--cor-texto) 54%, #ffffff);
-
 }
 
 .vazio p {
@@ -246,7 +451,10 @@ inputBusca::placeholder {
     width: 100%;
 }
 
-/* Botão Voltar ao Topo */
+/* ============================================ */
+/* BOTÃO VOLTAR AO TOPO */
+/* ============================================ */
+
 .botaoVoltar {
     position: fixed !important;
     bottom: 30px !important;
@@ -283,7 +491,10 @@ inputBusca::placeholder {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Estilos para comentários */
+/* ============================================ */
+/* COMENTÁRIOS */
+/* ============================================ */
+
 .comentariosSecao {
     border-top: 1px solid color-mix(in srgb, var(--cor-texto) 10%, #ffffff);
     padding: 12px 20px;
@@ -525,7 +736,7 @@ inputBusca::placeholder {
     display: flex;
     align-items: center;
     padding-bottom: 15px;
-    border-bottom: 1px solid color-mix(in srgb, var(--cor-texto) 10%, #ffffff);;
+    border-bottom: 1px solid color-mix(in srgb, var(--cor-texto) 10%, #ffffff);
 }
 
 .cabecalho {
@@ -616,14 +827,14 @@ inputBusca::placeholder {
 
 .modalInputArea {
     padding-top: 15px;
-    border-top: 1px solid color-mix(in srgb, var(--cor-texto) 10%, #ffffff);;
+    border-top: 1px solid color-mix(in srgb, var(--cor-texto) 10%, #ffffff);
 }
 
 .modalInput {
     width: 100%;
     padding: 14px;
     border-radius: 20px;
-    border: 1px solid color-mix(in srgb, var(--cor-texto) 27%, #ffffff);;
+    border: 1px solid color-mix(in srgb, var(--cor-texto) 27%, #ffffff);
     outline: none;
     font-size: 14px;
     box-sizing: border-box;
@@ -641,13 +852,31 @@ inputBusca::placeholder {
     font-size: 1rem;
 }
 
-
-
 /* ============================================ */
 /* RESPONSIVIDADE */
 /* ============================================ */
 
 @media (max-width: 768px) {
+    .storyAvatar img {
+        width: 70px;
+        height: 70px;
+    }
+
+    .story {
+        min-width: 75px;
+    }
+
+    .storyPrev, .storyNext {
+        width: 45px;
+        height: 80px;
+        font-size: 35px;
+    }
+
+    .storyText {
+        font-size: 14px;
+        bottom: 20px;
+    }
+
     .secao {
         flex-direction: column;
     }
@@ -697,7 +926,6 @@ inputBusca::placeholder {
         padding: 10px 0;
     }
 
-    /* Modal mobile */
     .modalPost {
         flex-direction: column;
         width: 95%;
@@ -742,6 +970,21 @@ inputBusca::placeholder {
 }
 
 @media (max-width: 425px) {
+    .storyAvatar img {
+        width: 60px;
+        height: 60px;
+    }
+
+    .story {
+        min-width: 65px;
+    }
+
+    .storyPrev, .storyNext {
+        width: 35px;
+        height: 60px;
+        font-size: 28px;
+    }
+
     .botao-ler-mais {
         display: inline-block;
         background-color: var(--cor-primaria);
@@ -768,7 +1011,6 @@ inputBusca::placeholder {
         height: 96vh;
         border-radius: 12px;
     }
-
 
     .modalEsquerda {
         height: 45%;

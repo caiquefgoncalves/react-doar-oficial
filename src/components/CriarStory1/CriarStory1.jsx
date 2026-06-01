@@ -1,3 +1,4 @@
+// src/components/CriarStory1/CriarStory1.jsx
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Titulo from "../Titulo/Titulo.jsx";
@@ -23,31 +24,118 @@ export default function CriarStory1({api}) {
     const [texto, setTexto] = useState("");
     const [msgTexto, setMsgTexto] = useState('');
     const [msgTipo, setMsgTipo] = useState('');
+    const [enviando, setEnviando] = useState(false);
+    const [carregando, setCarregando] = useState(true);
 
     useEffect(() => {
         const token = localStorage.getItem('token');
-        if (!token) { navigate('/login'); return; }
+
+        if (!token) {
+            setMsgTexto('Faça login para criar stories');
+            setMsgTipo('erro');
+            setTimeout(() => navigate('/login'), 2000);
+            return;
+        }
+
         const tokenData = decodificarToken(token);
-        if (!tokenData || tokenData.tipo !== 2) { navigate('/login');}
+
+        if (!tokenData) {
+            setMsgTexto('Token inválido. Faça login novamente.');
+            setMsgTipo('erro');
+            setTimeout(() => navigate('/login'), 2000);
+            return;
+        }
+
+        if (tokenData.tipo !== 2) {
+            setMsgTexto('Apenas ONGs podem criar stories');
+            setMsgTipo('erro');
+            setTimeout(() => navigate('/dashboard'), 2000);
+            return;
+        }
+
+        setCarregando(false);
     }, []);
 
-
     async function criarStory() {
-        if (!texto) { setMsgTexto('O texto do story é obrigatório'); setMsgTipo('error'); return; }
-        if (!arquivo) { setMsgTexto('O arquivo do story é obrigatório'); setMsgTipo('erro'); return; }
+        if (!texto.trim()) {
+            setMsgTexto('O texto do story é obrigatório');
+            setMsgTipo('erro');
+            return;
+        }
+        if (!arquivo) {
+            setMsgTexto('Selecione uma imagem ou vídeo para o story');
+            setMsgTipo('erro');
+            return;
+        }
 
-        const form = new FormData();
-        form.append('arquivos', arquivo);
+        const token = localStorage.getItem('token');
+        if (!token) {
+            setMsgTexto('Token não encontrado. Faça login novamente.');
+            setMsgTipo('erro');
+            setTimeout(() => navigate('/login'), 2000);
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('texto', texto);
+        formData.append('arquivos', arquivo);
+
+        setEnviando(true);
 
         try {
-            const response = await fetch(`${api_url}/criar_story`, { method: 'POST', credentials: 'include', body: form });
+            const response = await fetch(`${api_url}/criar_story`, {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                },
+                body: formData
+            });
 
-            const data = await response.json()
+            const data = await response.json();
 
-            setMsgTexto(data.message || data.error);
-            setMsgTipo(response.ok ? 'sucesso' : 'erro');
+            if (response.status === 401) {
+                localStorage.removeItem('token');
+                localStorage.removeItem('nome');
+                setMsgTexto('Sua sessão expirou. Faça login novamente.');
+                setMsgTipo('erro');
+                setTimeout(() => navigate('/login'), 2000);
+                return;
+            }
 
-        } catch (error) { setMsgTexto('Erro de conexão'); setMsgTipo('erro'); }
+            if (response.ok) {
+                setMsgTexto('Story criado com sucesso!');
+                setMsgTipo('sucesso');
+                setTexto('');
+                setArquivo(null);
+                // Limpar o input de arquivo
+                const fileInput = document.querySelector('input[type="file"]');
+                if (fileInput) fileInput.value = '';
+                setTimeout(() => navigate('/feed'), 2000);
+            } else {
+                setMsgTexto(data.error || 'Erro ao criar story');
+                setMsgTipo('erro');
+            }
+        } catch (error) {
+            console.error('Erro:', error);
+            setMsgTexto('Erro de conexão com o servidor');
+            setMsgTipo('erro');
+        } finally {
+            setEnviando(false);
+        }
+    }
+
+    if (carregando) {
+        return (
+            <section className={css.containerSection}>
+                <div className={css.titulo}>
+                    <Titulo titulo={'Criar Story'} cor={'laranja'}/>
+                </div>
+                <div className={css.formulario}>
+                    <p style={{ textAlign: 'center', padding: '50px' }}>Verificando permissões...</p>
+                </div>
+            </section>
+        );
     }
 
     return (
@@ -55,18 +143,34 @@ export default function CriarStory1({api}) {
             {msgTexto && (
                 <Mensagem tipo={msgTipo} texto={msgTexto} onClose={() => setMsgTexto('')} />
             )}
-            <div className={css.titulo}><Titulo titulo={'Criar story'} cor={'laranja'}/></div>
+            <div className={css.titulo}>
+                <Titulo titulo={'Criar Story'} cor={'laranja'}/>
+            </div>
             <div className={css.formulario}>
                 <div className={"row"}>
                     <div className={"col-md-6 col-12"}>
-                        <Input label={'Texto do story*'} type={'text'} placeholder={'Texto do story'} input={texto} alterarInput={(e) => setTexto(e.target.value)} required={true} apenasTexto={true} />
+                        <Input
+                            label={'Texto do story*'}
+                            type={'text'}
+                            placeholder={'Digite o texto do seu story...'}
+                            input={texto}
+                            alterarInput={(e) => setTexto(e.target.value)}
+                            required={true}
+                            apenasTexto={true}
+                        />
                     </div>
                     <div className={"col-md-6 col-12"}>
-                        <InputArquivo tamanho={'big'} tipo={'normaledicao'} label={'Foto/vídeo do story'} required={true} alterarInput={(e) => setArquivo(e.target.files[0])} />
+                        <InputArquivo
+                            tamanho={'big'}
+                            tipo={'normaledicao'}
+                            label={'Imagem ou vídeo do story*'}
+                            required={true}
+                            alterarInput={(e) => setArquivo(e.target.files[0])}
+                        />
                     </div>
                 </div>
                 <div className={css.botaoContainer}>
-                    <Botao acao={criarStory} texto={'Criar Story'} cor={'azul'}/>
+                    <Botao acao={criarStory} texto={enviando ? 'Criando...' : 'Criar Story'} cor={'azul'} desabilitado={enviando}/>
                 </div>
             </div>
         </section>
