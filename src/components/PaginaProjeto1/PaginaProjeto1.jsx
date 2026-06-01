@@ -14,6 +14,7 @@ export default function PaginaProjeto1({ api }) {
     const [qtd, setQtd] = useState("");
     const [idsAbertos, setIdsAbertos] = useState("");
     const [loading, setLoading] = useState(true);
+    const [temChavePix, setTemChavePix] = useState(false);
     const api_url = api;
 
     const [paginaAtualizacoes, setPaginaAtualizacoes] = useState(0);
@@ -62,6 +63,9 @@ export default function PaginaProjeto1({ api }) {
                     setAtualizacoes(data.atualizacoes || []);
                     setPaginaAtualizacoes(0);
                     setQtd(data.qtd_atualizacoes || data.atualizacoes?.length || 0);
+                }
+                if (data.ong.chave_pix && data.ong.chave_pix.trim() !== '') {
+                    setTemChavePix(true);
                 }
             }
         } catch (error) { console.error('Erro:', error); }
@@ -250,12 +254,14 @@ export default function PaginaProjeto1({ api }) {
                                     alt={`Pix ${ong.nome}`}
                                 />
 
-                                <div className={css.pixContainer}>
-                                    <p className={css.pixCode}>
-                                        {ong.chave_pix}
-                                    </p>
-                                    <Botao cor={'rosa'} acao={copiarPix} texto={copiado}/>
-                                </div>
+                                {temChavePix && ong.chave_pix && (
+                                    <div className={css.pixContainer}>
+                                        <p className={css.pixCode}>
+                                            {ong.chave_pix}
+                                        </p>
+                                        <Botao cor={'rosa'} acao={copiarPix} texto={copiado}/>
+                                    </div>
+                                )}
 
                                 <div className={css.dadosBancarios}>
                                     <p><strong>Instituição:</strong><br/>{ong.cod_banco || 'Não informado'}</p>

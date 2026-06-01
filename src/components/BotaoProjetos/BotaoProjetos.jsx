@@ -21,7 +21,7 @@ export default function BotaoProjetos({ status = 1, projetoId, usuarioTipo, apiU
     async function verificarVoluntariado() {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`http://10.92.3.131:5000/verificar_voluntario_projeto/${projetoId}`, {
+            const response = await fetch(`http://10.92.3.138:5000/verificar_voluntario_projeto/${projetoId}`, {
                 headers: { 'Authorization': `Bearer ${token || ''}` }
             });
             if (response.ok) {

@@ -27,9 +27,15 @@
     border: 1px solid #D9D9D9;
     border-radius: 1rem;
     padding: 1rem;
-    justify-content: space-between;
     display: flex;
     text-align: center;
+    width: 17.5vw;
 
 
+}
+
+@media (max-width: 1025px) {
+    .cards{
+        width: 21.3vw;
+    }
 }

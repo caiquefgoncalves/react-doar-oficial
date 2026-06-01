@@ -23,9 +23,11 @@ export default function PaginaOng1({api}) {
     let [idsAbertos, setIdsAbertos] = useState("");
     let [paginaAtualizacoes, setPaginaAtualizacoes] = useState(0);
     const [usuarioTipo, setUsuarioTipo] = useState(null);
+    const [usuarioId, setUsuarioId] = useState(null);
     const [msgTexto, setMsgTexto] = useState('');
     const [msgTipo, setMsgTipo] = useState('');
     const [temChavePix, setTemChavePix] = useState(false);
+    const [enviandoMensagem, setEnviandoMensagem] = useState(false);
 
     // Estado local para seguidores
     const [qtdSeguidores, setQtdSeguidores] = useState(0);
@@ -53,6 +55,7 @@ export default function PaginaOng1({api}) {
             try {
                 const payload = JSON.parse(atob(token.split('.')[1]));
                 setUsuarioTipo(payload.tipo);
+                setUsuarioId(payload.id_usuarios);
             } catch (e) {}
         }
         buscarDados();
@@ -94,6 +97,41 @@ export default function PaginaOng1({api}) {
 
     function handleDoar(projetoId) {
         navigate(`/doar/${projetoId}`);
+    }
+
+    // Dentro do arquivo PaginaOng1.jsx, atualize a função iniciarConversa:
+
+    async function iniciarConversa() {
+        if (usuarioTipo !== 1) {
+            setMsgTexto('Apenas doadores podem enviar mensagens');
+            setMsgTipo('erro');
+            return;
+        }
+
+        setEnviandoMensagem(true);
+        try {
+            const token = localStorage.getItem('token');
+            const response = await fetch(`${api_url}/dm/iniciar_conversa/${id}?token=${token}`, {
+                method: 'POST',
+                credentials: 'include'
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                // Redirecionar para a página de chats com o parâmetro da ONG
+                navigate(`/chats?ong=${id}`);
+            } else {
+                setMsgTexto(data.error || 'Erro ao iniciar conversa');
+                setMsgTipo('erro');
+            }
+        } catch (error) {
+            console.error('Erro ao iniciar conversa:', error);
+            setMsgTexto('Erro de conexão');
+            setMsgTipo('erro');
+        } finally {
+            setEnviandoMensagem(false);
+        }
     }
 
     function getTextoSeguidores() {
@@ -145,15 +183,25 @@ export default function PaginaOng1({api}) {
                                     <p className={css.texto}>{getTextoSeguidores()}</p>
                                 </div>
                             </div>
-                            {/* Botão seguir - apenas doadores ou não logados */}
-                            {(usuarioTipo === 1 || usuarioTipo === null) && (
-                                <BotaoSeguir
-                                    idOng={id}
-                                    apiUrl={api_url}
-                                    onStatusChange={handleSeguirChange}
-                                    onMensagem={(texto, tipo) => { setMsgTexto(texto); setMsgTipo(tipo); }}
-                                />
-                            )}
+                            <div className={css.botoesAcao}>
+                                {(usuarioTipo === 1 || usuarioTipo === null) && (
+                                    <BotaoSeguir
+                                        idOng={id}
+                                        apiUrl={api_url}
+                                        onStatusChange={handleSeguirChange}
+                                        onMensagem={(texto, tipo) => { setMsgTexto(texto); setMsgTipo(tipo); }}
+                                    />
+                                )}
+                                {usuarioTipo === 1 && (
+                                    <button
+                                        className={css.btnMensagem}
+                                        onClick={iniciarConversa}
+                                        disabled={enviandoMensagem}
+                                    >
+                                        {enviandoMensagem ? '...' : 'Mensagem'}
+                                    </button>
+                                )}
+                            </div>
                         </div>
 
                         {/* Sobre Nós */}

@@ -41,7 +41,7 @@ export default function Footer({ api }) {
                             {empresa.nome} <span>{empresa.span_nome}</span>
                         </div>
 
-                        <h4 className="mb-3 fw-bold">Sobre a {empresa.nome} {empresa.span_nome}</h4>
+                        <h4 className={"mb-3 fw-bold " + css.branco}>Sobre a {empresa.nome} {empresa.span_nome}</h4>
 
                         <p className={`mb-4 ${css.textoCinza}`} style={{ fontSize: '1.1rem', lineHeight: '1.6' }}>
                             {empresa.descricao}
@@ -53,7 +53,7 @@ export default function Footer({ api }) {
                     </div>
 
                     <div className="col-md-6 ps-md-5 d-flex flex-column align-items-center align-items-md-start">
-                        <h4 className="mb-4 fw-bold">Explore</h4>
+                        <h4 className={"mb-3 fw-bold " + css.branco}>Explore</h4>
 
                         <div className="row w-100 text-start justify-content-center justify-content-md-start mb-4" style={{maxWidth: '350px'}}>
                             <div className="col-6 col-md-12">

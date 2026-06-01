@@ -383,27 +383,19 @@ export default function Feed({ api }) {
                     <MenuLateral />
                     <div className={css.conteudo}>
                         <div className={css.stories}>
-
                             {Array.isArray(stories) && stories.length > 0 ? (
                                 stories.map((story) => (
                                     <div
                                         key={story.ong_id}
                                         onClick={() => setStoryAberto(story)}
-                                        style={{ cursor: 'pointer', textAlign: 'center' }}
+                                        className={css.story}
                                     >
                                         <img
                                             src={`${api}/uploads/Usuarios/${story.ong_foto}`}
                                             alt={story.ong_nome}
-                                            style={{
-                                                width: 60,
-                                                height: 60,
-                                                borderRadius: '50%',
-                                                objectFit: 'cover',
-                                                border: '2px solid var(--cor-primaria)'
-                                            }}
                                         />
 
-                                        <p style={{ fontSize: 12 }}>
+                                        <p>
                                             {story.ong_nome}
                                         </p>
                                     </div>
