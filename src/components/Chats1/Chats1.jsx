@@ -464,7 +464,6 @@ export default function Chats1({ api }) {
                             className={css.mandar}
                             onClick={enviarMensagem}
                             disabled={enviando || !novaMensagem.trim()}
-                            type="button"
                         >
                             <img src={"/mandar.png"} alt="Enviar mensagem" />
                         </button>
