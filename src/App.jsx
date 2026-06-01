@@ -44,8 +44,10 @@ import EditarMensagem from './pages/EditarMensagem.jsx';
 import Configuracoes from "./pages/Configuracoes.jsx";
 import RelatorioDoador from './pages/RelatorioDoador.jsx';
 import RelatorioOng from './pages/RelatorioOng.jsx';
+import Chats from './pages/Chats.jsx';
+import CriarStory from "./pages/CriarStory.jsx";
 
-const API_URL = "http://10.92.3.131:5000"
+const API_URL = "http://10.92.3.138:5000"
 
 export default function App() {
     return (
@@ -92,6 +94,8 @@ export default function App() {
                 <Route path="/configuracoes" element={<Configuracoes api={API_URL} />} />
                 <Route path="/relatorio_doador" element={<RelatorioDoador api={API_URL} />} />
                 <Route path="/relatorio_ong" element={<RelatorioOng api={API_URL} />} />
+                <Route path="/chats" element={<Chats api={API_URL} />} />
+                <Route path="/criarStory" element={<CriarStory api={API_URL} />} />
                 <Route path="/*" element={<TelaErro/>} />
             </Routes>
             <Footer api={API_URL}/>

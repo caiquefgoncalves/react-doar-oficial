@@ -80,3 +80,9 @@ label{
     font-weight: 700 !important;
     font-size: 0.9rem !important;
 }
+
+button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
