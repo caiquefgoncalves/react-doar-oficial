@@ -1,3 +1,4 @@
+
 .container {
     display: flex;
     flex-direction: column;
@@ -73,8 +74,6 @@
 .header button {
     color: var(--cor-texto);
     border: none;
-    background: transparent;  
-    cursor: pointer;
 }
 
 .header button img {
@@ -288,6 +287,23 @@
     cursor: pointer;
 }
 
+/* Status online/offline */
+.statusDot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-left: 8px;
+    flex-shrink: 0;
+}
+
+.statusDot.online {
+    background-color: #4CAF50;
+    box-shadow: 0 0 4px #4CAF50;
+}
+
+.statusDot.offline {
+    background-color: #9e9e9e;
+}
 
 .statusText {
     font-size: 0.7rem;
@@ -295,7 +311,13 @@
     margin-top: 2px;
 }
 
+.statusOnline {
+    color: #4CAF50;
+}
 
+.statusOffline {
+    color: #999;
+}
 
 .enviando {
     font-size: 0.65rem;
@@ -309,43 +331,41 @@
     cursor: not-allowed;
 }
 
+.semConversas, .semOngs, .carregando {
+    text-align: center;
+    color: #999;
+    font-size: 0.8rem;
+    padding: 1rem;
+}
 
-
-
+.online {
+    font-size: 0.7rem;
+    color: #4CAF50;
+    margin-left: 0.5rem;
+}
 
 /* Responsividade */
 @media (max-width: 768px) {
-    .container {
-        height: auto;
-        position: fixed !important;
-        top: 86vh;
-        width: 100%;
-        padding: 0.9rem;
-        flex-direction: row;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 1rem;
-        background-color: white;
-        z-index: 1;
-    }
-
-    .containerOculto {
+    .mensagemVazio {
         display: none;
+
     }
 
-    .secaoConversas, .secaoOngs {
-        min-width: 200px;
+    .container {
+        width: 100vw;
+    }
+
+    .chatArea {
+        width: 100vw;
+        z-index: 1;
+        position: absolute;
+        background-color: white;
     }
 
     .btnVoltar {
         display: flex;
     }
 
-    .mensagemVoce div,
-    .mensagemEu div {
-        max-width: 70%;
-        width: auto;
-    }
 
     .mensagemEu, .mensagemVoce {
         width: 100%;
@@ -353,17 +373,10 @@
 }
 
 @media (max-width: 426px) {
-    .container {
-        height: auto;
-        position: fixed !important;
-        top: 84vh;
-        width: 100%;
-        padding: 0.5rem;
-        flex-direction: row;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 1rem;
-        background-color: white;
+
+    .header button img {
+        width: 1.6rem;
+        height: 1.6rem;
     }
 
     .imagem {
@@ -378,10 +391,18 @@
     .mensagem {
         font-size: 0.75rem;
     }
+
+    .mensagemVoce div, .mensagemEu div {
+        width: 55vw;
+    }
 }
 
 @media (max-width: 321px) {
     .container {
         top: 87vh;
+    }
+
+    .mandar {
+        display: none;
     }
 }
