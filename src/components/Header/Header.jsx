@@ -284,7 +284,7 @@ export default function Header({ api }) {
                                     e.target.src = '/perfil.png';
                                 }}
                             />
-                            {tipoUsuario === 1 && <SeloVoluntario idUsuario={getIdUsuario()} api={api_url} />}
+                            {tipoUsuario === 1 && <SeloVoluntario api={api_url} idUsuario={getIdUsuario()}/>}
                         </div>
                     </div>
 
@@ -341,7 +341,7 @@ export default function Header({ api }) {
                                                 e.target.src = '/perfil.png';
                                             }}
                                         />
-                                        {tipoUsuario === 1 && <SeloVoluntario idUsuario={getIdUsuario()} api={api_url} />}
+                                        {tipoUsuario === 1 && <SeloVoluntario api={api_url} idUsuario={getIdUsuario()} />}
                                     </div>
                                     <button onClick={fazerLogout} className={css.btnSairMobile} style={{ marginLeft: '10px' }}>
                                         <img src="/sair.png" alt="Sair"/>

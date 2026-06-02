@@ -2,9 +2,9 @@ import { useState, useEffect } from 'react';
 import css from './Recomendacoes.module.css';
 import BotaoSeguir from "../BotaoSeguir/BotaoSeguir.jsx";
 
-export default function Recomendacoes() {
+export default function Recomendacoes( {api} ) {
 
-    const api_url = "http://10.92.3.138:5000";
+    const api_url = api;
 
     const [ongs, setOngs] = useState([]);
     const [carregando, setCarregando] = useState(true);
