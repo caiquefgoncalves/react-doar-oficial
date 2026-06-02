@@ -47,6 +47,12 @@
     margin-bottom: 5rem;
 }
 
+.texto {
+    font-size: 0.8rem;
+    font-weight: 200;
+    color: var(--cor-texto);
+}
+
 
 .pixContainer {
     width: 100%;
@@ -79,11 +85,38 @@
 
 
 @media (max-width: 426px) {
+    .pixContainer {
+        margin-top: 1rem;
+        width: 90vw;
+        padding: 0 1rem;
+        background-color: transparent;
+        border: none;
+    }
+
+    .qrCode {
+        background-color: #f9f9f9;
+        border: 1px solid #ddd;
+        padding: 1rem 0;
+        border-radius: 6px;
+
+    }
+
+    .texto {
+        color: #FFFFFF;
+        max-width: 100%;
+    }
+
+    .botoes {
+        align-self: start;
+        width: 100%;
+    }
+
+
     .informacoes{
         display: flex;
         align-items: center;
         flex-direction: column-reverse;
-        gap: 2rem;
+        gap: 1rem;
 
     }
 
@@ -108,6 +141,10 @@
 
     .titulo{
         margin-top: 0;
+    }
+
+    .informacoes form {
+        max-width: 90vw;
     }
 
 

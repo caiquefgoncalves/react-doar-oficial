@@ -163,7 +163,7 @@ export default function CriarStory1({api}) {
                         <InputArquivo
                             tamanho={'big'}
                             tipo={'normaledicao'}
-                            label={'Imagem ou vídeo do story*'}
+                            label={'Imagem ou vídeo do story'}
                             required={true}
                             alterarInput={(e) => setArquivo(e.target.files[0])}
                         />

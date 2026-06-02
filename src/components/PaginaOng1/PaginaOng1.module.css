@@ -217,20 +217,26 @@
 }
 
 .btnMensagem {
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    padding: 8px 20px;
+    padding: 8px 16px;
     border-radius: 25px;
-    font-size: 14px;
+    border: 1px solid #e0e0e0;
+    background-color: white;
+    color: var(--cor-texto);
+    font-size: 13px;
     font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.2s, transform 0.2s;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+    font-family: inherit;
 }
 
 .btnMensagem:hover:not(:disabled) {
-    background-color: #388E3C;
-    transform: translateY(-1px);
+    background-color: #f0f2f5;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
 .btnMensagem:disabled {

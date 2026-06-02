@@ -1,4 +1,4 @@
-// src/components/Chats1/Chats1.jsx
+
 import { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import io from 'socket.io-client';
@@ -187,8 +187,13 @@ export default function Chats1({ api }) {
             }
         }
 
+        // Verifica se é doador (tipo 1) ou ONG (tipo 2)
         if (tokenData.tipo !== 1 && tokenData.tipo !== 2) {
-            navigate('/dashboard');
+            setMsgTexto('Apenas doadores e ONGs podem acessar o chat');
+            setMsgTipo('erro');
+            setTimeout(() => {
+                navigate('/dashboard');
+            }, 3000);
             return;
         }
 
@@ -297,12 +302,12 @@ export default function Chats1({ api }) {
         mensagemIdsRef.current.clear();
     }
 
-    function handleKeyPress(e) {
+    const handleKeyPress = (e) => {
         if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
             enviarMensagem();
         }
-    }
+    };
 
     async function enviarMensagem() {
         if (!novaMensagem.trim()) return;
@@ -334,7 +339,6 @@ export default function Chats1({ api }) {
         setMensagens(prev => [...prev, mensagemTemp]);
         setNovaMensagem('');
 
-        // ROLA PARA O FINAL DO CHAT QUANDO ENVIA MENSAGEM
         setTimeout(() => {
             scrollToBottom();
         }, 50);
@@ -384,7 +388,6 @@ export default function Chats1({ api }) {
             )}
 
             <div className={css.container}>
-                {/* Conversas Existentes */}
                 <div className={css.secaoConversas}>
                     <Titulo titulo={"Minhas Conversas"} cor={"preto"}/>
                     {carregandoConversas ? (
@@ -464,6 +467,7 @@ export default function Chats1({ api }) {
                             className={css.mandar}
                             onClick={enviarMensagem}
                             disabled={enviando || !novaMensagem.trim()}
+                            type="button"
                         >
                             <img src={"/mandar.png"} alt="Enviar mensagem" />
                         </button>
@@ -473,7 +477,7 @@ export default function Chats1({ api }) {
                 <div className={css.chatAreaVazio}>
                     <div className={css.mensagemVazio}>
                         <img src={"/baterPapo.png"} alt="Chats" />
-                        <p>Selecione uma conversa ou inicie uma nova com uma ONG</p>
+                        <p>Selecione uma conversa ou inicie uma nova conversa</p>
                     </div>
                 </div>
             )}

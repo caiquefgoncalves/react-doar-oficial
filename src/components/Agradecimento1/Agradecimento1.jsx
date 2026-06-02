@@ -20,12 +20,15 @@ export default function Agradecimento1() {
 
     return (
         <section className={css.container}>
-            <div className={css.titulo}>
-                <Titulo titulo={'Agradecemos a contribuição!'} cor={'rosa'} />
-            </div>
-            <div className={css.botoes}>
-                <Botao texto={'Ir para o feed'} cor={'rosa'} pagina={'/feed'} />
-                <Botao texto={'Ir para o dashboard'} cor={'vazadorosa2'} pagina={dashboardRoute} />
+            <div className={css.overlay}></div>
+            <div className={css.conteudo}>
+                <div className={css.titulo}>
+                    <Titulo titulo={'Agradecemos a contribuição!'} cor={'rosa'} />
+                </div>
+                <div className={css.botoes}>
+                    <Botao texto={'Ir para o feed'} cor={'rosa'} pagina={'/feed'} />
+                    <Botao texto={'Ir para o dashboard'} cor={'vazadorosa2'} pagina={dashboardRoute} />
+                </div>
             </div>
         </section>
     )

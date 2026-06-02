@@ -1,9 +1,13 @@
 // MenuLateral.jsx
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import css from './MenuLateral.module.css'
+import Mensagem from "../Mensagem/Mensagem.jsx";
 
 export default function MenuLateral() {
     const navigate = useNavigate();
+    const [msgTexto, setMsgTexto] = useState('');
+    const [msgTipo, setMsgTipo] = useState('');
 
     function decodificarToken(token) {
         try {
@@ -77,7 +81,11 @@ export default function MenuLateral() {
 
         // AGORA PERMITE AMBOS: Doador (tipo 1) e ONG (tipo 2)
         if (tokenData.tipo !== 1 && tokenData.tipo !== 2) {
-            alert('Apenas doadores e ONGs podem acessar o chat');
+            setMsgTexto('Apenas doadores e ONGs podem acessar o chat');
+            setMsgTipo('erro');
+            setTimeout(() => {
+                setMsgTexto('');
+            }, 3000);
             return;
         }
 
@@ -85,27 +93,32 @@ export default function MenuLateral() {
     }
 
     return (
-        <div className={css.container}>
-            <div className={css.funcoes} onClick={() => navigate('/feed')}>
-                <img src={'/camera.png'} alt="Feed"/>
-                <h2 className={css.desktop}>Feed</h2>
+        <>
+            {msgTexto && (
+                <Mensagem tipo={msgTipo} texto={msgTexto} onClose={() => setMsgTexto('')} />
+            )}
+            <div className={css.container}>
+                <div className={css.funcoes} onClick={() => navigate('/feed')}>
+                    <img src={'/camera.png'} alt="Feed"/>
+                    <h2 className={css.desktop}>Feed</h2>
+                </div>
+                <div className={css.funcoes} onClick={irParaPerfil}>
+                    <img src={'/perfil.png'} alt="Perfil"/>
+                    <h2 className={css.desktop}>Perfil</h2>
+                </div>
+                <div className={css.funcoes} onClick={() => navigate('/ongs')}>
+                    <img src={'/ongs.png'} alt="ONGs"/>
+                    <h2 className={css.desktop}>ONGs</h2>
+                </div>
+                <div className={css.funcoes} onClick={() => navigate('/projetos')}>
+                    <img src={'/projetos.png'} alt="Projetos"/>
+                    <h2 className={css.desktop}>Projetos</h2>
+                </div>
+                <div className={css.funcoes} onClick={navegarParaChats}>
+                    <img src={'/chat.png'} alt="Chats"/>
+                    <h2 className={css.desktop}>Chats</h2>
+                </div>
             </div>
-            <div className={css.funcoes} onClick={irParaPerfil}>
-                <img src={'/perfil.png'} alt="Perfil"/>
-                <h2 className={css.desktop}>Perfil</h2>
-            </div>
-            <div className={css.funcoes} onClick={() => navigate('/ongs')}>
-                <img src={'/ongs.png'} alt="ONGs"/>
-                <h2 className={css.desktop}>ONGs</h2>
-            </div>
-            <div className={css.funcoes} onClick={() => navigate('/projetos')}>
-                <img src={'/projetos.png'} alt="Projetos"/>
-                <h2 className={css.desktop}>Projetos</h2>
-            </div>
-            <div className={css.funcoes} onClick={navegarParaChats}>
-                <img src={'/chat.png'} alt="Chats"/>
-                <h2 className={css.desktop}>Chats</h2>
-            </div>
-        </div>
+        </>
     )
 }

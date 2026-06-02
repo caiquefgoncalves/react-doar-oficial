@@ -9,14 +9,16 @@ import Mensagem from "../Mensagem/Mensagem.jsx";
 
 export default function FazerDoacao({ api }) {
     const api_url = api
-    const token = localStorage.getItem("token")
     const { id } = useParams();
     const navigate = useNavigate();
     let [valor, setValor] = useState("");
     let [pix, setPix] = useState("");
     let [chavePix, setChavePix] = useState("");
+    let [dadosDoacao, setDadosDoacao] = useState(null);
     const [mensagem, setMensagem] = useState({ texto: '', tipo: '' });
-    let [copiado, setCopiado] = useState("Copiar"); // Estado para o botão de copiar
+    let [copiado, setCopiado] = useState("Copiar");
+    const [gerando, setGerando] = useState(false);
+    const [confirmando, setConfirmando] = useState(false);
 
     function copiarPix() {
         navigator.clipboard.writeText(chavePix).then(() => {
@@ -47,29 +49,68 @@ export default function FazerDoacao({ api }) {
         let valorNumerico = valor.replace(/\D/g, '');
         valorNumerico = parseFloat(valorNumerico) / 100;
 
-
-
         if (!valorNumerico || valorNumerico <= 0) {
             setMensagem({ texto: 'Digite um valor válido', tipo: 'erro' });
             return;
         }
 
+        setGerando(true);
         const token = localStorage.getItem('token');
 
-        let retorno = await fetch(`${api_url}/doar_projeto/${id}?token=${token}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ valor: valorNumerico }),
-            credentials: 'include'
-        });
-        retorno = await retorno.json();
+        try {
+            let response = await fetch(`${api_url}/gerar_qr_doacao/${id}?token=${token}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ valor: valorNumerico }),
+                credentials: 'include'
+            });
 
-        if (retorno.message) {
-            setPix(retorno.pix);
-            setChavePix(retorno.chave_pix);
-            setMensagem({ texto: retorno.message || 'QR code gerado com sucesso', tipo: 'sucesso' });
-        } else {
-            setMensagem({ texto: retorno.error || 'Erro ao gerar QR code', tipo: 'erro' });
+            let retorno = await response.json();
+
+            if (response.ok) {
+                setPix(retorno.pix);
+                setChavePix(retorno.chave_pix);
+                setDadosDoacao({
+                    id_projeto: retorno.id_projeto,
+                    valor: retorno.valor,
+                    id_ong: retorno.id_ong,
+                    nome_projeto: retorno.nome_projeto,
+                    nome_ong: retorno.nome_ong
+                });
+                setMensagem({ texto: 'QR Code gerado com sucesso!', tipo: 'sucesso' });
+            } else {
+                setMensagem({ texto: retorno.error || 'Erro ao gerar QR code', tipo: 'erro' });
+            }
+        } catch (error) {
+            setMensagem({ texto: 'Erro de conexão', tipo: 'erro' });
+        } finally {
+            setGerando(false);
+        }
+    }
+
+    async function confirmarDoacao() {
+        setConfirmando(true);
+        const token = localStorage.getItem('token');
+
+        try {
+            let response = await fetch(`${api_url}/confirmar_doacao?token=${token}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(dadosDoacao),
+                credentials: 'include'
+            });
+
+            let retorno = await response.json();
+
+            if (response.ok) {
+                navigate('/agradecimento');
+            } else {
+                setMensagem({ texto: retorno.error || 'Erro ao confirmar doação', tipo: 'erro' });
+            }
+        } catch (error) {
+            setMensagem({ texto: 'Erro de conexão', tipo: 'erro' });
+        } finally {
+            setConfirmando(false);
         }
     }
 
@@ -87,6 +128,7 @@ export default function FazerDoacao({ api }) {
                             placeholder={'R$ 0,00'}
                             input={valor}
                             alterarInput={alterarValor}
+                            disabled={pix !== ""}
                         />
 
                         {pix ? (
@@ -96,18 +138,25 @@ export default function FazerDoacao({ api }) {
                                         cor={'vazadorosa2'}
                                         texto={'Gerar o QR Code novamente'}
                                         acao={gerarQrCode}
+                                        desabilitado={gerando}
                                     />
                                 </div>
                                 <div className={css.botao}>
-                                    <Botao cor={'rosa'} texto={'Concluído'} acao={() => navigate('/agradecimento')} />
+                                    <Botao
+                                        cor={'rosa'}
+                                        texto={confirmando ? 'Confirmando...' : 'Concluído'}
+                                        acao={confirmarDoacao}
+                                        desabilitado={confirmando}
+                                    />
                                 </div>
                             </div>
                         ) : (
                             <div className={css.botaoQr}>
                                 <Botao
                                     cor={'rosa'}
-                                    texto={'Gerar o QR Code'}
+                                    texto={gerando ? 'Gerando...' : 'Gerar o QR Code'}
                                     acao={gerarQrCode}
+                                    desabilitado={gerando}
                                 />
                             </div>
                         )}
@@ -120,7 +169,6 @@ export default function FazerDoacao({ api }) {
                                 alt="QR Code PIX"
                                 onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = '/sem_imagem.webp'; }}
                             />
-                            {/* Classes integradas ao seu CSS Module */}
                             <div className={css.pixContainer}>
                                 <p className={css.pixCode}>
                                     {chavePix}

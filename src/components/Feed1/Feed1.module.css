@@ -238,7 +238,7 @@
 
 .storyMedia {
     max-width: 100%;
-    max-height: 80vh;
+    height: 35%;
     object-fit: contain;
 }
 

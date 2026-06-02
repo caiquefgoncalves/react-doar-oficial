@@ -456,7 +456,7 @@ export default function Feed({ api }) {
                             <button className={css.storyClose} onClick={fecharStory}>✕</button>
                         </div>
 
-                        {/* Conteúdo do story atual */}
+
                         <div className={css.storyBody}>
                             {storySelecionado.stories[storyIndex].arquivo && (
                                 storySelecionado.stories[storyIndex].arquivo.match(/\.(mp4|webm|ogg)$/i) ? (

@@ -74,6 +74,7 @@
 .header button {
     color: var(--cor-texto);
     border: none;
+    background-color: transparent;
 }
 
 .header button img {
@@ -364,6 +365,7 @@
 
     .btnVoltar {
         display: flex;
+
     }
 
 

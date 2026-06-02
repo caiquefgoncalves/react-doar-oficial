@@ -164,6 +164,10 @@
         font-size: 1rem;
     }
 
+    .rosa {
+        border: 2px solid white;
+    }
+
     .vazadoamarelo {
         padding: 0.6rem 1.2rem;
         font-size: 1rem;
@@ -178,7 +182,7 @@
     }
 
     .vazadorosa2{
-        background-color: var(--cor-secundaria);
+        background-color: white;
         color:#F65682;
         border: none;
     }
