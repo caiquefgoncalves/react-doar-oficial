@@ -55,14 +55,19 @@ export default function EditarAdm1({ api }) {
                     if (adm) {
                         setNome(adm[1] || '');
                         setEmail(adm[2] || '');
-                        setCpf(adm[4] || '');
-                        setTelefone(adm[5] || '');
+                        setCpf((adm[4] || '').replace(/\D/g, '').replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d{1,2})$/, '$1-$2'));
+                        setTelefone((adm[5] || '').replace(/\D/g, '').replace(/^(\d{2})(\d)/g, '($1) $2').replace(/(\d{5})(\d)/, '$1-$2').substring(0, 15));
                     }
                 }
             }
         } catch (error) { console.error('Erro:', error); }
         finally { setLoading(false); }
     }
+
+    // Função para redirecionar para o dashboard ADM e recarregar
+    const redirecionarParaDashboard = () => {
+        window.location.href = '/dashboardAdm';
+    };
 
     async function salvarEdicao() {
         // Validações em ordem (senha e foto são opcionais na edição)
@@ -90,7 +95,11 @@ export default function EditarAdm1({ api }) {
             setMsgTipo(response.ok ? 'sucesso' : 'erro');
             if (response.ok) {
                 if (data.usuario && data.usuario.nome) localStorage.setItem('nome_adm', data.usuario.nome);
-                setTimeout(() => navigate('/dashboardAdm'), 2000);
+
+                // Redirecionar para o dashboard ADM e recarregar a página
+                setTimeout(() => {
+                    redirecionarParaDashboard();
+                }, 1500);
             }
         } catch (error) { setMsgTexto('Erro de conexão'); setMsgTipo('erro'); }
     }

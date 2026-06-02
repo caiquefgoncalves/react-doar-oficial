@@ -73,12 +73,21 @@ export default function EditarOng1({api}) {
                 setNumConta(ong.num_conta || '');
                 setTipoConta(ong.tipo_conta || '');
                 setChavePix(ong.chave_pix || '');
-                setCnpj(ong.cpf_cnpj || '');
+                setCnpj((ong.cpf_cnpj || '').replace(/\D/g, '').replace(/^(\d{2})(\d)/, '$1.$2').replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3').replace(/\.(\d{3})(\d)/, '.$1/$2').replace(/(\d{4})(\d)/, '$1-$2').substring(0, 18));
                 setFotoAtual(`${api_url}/uploads/Usuarios/${id}.jpeg`);
             }
         } catch (error) { console.error('Erro:', error); }
         finally { setLoading(false); }
     }
+
+    // Função para redirecionar para o dashboard correto e recarregar
+    const redirecionarParaDashboard = () => {
+        const token = localStorage.getItem('token');
+        const tokenData = decodificarToken(token);
+
+        // Recarregar a página para atualizar os dados
+        window.location.href = tokenData && tokenData.tipo === 0 ? '/dashboardAdm' : '/dashboardOng';
+    };
 
     async function salvarEdicao() {
         // Converter possíveis números para string antes das validações
@@ -135,11 +144,11 @@ export default function EditarOng1({api}) {
             setMsgTipo(response.ok ? 'sucesso' : 'erro');
             if (response.ok) {
                 if (data.usuario && data.usuario.nome) localStorage.setItem('nome_ong', data.usuario.nome);
+
+                // Redirecionar para o dashboard correto e recarregar a página
                 setTimeout(() => {
-                    if (tokenData && tokenData.tipo === 0) navigate('/dashboardAdm');
-                    else if (tokenData && tokenData.tipo === 2) navigate('/dashboardOng');
-                    else navigate('/login');
-                }, 2000);
+                    redirecionarParaDashboard();
+                }, 1500);
             }
         } catch (error) { setMsgTexto('Erro de conexão'); setMsgTipo('erro'); }
     }

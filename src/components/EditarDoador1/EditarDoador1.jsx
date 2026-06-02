@@ -68,8 +68,8 @@ export default function EditarDoador({ api }) {
                 if (data.usuario) {
                     setNome(data.usuario.nome || '');
                     setEmail(data.usuario.email || '');
-                    setCpf(data.usuario.cpf_cnpj || '');
-                    setTelefone(data.usuario.telefone || '');
+                    setCpf((data.usuario.cpf_cnpj || '').replace(/\D/g, '').replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4'));
+                    setTelefone((data.usuario.telefone || '').replace(/\D/g, '').replace(/^(\d{2})(\d)/g, '($1) $2').replace(/(\d{5})(\d)/, '$1-$2').substring(0, 15));
                     setFotoAtual(`${api_url}/uploads/Usuarios/${id}.jpeg`);
                 } else if (data.usuarios) {
                     const doador = data.usuarios.find(u => u[0] === parseInt(id));
@@ -85,6 +85,15 @@ export default function EditarDoador({ api }) {
         } catch (error) { console.error('Erro:', error); }
         finally { setLoading(false); }
     }
+
+    // Função para redirecionar para o dashboard correto e recarregar
+    const redirecionarParaDashboard = () => {
+        const token = localStorage.getItem('token');
+        const tokenData = decodificarToken(token);
+
+        // Recarregar a página para atualizar os dados
+        window.location.href = tokenData && tokenData.tipo === 0 ? '/dashboardAdm' : '/dashboardDoador';
+    };
 
     async function salvarEdicao() {
         if (!nome?.trim()) { setMsgTexto('O nome é obrigatório'); setMsgTipo('erro'); return; }
@@ -118,11 +127,11 @@ export default function EditarDoador({ api }) {
                 if (data.usuario && data.usuario.nome) {
                     localStorage.setItem('nome_doador', data.usuario.nome);
                 }
+
+                // Redirecionar para o dashboard correto e recarregar a página
                 setTimeout(() => {
-                    if (tokenData && tokenData.tipo === 0) navigate('/dashboardAdm');
-                    else if (tokenData && tokenData.tipo === 1) navigate('/dashboardDoador');
-                    else navigate('/login');
-                }, 2000);
+                    redirecionarParaDashboard();
+                }, 1500);
             }
         } catch (error) { setMsgTexto('Erro de conexão'); setMsgTipo('erro'); }
     }

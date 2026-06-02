@@ -46,15 +46,14 @@ export default function Chats1({ api }) {
     const mensagensContainerRef = useRef(null);
     const isFirstLoadRef = useRef(true);
 
-    // Função para rolar para o final do chat (mais recente)
+    // Função SIMPLES para rolar para o final
     const scrollToBottom = () => {
         if (mensagensContainerRef.current) {
-            const container = mensagensContainerRef.current;
-            container.scrollTop = container.scrollHeight;
+            mensagensContainerRef.current.scrollTop = mensagensContainerRef.current.scrollHeight;
         }
     };
 
-    // Função para atualizar a URL com o ID do contato (pode ser ONG ou DOADOR)
+    // Função para atualizar a URL
     const atualizarUrl = (contatoId) => {
         if (contatoId) {
             navigate(`/chats?contato=${contatoId}`, { replace: false });
@@ -63,7 +62,7 @@ export default function Chats1({ api }) {
         }
     };
 
-    // Verificar se veio parâmetro na URL para abrir conversa direta
+    // CORREÇÃO PRINCIPAL: Verificar parâmetro na URL sem quebrar a referência do estado anterior
     useEffect(() => {
         if (conversas.length > 0) {
             const params = new URLSearchParams(location.search);
@@ -73,14 +72,13 @@ export default function Chats1({ api }) {
             if (conversaId) {
                 const conversa = conversas.find(c => c.conversa_id === parseInt(conversaId));
                 if (conversa) {
-                    setConversaSelecionada(conversa);
+                    setConversaSelecionada(prev => (prev && prev.conversa_id === conversa.conversa_id) ? prev : conversa);
                 }
             } else if (contatoId) {
                 const conversaExistente = conversas.find(c => c.usuario_id === parseInt(contatoId));
                 if (conversaExistente) {
-                    setConversaSelecionada(conversaExistente);
+                    setConversaSelecionada(prev => (prev && prev.conversa_id === conversaExistente.conversa_id) ? prev : conversaExistente);
                 } else if (usuarioTipo === 1) {
-                    // Se for doador, tenta iniciar conversa com a ONG
                     iniciarConversaAutomatica(parseInt(contatoId));
                 }
             }
@@ -89,7 +87,7 @@ export default function Chats1({ api }) {
 
     const getToken = () => localStorage.getItem('token');
 
-    // Configurar Socket.IO
+    // Socket.IO
     useEffect(() => {
         const token = getToken();
         if (!token || !autorizado) return;
@@ -133,7 +131,12 @@ export default function Chats1({ api }) {
                     setMensagens(prev => {
                         const existe = prev.some(msg => msg.id === data.id);
                         if (!existe) {
-                            return [...prev, {
+                            // Filtra mensagens temporárias para evitar duplicados lado a lado na recepção do socket
+                            const listaFiltrada = data.remetente_id === usuarioId
+                                ? prev.filter(msg => !msg.isTemp)
+                                : prev;
+
+                            return [...listaFiltrada, {
                                 id: data.id,
                                 remetente_id: data.remetente_id,
                                 mensagem: data.mensagem,
@@ -223,13 +226,13 @@ export default function Chats1({ api }) {
         }
     }, [conversaSelecionada]);
 
-    // Rolar para o final quando as mensagens são carregadas pela primeira vez
+    // CORREÇÃO: Evita brigas e múltiplos "pulos" de rolagem limpando o timer anterior (Debounce)
     useEffect(() => {
-        if (mensagens.length > 0 && isFirstLoadRef.current) {
-            setTimeout(() => {
+        if (mensagens.length > 0) {
+            const timerId = setTimeout(() => {
                 scrollToBottom();
-                isFirstLoadRef.current = false;
-            }, 100);
+            }, 50);
+            return () => clearTimeout(timerId);
         }
     }, [mensagens]);
 
@@ -258,12 +261,13 @@ export default function Chats1({ api }) {
         }
     }
 
-    async function carregarMensagens(conversaId) {
+    // CORREÇÃO: Adicionado parâmetro 'silencioso' para não disparar loaders visuais no envio
+    async function carregarMensagens(conversaId, silencioso = false) {
         const token = getToken();
         if (!token) return;
 
         try {
-            setCarregandoMensagens(true);
+            if (!silencioso) setCarregandoMensagens(true);
             const response = await fetch(`${api_url}/dm/mensagens/${conversaId}?token=${token}`, {
                 method: 'GET',
                 credentials: 'include',
@@ -274,12 +278,13 @@ export default function Chats1({ api }) {
                 const data = await response.json();
                 const mensagensCarregadas = data.mensagens || [];
                 mensagensCarregadas.forEach(msg => mensagemIdsRef.current.add(msg.id));
+
                 setMensagens(mensagensCarregadas.sort((a, b) => a.id - b.id));
             }
         } catch (error) {
             console.error('Erro ao carregar mensagens:', error);
         } finally {
-            setCarregandoMensagens(false);
+            if (!silencioso) setCarregandoMensagens(false);
         }
     }
 
@@ -322,7 +327,6 @@ export default function Chats1({ api }) {
     function voltarParaConversas() {
         setConversaSelecionada(null);
         mensagemIdsRef.current.clear();
-        isFirstLoadRef.current = true;
         navigate('/chats', { replace: true });
     }
 
@@ -345,6 +349,8 @@ export default function Chats1({ api }) {
         }
 
         const mensagemTexto = novaMensagem.trim();
+
+        // Adicionar mensagem temporária
         const mensagemTemp = {
             id: Date.now(),
             remetente_id: usuarioId,
@@ -362,7 +368,6 @@ export default function Chats1({ api }) {
 
         setMensagens(prev => [...prev, mensagemTemp]);
         setNovaMensagem('');
-
         setEnviando(true);
 
         try {
@@ -374,12 +379,9 @@ export default function Chats1({ api }) {
             });
 
             if (response.ok) {
-                setMensagens(prev => prev.filter(msg => !msg.isTemp));
-                await carregarMensagens(conversaSelecionada.conversa_id);
+                // CORREÇÃO: Passa 'true' para carregar de forma totalmente invisível ao usuário
+                await carregarMensagens(conversaSelecionada.conversa_id, true);
                 await carregarConversas();
-                setTimeout(() => {
-                    scrollToBottom();
-                }, 100);
             } else {
                 setMensagens(prev => prev.filter(msg => msg.id !== mensagemTemp.id));
                 const data = await response.json();

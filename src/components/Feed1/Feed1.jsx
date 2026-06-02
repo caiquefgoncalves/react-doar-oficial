@@ -153,6 +153,9 @@ export default function Feed({ api }) {
 
     // Próximo story (dentro da mesma ONG ou próxima ONG)
     const nextStory = () => {
+        // Pausar timer ao navegar manualmente
+        if (timeoutId) clearTimeout(timeoutId);
+
         if (storySelecionado) {
             // Se ainda tem stories na mesma ONG
             if (storyIndex < storySelecionado.stories.length - 1) {
@@ -167,6 +170,9 @@ export default function Feed({ api }) {
 
     // Story anterior
     const prevStory = () => {
+        // Pausar timer ao navegar manualmente
+        if (timeoutId) clearTimeout(timeoutId);
+
         if (storySelecionado) {
             // Se não está no primeiro story da ONG atual
             if (storyIndex > 0) {
@@ -231,6 +237,9 @@ export default function Feed({ api }) {
             return () => clearTimeout(id);
         }
     }, [storySelecionado, storyIndex, progressoAtivo]);
+
+    // Verificar se deve mostrar os botões de navegação
+    const mostrarBotoesNavegacao = storiesList.length > 1 || (storySelecionado && storySelecionado.stories.length > 1);
 
     async function buscarAtualizacoes(novaPagina = 0, append = false) {
         try {
@@ -420,7 +429,7 @@ export default function Feed({ api }) {
                                     className={`${css.storyProgressBar} ${idx === storyIndex ? css.active : (idx < storyIndex ? css.completed : '')}`}
                                 >
                                     <div
-                                        key={`${storyIndex}-${idx}`} // 🔥 força re-render (ESSENCIAL)
+                                        key={`${storyIndex}-${idx}`}
                                         className={`${css.storyProgressFill} ${
                                             idx === storyIndex && progressoAtivo ? css.animate : ''
                                         }`}
@@ -434,11 +443,27 @@ export default function Feed({ api }) {
                             ))}
                         </div>
 
-                        {/* Botões de navegação */}
-                        {storiesList.length > 1 && (
+                        {/* Botões de navegação - AGORA FUNCIONA CORRETAMENTE */}
+                        {mostrarBotoesNavegacao && (
                             <>
-                                <button className={css.storyPrev} onClick={(e) => { e.stopPropagation(); prevStory(); }}>‹</button>
-                                <button className={css.storyNext} onClick={(e) => { e.stopPropagation(); nextStory(); }}>›</button>
+                                <button
+                                    className={css.storyPrev}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        prevStory();
+                                    }}
+                                >
+                                    ‹
+                                </button>
+                                <button
+                                    className={css.storyNext}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        nextStory();
+                                    }}
+                                >
+                                    ›
+                                </button>
                             </>
                         )}
 

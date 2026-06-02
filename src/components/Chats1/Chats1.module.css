@@ -345,6 +345,26 @@
     margin-left: 0.5rem;
 }
 
+/* Adicione no final do arquivo CSS */
+
+/* Evita que o container de mensagens cause repaints desnecessários */
+.mensagens {
+    will-change: scroll-position;
+    contain: strict;
+    overscroll-behavior: contain;
+}
+
+/* Remove transições desnecessárias que podem causar piscadas */
+.conversaItem, .chatArea, .header, .mensagemEu div, .mensagemVoce div {
+    transition: none;
+}
+
+/* Melhora o desempenho do scroll */
+.mensagens {
+    scroll-behavior: auto !important;
+    -webkit-overflow-scrolling: touch;
+}
+
 /* Responsividade */
 @media (max-width: 768px) {
     .mensagemVazio {
