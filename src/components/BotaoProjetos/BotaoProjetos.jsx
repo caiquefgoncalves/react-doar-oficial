@@ -8,6 +8,8 @@ export default function BotaoProjetos({ status = 1, projetoId, usuarioTipo, apiU
     const [jaVoluntariou, setJaVoluntariou] = useState(false);
     const [loading, setLoading] = useState(true);
 
+    const api_url = apiUrl;
+
 
 
     useEffect(() => {
@@ -21,7 +23,7 @@ export default function BotaoProjetos({ status = 1, projetoId, usuarioTipo, apiU
     async function verificarVoluntariado() {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`http://10.92.3.138:5000/verificar_voluntario_projeto/${projetoId}`, {
+            const response = await fetch(`${api_url}/verificar_voluntario_projeto/${projetoId}`, {
                 headers: { 'Authorization': `Bearer ${token || ''}` }
             });
             if (response.ok) {
