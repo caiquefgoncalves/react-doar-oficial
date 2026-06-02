@@ -144,7 +144,7 @@ export default function FazerDoacao({ api }) {
                                 <div className={css.botao}>
                                     <Botao
                                         cor={'rosa'}
-                                        texto={confirmando ? 'Confirmando...' : 'Concluído'}
+                                        texto={confirmando ? 'Confirmando...' : 'Concluir Pagamento'}
                                         acao={confirmarDoacao}
                                         desabilitado={confirmando}
                                     />

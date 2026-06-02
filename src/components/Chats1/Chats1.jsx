@@ -1,4 +1,4 @@
-
+// src/components/Chats1/Chats1.jsx
 import { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import io from 'socket.io-client';
@@ -29,6 +29,7 @@ export default function Chats1({ api }) {
     const [conversas, setConversas] = useState([]);
     const [carregandoConversas, setCarregandoConversas] = useState(true);
     const [conversaSelecionada, setConversaSelecionada] = useState(null);
+    const [paramProcessado, setParamProcessado] = useState(false); // Controlar se o parâmetro já foi processado
 
     const [mensagens, setMensagens] = useState([]);
     const [novaMensagem, setNovaMensagem] = useState('');
@@ -53,9 +54,11 @@ export default function Chats1({ api }) {
         }
     };
 
-    // Verificar se veio parâmetro na URL para abrir conversa direta
+    const getToken = () => localStorage.getItem('token');
+
+    // Processar parâmetro da URL apenas uma vez, quando as conversas carregarem
     useEffect(() => {
-        if (conversas.length > 0) {
+        if (conversas.length > 0 && !paramProcessado) {
             const params = new URLSearchParams(location.search);
             const conversaId = params.get('conversa');
             const ongId = params.get('ong');
@@ -64,19 +67,23 @@ export default function Chats1({ api }) {
                 const conversa = conversas.find(c => c.conversa_id === parseInt(conversaId));
                 if (conversa) {
                     setConversaSelecionada(conversa);
+                    setParamProcessado(true);
+                    // Limpar o parâmetro da URL sem recarregar a página
+                    navigate('/chats', { replace: true });
                 }
             } else if (ongId) {
                 const conversaExistente = conversas.find(c => c.usuario_id === parseInt(ongId));
                 if (conversaExistente) {
                     setConversaSelecionada(conversaExistente);
+                    setParamProcessado(true);
+                    navigate('/chats', { replace: true });
                 } else {
                     iniciarConversaAutomatica(parseInt(ongId));
+                    setParamProcessado(true);
                 }
             }
         }
-    }, [conversas, location.search]);
-
-    const getToken = () => localStorage.getItem('token');
+    }, [conversas, location.search, paramProcessado, navigate]);
 
     // Configurar Socket.IO
     useEffect(() => {
@@ -156,10 +163,12 @@ export default function Chats1({ api }) {
                 socketRef.current.disconnect();
             }
         };
-    }, [api_url, autorizado, usuarioId, conversaSelecionada]);
+    }, [api_url, autorizado, usuarioId]);
 
+    // Entrar na sala da conversa selecionada
     useEffect(() => {
         if (socketConnected && conversaSelecionada && socketRef.current) {
+            console.log('Entrando na sala:', conversaSelecionada.conversa_id);
             socketRef.current.emit('join_conversa', { conversa_id: conversaSelecionada.conversa_id });
         }
     }, [socketConnected, conversaSelecionada]);
@@ -187,7 +196,6 @@ export default function Chats1({ api }) {
             }
         }
 
-        // Verifica se é doador (tipo 1) ou ONG (tipo 2)
         if (tokenData.tipo !== 1 && tokenData.tipo !== 2) {
             setMsgTexto('Apenas doadores e ONGs podem acessar o chat');
             setMsgTipo('erro');
@@ -281,6 +289,8 @@ export default function Chats1({ api }) {
                     const novaConversa = conversas.find(c => c.usuario_id === ongId);
                     if (novaConversa) {
                         setConversaSelecionada(novaConversa);
+                        // Limpar URL após abrir conversa
+                        navigate('/chats', { replace: true });
                     }
                 }, 500);
             } else {
@@ -311,7 +321,11 @@ export default function Chats1({ api }) {
 
     async function enviarMensagem() {
         if (!novaMensagem.trim()) return;
-        if (!conversaSelecionada) return;
+        if (!conversaSelecionada) {
+            setMsgTexto('Nenhuma conversa selecionada');
+            setMsgTipo('erro');
+            return;
+        }
 
         const token = getToken();
         if (!token) {
@@ -321,6 +335,8 @@ export default function Chats1({ api }) {
         }
 
         const mensagemTexto = novaMensagem.trim();
+        const conversaId = conversaSelecionada.conversa_id;
+
         const mensagemTemp = {
             id: Date.now(),
             remetente_id: usuarioId,
@@ -346,7 +362,7 @@ export default function Chats1({ api }) {
         setEnviando(true);
 
         try {
-            const response = await fetch(`${api_url}/dm/enviar_mensagem/${conversaSelecionada.conversa_id}?token=${token}`, {
+            const response = await fetch(`${api_url}/dm/enviar_mensagem/${conversaId}?token=${token}`, {
                 method: 'POST',
                 credentials: 'include',
                 headers: { 'Content-Type': 'application/json' },
@@ -355,7 +371,7 @@ export default function Chats1({ api }) {
 
             if (response.ok) {
                 setMensagens(prev => prev.filter(msg => !msg.isTemp));
-                await carregarMensagens(conversaSelecionada.conversa_id);
+                await carregarMensagens(conversaId);
                 await carregarConversas();
             } else {
                 setMensagens(prev => prev.filter(msg => msg.id !== mensagemTemp.id));
@@ -399,7 +415,9 @@ export default function Chats1({ api }) {
                             <div
                                 key={conv.conversa_id}
                                 className={css.conversaItem}
-                                onClick={() => setConversaSelecionada(conv)}
+                                onClick={() => {
+                                    setConversaSelecionada(conv);
+                                }}
                             >
                                 <img
                                     className={css.imagem}
@@ -467,7 +485,6 @@ export default function Chats1({ api }) {
                             className={css.mandar}
                             onClick={enviarMensagem}
                             disabled={enviando || !novaMensagem.trim()}
-                            type="button"
                         >
                             <img src={"/mandar.png"} alt="Enviar mensagem" />
                         </button>
@@ -477,7 +494,7 @@ export default function Chats1({ api }) {
                 <div className={css.chatAreaVazio}>
                     <div className={css.mensagemVazio}>
                         <img src={"/baterPapo.png"} alt="Chats" />
-                        <p>Selecione uma conversa ou inicie uma nova conversa</p>
+                        <p>Selecione uma conversa ou inicie uma nova para começar</p>
                     </div>
                 </div>
             )}
