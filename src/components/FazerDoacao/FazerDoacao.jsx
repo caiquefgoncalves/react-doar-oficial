@@ -122,17 +122,17 @@ export default function FazerDoacao({ api }) {
             </div>
             <div className={css.container}>
                 <div className={css.informacoes}>
-                    <div className={css.secao}>
+                    <form className={css.secao}>
                         <Input
                             label={'Valor a ser doado *'}
                             placeholder={'R$ 0,00'}
                             input={valor}
                             alterarInput={alterarValor}
-                            disabled={pix !== ""}
                         />
 
                         {pix ? (
                             <div className={css.botoes}>
+                                <p className={css.texto}>Caso queira cancelar a doação, basta sair dessa página</p>
                                 <div className={css.botaoQr}>
                                     <Botao
                                         cor={'vazadorosa2'}
@@ -160,7 +160,7 @@ export default function FazerDoacao({ api }) {
                                 />
                             </div>
                         )}
-                    </div>
+                    </form>
 
                     {pix && (
                         <div className={css.qrCode}>

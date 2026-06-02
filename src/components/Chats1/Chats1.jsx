@@ -29,7 +29,6 @@ export default function Chats1({ api }) {
     const [conversas, setConversas] = useState([]);
     const [carregandoConversas, setCarregandoConversas] = useState(true);
     const [conversaSelecionada, setConversaSelecionada] = useState(null);
-    const [paramProcessado, setParamProcessado] = useState(false); // Controlar se o parâmetro já foi processado
 
     const [mensagens, setMensagens] = useState([]);
     const [novaMensagem, setNovaMensagem] = useState('');
@@ -45,8 +44,9 @@ export default function Chats1({ api }) {
     const socketRef = useRef(null);
     const mensagemIdsRef = useRef(new Set());
     const mensagensContainerRef = useRef(null);
+    const isFirstLoadRef = useRef(true);
 
-    // Função para rolar para o final do chat
+    // Função para rolar para o final do chat (mais recente)
     const scrollToBottom = () => {
         if (mensagensContainerRef.current) {
             const container = mensagensContainerRef.current;
@@ -54,36 +54,40 @@ export default function Chats1({ api }) {
         }
     };
 
-    const getToken = () => localStorage.getItem('token');
+    // Função para atualizar a URL com o ID do contato (pode ser ONG ou DOADOR)
+    const atualizarUrl = (contatoId) => {
+        if (contatoId) {
+            navigate(`/chats?contato=${contatoId}`, { replace: false });
+        } else {
+            navigate('/chats', { replace: false });
+        }
+    };
 
-    // Processar parâmetro da URL apenas uma vez, quando as conversas carregarem
+    // Verificar se veio parâmetro na URL para abrir conversa direta
     useEffect(() => {
-        if (conversas.length > 0 && !paramProcessado) {
+        if (conversas.length > 0) {
             const params = new URLSearchParams(location.search);
             const conversaId = params.get('conversa');
-            const ongId = params.get('ong');
+            const contatoId = params.get('contato');
 
             if (conversaId) {
                 const conversa = conversas.find(c => c.conversa_id === parseInt(conversaId));
                 if (conversa) {
                     setConversaSelecionada(conversa);
-                    setParamProcessado(true);
-                    // Limpar o parâmetro da URL sem recarregar a página
-                    navigate('/chats', { replace: true });
                 }
-            } else if (ongId) {
-                const conversaExistente = conversas.find(c => c.usuario_id === parseInt(ongId));
+            } else if (contatoId) {
+                const conversaExistente = conversas.find(c => c.usuario_id === parseInt(contatoId));
                 if (conversaExistente) {
                     setConversaSelecionada(conversaExistente);
-                    setParamProcessado(true);
-                    navigate('/chats', { replace: true });
-                } else {
-                    iniciarConversaAutomatica(parseInt(ongId));
-                    setParamProcessado(true);
+                } else if (usuarioTipo === 1) {
+                    // Se for doador, tenta iniciar conversa com a ONG
+                    iniciarConversaAutomatica(parseInt(contatoId));
                 }
             }
         }
-    }, [conversas, location.search, paramProcessado, navigate]);
+    }, [conversas, location.search, usuarioTipo]);
+
+    const getToken = () => localStorage.getItem('token');
 
     // Configurar Socket.IO
     useEffect(() => {
@@ -163,12 +167,10 @@ export default function Chats1({ api }) {
                 socketRef.current.disconnect();
             }
         };
-    }, [api_url, autorizado, usuarioId]);
+    }, [api_url, autorizado, usuarioId, conversaSelecionada]);
 
-    // Entrar na sala da conversa selecionada
     useEffect(() => {
         if (socketConnected && conversaSelecionada && socketRef.current) {
-            console.log('Entrando na sala:', conversaSelecionada.conversa_id);
             socketRef.current.emit('join_conversa', { conversa_id: conversaSelecionada.conversa_id });
         }
     }, [socketConnected, conversaSelecionada]);
@@ -216,9 +218,20 @@ export default function Chats1({ api }) {
         if (conversaSelecionada) {
             setMensagens([]);
             mensagemIdsRef.current.clear();
+            isFirstLoadRef.current = true;
             carregarMensagens(conversaSelecionada.conversa_id);
         }
     }, [conversaSelecionada]);
+
+    // Rolar para o final quando as mensagens são carregadas pela primeira vez
+    useEffect(() => {
+        if (mensagens.length > 0 && isFirstLoadRef.current) {
+            setTimeout(() => {
+                scrollToBottom();
+                isFirstLoadRef.current = false;
+            }, 100);
+        }
+    }, [mensagens]);
 
     async function carregarConversas(tokenParam) {
         const token = tokenParam || getToken();
@@ -270,13 +283,13 @@ export default function Chats1({ api }) {
         }
     }
 
-    async function iniciarConversaAutomatica(ongId) {
+    async function iniciarConversaAutomatica(contatoId) {
         const token = getToken();
         if (!token) return;
 
         setIniciando(true);
         try {
-            const response = await fetch(`${api_url}/dm/iniciar_conversa/${ongId}?token=${token}`, {
+            const response = await fetch(`${api_url}/dm/iniciar_conversa/${contatoId}?token=${token}`, {
                 method: 'POST',
                 credentials: 'include',
                 headers: { 'Content-Type': 'application/json' }
@@ -286,11 +299,10 @@ export default function Chats1({ api }) {
                 await carregarConversas();
                 setTimeout(async () => {
                     await carregarConversas();
-                    const novaConversa = conversas.find(c => c.usuario_id === ongId);
+                    const novaConversa = conversas.find(c => c.usuario_id === contatoId);
                     if (novaConversa) {
                         setConversaSelecionada(novaConversa);
-                        // Limpar URL após abrir conversa
-                        navigate('/chats', { replace: true });
+                        atualizarUrl(contatoId);
                     }
                 }, 500);
             } else {
@@ -310,6 +322,8 @@ export default function Chats1({ api }) {
     function voltarParaConversas() {
         setConversaSelecionada(null);
         mensagemIdsRef.current.clear();
+        isFirstLoadRef.current = true;
+        navigate('/chats', { replace: true });
     }
 
     const handleKeyPress = (e) => {
@@ -321,11 +335,7 @@ export default function Chats1({ api }) {
 
     async function enviarMensagem() {
         if (!novaMensagem.trim()) return;
-        if (!conversaSelecionada) {
-            setMsgTexto('Nenhuma conversa selecionada');
-            setMsgTipo('erro');
-            return;
-        }
+        if (!conversaSelecionada) return;
 
         const token = getToken();
         if (!token) {
@@ -335,8 +345,6 @@ export default function Chats1({ api }) {
         }
 
         const mensagemTexto = novaMensagem.trim();
-        const conversaId = conversaSelecionada.conversa_id;
-
         const mensagemTemp = {
             id: Date.now(),
             remetente_id: usuarioId,
@@ -355,14 +363,10 @@ export default function Chats1({ api }) {
         setMensagens(prev => [...prev, mensagemTemp]);
         setNovaMensagem('');
 
-        setTimeout(() => {
-            scrollToBottom();
-        }, 50);
-
         setEnviando(true);
 
         try {
-            const response = await fetch(`${api_url}/dm/enviar_mensagem/${conversaId}?token=${token}`, {
+            const response = await fetch(`${api_url}/dm/enviar_mensagem/${conversaSelecionada.conversa_id}?token=${token}`, {
                 method: 'POST',
                 credentials: 'include',
                 headers: { 'Content-Type': 'application/json' },
@@ -371,8 +375,11 @@ export default function Chats1({ api }) {
 
             if (response.ok) {
                 setMensagens(prev => prev.filter(msg => !msg.isTemp));
-                await carregarMensagens(conversaId);
+                await carregarMensagens(conversaSelecionada.conversa_id);
                 await carregarConversas();
+                setTimeout(() => {
+                    scrollToBottom();
+                }, 100);
             } else {
                 setMensagens(prev => prev.filter(msg => msg.id !== mensagemTemp.id));
                 const data = await response.json();
@@ -417,6 +424,7 @@ export default function Chats1({ api }) {
                                 className={css.conversaItem}
                                 onClick={() => {
                                     setConversaSelecionada(conv);
+                                    atualizarUrl(conv.usuario_id);
                                 }}
                             >
                                 <img
@@ -494,7 +502,7 @@ export default function Chats1({ api }) {
                 <div className={css.chatAreaVazio}>
                     <div className={css.mensagemVazio}>
                         <img src={"/baterPapo.png"} alt="Chats" />
-                        <p>Selecione uma conversa ou inicie uma nova para começar</p>
+                        <p>Selecione uma conversa ou inicie uma nova conversa</p>
                     </div>
                 </div>
             )}

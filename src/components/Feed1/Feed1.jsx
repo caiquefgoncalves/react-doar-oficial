@@ -420,10 +420,10 @@ export default function Feed({ api }) {
                                     className={`${css.storyProgressBar} ${idx === storyIndex ? css.active : (idx < storyIndex ? css.completed : '')}`}
                                 >
                                     <div
-                                        className={css.storyProgressFill}
-                                        style={{
-                                            animation: idx === storyIndex && progressoAtivo ? 'progress 5s linear forwards' : 'none'
-                                        }}
+                                        key={`${storyIndex}-${idx}`} // 🔥 força re-render (ESSENCIAL)
+                                        className={`${css.storyProgressFill} ${
+                                            idx === storyIndex && progressoAtivo ? css.animate : ''
+                                        }`}
                                         onAnimationEnd={() => {
                                             if (idx === storyIndex && progressoAtivo) {
                                                 nextStory();
@@ -456,7 +456,7 @@ export default function Feed({ api }) {
                             <button className={css.storyClose} onClick={fecharStory}>✕</button>
                         </div>
 
-
+                        {/* Conteúdo do story atual */}
                         <div className={css.storyBody}>
                             {storySelecionado.stories[storyIndex].arquivo && (
                                 storySelecionado.stories[storyIndex].arquivo.match(/\.(mp4|webm|ogg)$/i) ? (

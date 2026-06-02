@@ -1,11 +1,15 @@
-
+/* ============================================ */
+/* KEYFRAMES */
+/* ============================================ */
 
 @keyframes progress {
     from { width: 0%; }
     to { width: 100%; }
 }
 
-
+/* ============================================ */
+/* LAYOUT PRINCIPAL */
+/* ============================================ */
 
 .secao {
     display: flex;
@@ -149,6 +153,10 @@
     background: white;
 }
 
+.animate {
+    animation: progress 5s linear forwards;
+}
+
 /* Botões de navegação */
 .storyPrev, .storyNext {
     position: absolute;
@@ -251,7 +259,9 @@
     text-align: center;
 }
 
-
+/* ============================================ */
+/* BARRA DE TOPO - BUSCA E FILTRO */
+/* ============================================ */
 
 .botao-ler-mais {
     display: none;
