@@ -172,7 +172,7 @@ export default function EditarDoador({ api }) {
                             </div>
                         </div>
                         <div className={"col-md-6 col-12"}>
-                            <InputArquivo tamanho={'big'} required={false} alterarInput={(e) => setFotoPerfil(e.target.files[0])} />
+                            <InputArquivo tamanho={'big'} required={true} alterarInput={(e) => setFotoPerfil(e.target.files[0])} />
                         </div>
                     </div>
                 </div>

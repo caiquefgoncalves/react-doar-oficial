@@ -134,6 +134,16 @@ export default function DashboardAdm1({ api }) {
     }
 
     function confirmarExcluir(tipo, item) {
+       
+        const token = localStorage.getItem('token');
+        const tokenData = decodificarToken(token);
+
+        if (tipo === 'adm' && tokenData && tokenData.id_usuarios === item[0]) {
+            setMensagem('Você não pode excluir sua própria conta de administrador');
+            setTipoMensagem('erro');
+            return;
+        }
+
         setItemParaExcluir(item);
         setTipoExclusao(tipo);
         setModalExcluirAberto(true);

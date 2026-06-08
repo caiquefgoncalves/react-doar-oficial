@@ -80,22 +80,17 @@ export default function EditarOng1({api}) {
         finally { setLoading(false); }
     }
 
-    // Função para redirecionar para o dashboard correto e recarregar
     const redirecionarParaDashboard = () => {
         const token = localStorage.getItem('token');
         const tokenData = decodificarToken(token);
-
-        // Recarregar a página para atualizar os dados
         window.location.href = tokenData && tokenData.tipo === 0 ? '/dashboardAdm' : '/dashboardOng';
     };
 
     async function salvarEdicao() {
-        // Converter possíveis números para string antes das validações
         const codBancoStr = String(codBanco || '');
         const numAgenciaStr = String(numAgencia || '');
         const numContaStr = String(numConta || '');
 
-        // Validações em ordem (senha é opcional)
         if (!nome?.trim()) { setMsgTexto('O nome é obrigatório'); setMsgTipo('erro'); return; }
         if (!email?.trim()) { setMsgTexto('O email é obrigatório'); setMsgTipo('erro'); return; }
         if (!descBreve?.trim()) { setMsgTexto('A descrição breve é obrigatória'); setMsgTipo('erro'); return; }
@@ -104,12 +99,14 @@ export default function EditarOng1({api}) {
         if (!numContaStr.trim()) { setMsgTexto('O número da conta é obrigatório'); setMsgTipo('erro'); return; }
         if (!tipoConta || tipoConta === 'Escolha um tipo de conta') { setMsgTexto('Escolha um tipo de conta'); setMsgTipo('erro'); return; }
         if (!cnpj?.trim()) { setMsgTexto('O CNPJ é obrigatório'); setMsgTipo('erro'); return; }
+
+        // CORRIGIDO: Modificado de 'category' para 'categoria'
         if (!categoria || categoria === 'Escolha uma categoria') { setMsgTexto('Escolha uma categoria'); setMsgTipo('erro'); return; }
+
         if (!descLonga?.trim()) { setMsgTexto('A descrição longa é obrigatória'); setMsgTipo('erro'); return; }
         if (!chavePix?.trim()) { setMsgTexto('A chave PIX é obrigatória'); setMsgTipo('erro'); return; }
         if (!numAgenciaStr.trim()) { setMsgTexto('O número da agência é obrigatório'); setMsgTipo('erro'); return; }
 
-        // Validar se senha foi preenchida e se confere
         if (senha && senha !== confirmarSenha) {
             setMsgTexto('As senhas não conferem');
             setMsgTipo('erro');
@@ -117,8 +114,6 @@ export default function EditarOng1({api}) {
         }
 
         const token = localStorage.getItem('token');
-        const tokenData = decodificarToken(token);
-
         const form = new FormData();
         form.append('token', token);
         form.append('nome', nome?.trim() || '');
@@ -144,8 +139,6 @@ export default function EditarOng1({api}) {
             setMsgTipo(response.ok ? 'sucesso' : 'erro');
             if (response.ok) {
                 if (data.usuario && data.usuario.nome) localStorage.setItem('nome_ong', data.usuario.nome);
-
-                // Redirecionar para o dashboard correto e recarregar a página
                 setTimeout(() => {
                     redirecionarParaDashboard();
                 }, 1500);
@@ -153,7 +146,7 @@ export default function EditarOng1({api}) {
         } catch (error) { setMsgTexto('Erro de conexão'); setMsgTipo('erro'); }
     }
 
-    if (loading) return <section className={css.containerSection}><p>Carregando...</p></section>;
+    if (loading) return <section className={css.containerSection}><p style={{ textAlign: 'center', padding: '50px' }}>Carregando...</p></section>;
 
     return (
         <section className={css.containerSection}>
@@ -162,14 +155,12 @@ export default function EditarOng1({api}) {
             <div className={css.formulario}>
                 <div className={css.linha}>
                     <div className={"row"}>
-                        {/* Linha 1: Nome | CNPJ */}
                         <div className={"col-md-6 col-12"}>
                             <Input label={'Nome *'} type={'text'} placeholder={'Digite seu nome'} required={true} maxLength={254} input={nome} alterarInput={(e) => setNome(e.target.value)} />
                         </div>
                         <div className={"col-md-6 col-12"}>
                             <Input label={'CNPJ *'} type={'text'} placeholder={'Digite o CNPJ'} required={true} input={cnpj} alterarInput={(e) => setCnpj(e.target.value)} mascara={'cnpj'} />
                         </div>
-                        {/* Linha 2: Email | Categoria */}
                         <div className={"col-md-6 col-12"}>
                             <Input label={'Email *'} type={'text'} placeholder={'Digite seu email'} required={true} maxLength={254} input={email} alterarInput={(e) => setEmail(e.target.value)} />
                         </div>
@@ -184,40 +175,34 @@ export default function EditarOng1({api}) {
                                 <div className={"col-12"}>
                                     <Input label={'Localização *'} type={'text'} placeholder={'Digite sua localização'} required={true} maxLength={254} input={localizacao} alterarInput={(e) => setLocalizacao(e.target.value)} />
                                 </div>
-
                             </div>
                         </div>
                         <div className={"col-md-6 col-12"}>
                             <Input tamanho={'Big'} label={'Descrição longa *'} type={'text'} placeholder={'Descrição longa sobre sua ONG'} required={true} maxLength={254} textarea={true} input={descLonga} alterarInput={(e) => setDescLonga(e.target.value)} />
                         </div>
-                        {/* Linha 4: Localização | (vazio) */}
-                        {/* Linha 5: Senha | Confirmar Senha */}
                         <div className={"col-md-6 col-12"}>
                             <Input label={'Senha'} type={'password'} placeholder={'Digite uma nova senha (opcional)'} required={false} maxLength={254} input={senha} alterarInput={(e) => setSenha(e.target.value)} />
                         </div>
                         <div className={"col-md-6 col-12"}>
                             <Input label={'Confirmar senha'} type={'password'} placeholder={'Confirme sua nova senha'} required={false} maxLength={254} input={confirmarSenha} alterarInput={(e) => setConfirmarSenha(e.target.value)} />
                         </div>
-                        {/* Linha 6: Chave PIX | Número da Conta */}
                         <div className={"col-md-6 col-12"}>
                             <Input label={'Chave PIX *'} type={'text'} placeholder={'Digite sua chave PIX'} required={true} maxLength={254} input={chavePix} alterarInput={(e) => setChavePix(e.target.value)} />
                         </div>
                         <div className={"col-md-6 col-12"}>
                             <Input label={'Número da conta *'} type={'text'} placeholder={'Digite o número da conta'} required={true} input={numConta} alterarInput={(e) => setNumConta(e.target.value)} maxLength={12} />
                         </div>
-                        {/* Linha 7: Código do Banco | Tipo de Conta */}
                         <div className={"col-md-6 col-12"}>
                             <Input label={'Código do banco *'} type={'text'} placeholder={'Digite o código do banco'} required={true} maxLength={3} input={codBanco} alterarInput={(e) => setCodBanco(e.target.value)} />
                         </div>
                         <div className={"col-md-6 col-12"}>
                             <Select label={'Tipo de conta *'} options={['Escolha um tipo de conta', 'Conta-corrente', 'Poupança', 'Conta salário', 'Conta digital', 'Conta PJ']} input={tipoConta} alterarInput={(e) => setTipoConta(e.target.value)} />
                         </div>
-                        {/* Linha 8: Número da Agência | Foto de Perfil */}
                         <div className={"col-md-6 col-12"}>
                             <Input label={'Número da agência *'} type={'text'} placeholder={'Digite o número da sua agência'} required={true} maxLength={4} input={numAgencia} alterarInput={(e) => setNumAgencia(e.target.value)} />
                         </div>
                         <div className={"col-md-6 col-12"}>
-                            <InputArquivo tamanho={'big'} required={true} alterarInput={(e) => setFotoPerfil(e.target.files[0])} />
+                            <InputArquivo tamanho={'big'} required={false} alterarInput={(e) => setFotoPerfil(e.target.files[0])} />
                         </div>
                     </div>
                 </div>

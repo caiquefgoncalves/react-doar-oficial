@@ -3,12 +3,12 @@ import css from './CadastroAdm1.module.css'
 import Titulo from "../Titulo/Titulo.jsx";
 import Input from "../Input/Input.jsx";
 import Botao from "../Botao/Botao.jsx";
-import {useState} from "react";
-import {useNavigate} from "react-router-dom";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Mensagem from "../Mensagem/Mensagem.jsx";
 import InputArquivo from "../InputArquivo/InputArquivo.jsx";
 
-export default function CadastroAdm1({api}) {
+export default function CadastroAdm1({ api }) {
     const api_url = api
     const [nome, setNome] = useState('')
     const [cpf, setCpf] = useState('')
@@ -26,98 +26,84 @@ export default function CadastroAdm1({api}) {
     function alterarEmail(e) { setEmail(e.target.value.replace(/\s/g, '')) }
     function alterarSenha(e) { setSenha(e.target.value) }
     function alterarConfirmarSenha(e) { setConfirmarSenha(e.target.value) }
-    function alterarFotoPerfil(e) { if (e.target.files?.[0]) setFotoPerfil(e.target.files[0]) }
+    function alterarFotoPerfil(e) { setFotoPerfil(e.target.files[0]) }
 
     async function criarAdm() {
-        // Validações em ordem
-        if (!nome.trim()) {
-            setMensagem({ texto: 'O nome é obrigatório', tipo: 'erro' });
-            return;
-        }
-        if (!senha.trim()) {
-            setMensagem({ texto: 'A senha é obrigatória', tipo: 'erro' });
-            return;
-        }
-        if (!telefone.trim()) {
-            setMensagem({ texto: 'O telefone é obrigatório', tipo: 'erro' });
-            return;
-        }
-        if (!email.trim()) {
-            setMensagem({ texto: 'O email é obrigatório', tipo: 'erro' });
-            return;
-        }
-        if (!cpf.trim()) {
-            setMensagem({ texto: 'O CPF é obrigatório', tipo: 'erro' });
-            return;
-        }
-        if (!confirmarSenha.trim()) {
-            setMensagem({ texto: 'Confirme sua senha', tipo: 'erro' });
-            return;
-        }
-        if (!fotoPerfil) {
-            setMensagem({ texto: 'A foto de perfil é obrigatória', tipo: 'erro' });
+        if (!nome.trim() || !cpf.trim() || !email.trim() || !telefone.trim() || !senha.trim() || !confirmarSenha.trim() || !fotoPerfil) {
+            setMensagem({ texto: 'Preencha todos os campos obrigatórios e envie uma foto de perfil.', tipo: 'erro' });
             return;
         }
 
+        if (senha !== confirmarSenha) {
+            setMensagem({ texto: 'As senhas não conferem.', tipo: 'erro' });
+            return;
+        }
+
+        // 1. Resgata o token do Administrador logado
+        const token = localStorage.getItem('token');
+
+        // 2. Cria o FormData e adiciona os campos
         const form = new FormData();
-        form.append('nome', nome)
-        form.append('cpf_cnpj', cpf.replace(/\D/g, ''))
-        form.append('telefone', telefone.replace(/\D/g, ''))
-        form.append('email', email)
-        form.append('senha', senha)
-        form.append('confirmar_senha', confirmarSenha)
-        form.append('tipo', 0)
+        form.append('token', token); // <-- ANEXA O TOKEN AQUI PARA O BACKEND AUTENTICAR
+        form.append('nome', nome.trim());
+        form.append('cpf_cnpj', cpf.replace(/\D/g, ''));
+        form.append('telefone', telefone.replace(/\D/g, ''));
+        form.append('email', email.trim());
+        form.append('senha', senha);
+        form.append('confirmar_senha', confirmarSenha);
         form.append('foto_perfil', fotoPerfil);
+        form.append('tipo', '0'); // Define explicitamente que é do tipo Admin (0)
 
         try {
-            const token = localStorage.getItem('token');
-
-            let retorno = await fetch(`${api_url}/criar_usuarios`, {
+            const response = await fetch(`${api_url}/criar_usuarios`, {
                 method: 'POST',
                 credentials: 'include',
-                headers: {
-                    'Authorization': `${token}`
-                },
                 body: form
-            })
-            retorno = await retorno.json();
-            if (retorno.message) {
-                setMensagem({ texto: retorno.message, tipo: 'sucesso' });
-                setTimeout(() => navigate('/ConfirmarEmail'), 2000);
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                setMensagem({ texto: 'Administrador cadastrado com sucesso!', tipo: 'sucesso' });
+                setTimeout(() => {
+                    navigate('/dashboardAdm');
+                }, 1500);
             } else {
-                setMensagem({ texto: retorno.error, tipo: 'erro' });
+                setMensagem({ texto: data.error || data.message || 'Erro ao cadastrar administrador.', tipo: 'erro' });
             }
         } catch (error) {
-            setMensagem({ texto: 'Erro de conexão com o servidor', tipo: 'erro' });
+            console.error(error);
+            setMensagem({ texto: 'Erro de conexão com o servidor.', tipo: 'erro' });
         }
     }
 
     return (
         <section className={css.containerSection}>
             {mensagem.texto && (
-                <Mensagem tipo={mensagem.tipo} texto={mensagem.texto} onClose={() => setMensagem({ texto: '', tipo: '' })} />
+                <Mensagem
+                    tipo={mensagem.tipo}
+                    texto={mensagem.texto}
+                    onClose={() => setMensagem({ texto: '', tipo: '' })}
+                />
             )}
             <div className={css.organizar}>
-                <Titulo titulo={'Cadastrar Administrador'} cor={'azul-claro'} />
+                <Titulo titulo={'Cadastro ADM'} cor={'azul-claro'} />
             </div>
             <div className={css.formulario}>
                 <div className={css.linha}>
                     <div className={"row"}>
-                        {/* Linha 1: Nome | CPF */}
                         <div className={"col-md-6 col-12"}>
                             <Input label={'Nome *'} type={'text'} placeholder={'Digite seu nome'} required={true} maxLength={254} input={nome} alterarInput={alterarNome} />
                         </div>
                         <div className={"col-md-6 col-12"}>
                             <Input label={'CPF *'} type={'text'} placeholder={'Digite seu CPF'} required={true} input={cpf} alterarInput={alterarCPF} mascara={'cpf'} />
                         </div>
-                        {/* Linha 2: Senha | Confirmar Senha */}
                         <div className={"col-md-6 col-12"}>
                             <Input label={'Senha *'} type={'password'} placeholder={'Digite sua senha'} required={true} maxLength={254} input={senha} alterarInput={alterarSenha} />
                         </div>
                         <div className={"col-md-6 col-12"}>
                             <Input label={'Confirmar senha *'} type={'password'} placeholder={'Confirme sua senha'} required={true} maxLength={254} input={confirmarSenha} alterarInput={alterarConfirmarSenha} />
                         </div>
-                        {/* Linha 3: Telefone | Foto de Perfil */}
                         <div className={"col-md-6 col-12"}>
                             <div className={"row"}>
                                 <div className={"col-12"}>
@@ -134,7 +120,7 @@ export default function CadastroAdm1({api}) {
                     </div>
                 </div>
                 <div className={css.botaoContainer}>
-                    <Botao acao={criarAdm} texto={'Cadastrar'} cor={'azul'}/>
+                    <Botao acao={criarAdm} texto={'Cadastrar'} cor={'azul'} />
                 </div>
             </div>
         </section>
