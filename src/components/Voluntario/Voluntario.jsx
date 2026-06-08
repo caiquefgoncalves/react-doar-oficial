@@ -10,9 +10,11 @@ import Mensagem from "../Mensagem/Mensagem.jsx";
 export default function Voluntario({ api }) {
     const { id } = useParams();
     const navigate = useNavigate();
+    const api_url = api; // USA A PROP PASSADA
     const [mensagem, setMensagem] = useState('');
     const [msgTexto, setMsgTexto] = useState('');
     const [msgTipo, setMsgTipo] = useState('');
+    const [enviando, setEnviando] = useState(false);
 
     async function enviarVoluntariado() {
         if (!mensagem.trim()) {
@@ -21,28 +23,47 @@ export default function Voluntario({ api }) {
             return;
         }
 
-        try {
-            const token = localStorage.getItem('token');
+        const token = localStorage.getItem('token');
+        if (!token) {
+            setMsgTexto('Token não encontrado. Faça login novamente.');
+            setMsgTipo('erro');
+            setTimeout(() => navigate('/login'), 2000);
+            return;
+        }
 
-            const response = await fetch(`http://10.92.3.131:5000/voluntario_projeto/${id}`, {
+        setEnviando(true);
+
+        try {
+            // CORRIGIDO: usa api_url e envia token como parâmetro na URL
+            const response = await fetch(`${api_url}/voluntario_projeto/${id}?token=${token}`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-                body: JSON.stringify({ mensagem }),
-                credentials: 'include'
+                credentials: 'include',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ mensagem })
             });
+
             const data = await response.json();
+
             if (response.ok) {
-                setMsgTexto('Voluntariado enviado com sucesso!');
+                setMsgTexto(data.message || 'Voluntariado enviado com sucesso!');
                 setMsgTipo('sucesso');
                 setTimeout(() => navigate('/agradecimento'), 2000);
+            } else if (response.status === 401) {
+                localStorage.removeItem('token');
+                localStorage.removeItem('nome');
+                setMsgTexto('Sua sessão expirou. Faça login novamente.');
+                setMsgTipo('erro');
+                setTimeout(() => navigate('/login'), 2000);
             } else {
-                setMsgTexto(data.error || 'Erro ao enviar');
+                setMsgTexto(data.error || 'Erro ao enviar solicitação');
                 setMsgTipo('erro');
             }
         } catch (error) {
             console.error('Erro:', error);
-            setMsgTexto('Erro de conexão');
+            setMsgTexto('Erro de conexão. Tente novamente.');
             setMsgTipo('erro');
+        } finally {
+            setEnviando(false);
         }
     }
 
@@ -68,12 +89,12 @@ export default function Voluntario({ api }) {
                         </div>
                         <div className={css.botoes}>
                             <Botao texto={'Voltar'} cor={'vazadorosa2'} acao={() => navigate(-1)}/>
-                            <Botao texto={'Enviar'} cor={'rosa'} acao={enviarVoluntariado}/>
+                            <Botao texto={enviando ? 'Enviando...' : 'Enviar'} cor={'rosa'} acao={enviarVoluntariado} desabilitado={enviando}/>
                         </div>
                     </div>
                     <img className={css.imagem} src={'/voluntario.png'} alt="Voluntário"/>
                 </div>
             </div>
         </section>
-    )
+    );
 }

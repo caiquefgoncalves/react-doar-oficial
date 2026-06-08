@@ -46,7 +46,10 @@ export default function EditarAtualizacao1({api}) {
         try {
             const token = localStorage.getItem('token');
             const response = await fetch(`${api_url}/listar_projetos?token=${token}`, { credentials: 'include' });
-            if (response.ok) { const data = await response.json(); if (data.projetos) setProjetos(data.projetos); }
+            if (response.ok) {
+                const data = await response.json();
+                if (data.projetos) setProjetos(data.projetos);
+            }
         } catch (error) { console.error('Erro:', error); }
     }
 
@@ -65,16 +68,34 @@ export default function EditarAtualizacao1({api}) {
             }
         } catch (error) { console.error('Erro:', error); }
         finally {
-            if (projetos.length > 0) {
-                const projeto = projetos.find(p => p.id === projetoId);
-                if (projeto) setProjetoTitulo(projeto.titulo);
-            }
             setLoading(false);
         }
     }
 
+    // CORREÇÃO: Função para quando selecionar um projeto no select
+    const handleProjetoChange = (e) => {
+        const projetoSelecionado = e.target.value;
+        setProjetoTitulo(projetoSelecionado);
+
+        // Encontrar o ID do projeto selecionado
+        const projeto = projetos.find(p => p.titulo === projetoSelecionado);
+        if (projeto) {
+            setProjetoId(projeto.id);
+        }
+    };
+
     async function salvarEdicao() {
-        if (!titulo.trim()) { setMsgTexto('Preencha o título'); setMsgTipo('erro'); return; }
+        if (!titulo.trim()) {
+            setMsgTexto('Preencha o título');
+            setMsgTipo('erro');
+            return;
+        }
+
+        if (!projetoId) {
+            setMsgTexto('Selecione um projeto');
+            setMsgTipo('erro');
+            return;
+        }
 
         const token = localStorage.getItem('token');
         const form = new FormData();
@@ -84,12 +105,19 @@ export default function EditarAtualizacao1({api}) {
         if (foto) form.append('foto', foto);
 
         try {
-            const response = await fetch(`${api_url}/editar_atualizacao/${id}?token=${token}`, { method: 'PUT', credentials: 'include', body: form });
+            const response = await fetch(`${api_url}/editar_atualizacao/${id}?token=${token}`, {
+                method: 'PUT',
+                credentials: 'include',
+                body: form
+            });
             const data = await response.json();
             setMsgTexto(data.message || data.error);
             setMsgTipo(response.ok ? 'sucesso' : 'erro');
             if (response.ok) setTimeout(() => navigate('/dashboardOng'), 2000);
-        } catch (error) { setMsgTexto('Erro de conexão'); setMsgTipo('erro'); }
+        } catch (error) {
+            setMsgTexto('Erro de conexão');
+            setMsgTipo('erro');
+        }
     }
 
     if (loading) return <section className={css.containerSection}><p className={css.loading}>Carregando...</p></section>;
@@ -103,20 +131,48 @@ export default function EditarAtualizacao1({api}) {
             <div className={css.formulario}>
                 <div className={"row"}>
                     <div className={"col-md-6 col-12"}>
-                        <Input label={'Título *'} type={'text'} placeholder={'Título da atualização'} input={titulo} alterarInput={(e) => setTitulo(e.target.value)} required={true} apenasTexto={true} />
+                        <Input
+                            label={'Título *'}
+                            type={'text'}
+                            placeholder={'Título da atualização'}
+                            input={titulo}
+                            alterarInput={(e) => setTitulo(e.target.value)}
+                            required={true}
+                            apenasTexto={true}
+                        />
                     </div>
                     <div className={"col-md-6 col-12"}>
                         {projetos.length === 0 ? (
                             <div className={css.aviso}><p>⚠️ Nenhum projeto encontrado. Crie um projeto primeiro.</p></div>
                         ) : (
-                            <Select label={'Projeto *'} input={projetoTitulo} alterarInput={handleProjetoChange} options={['Escolha um projeto', ...projetos.map(p => p.titulo)]} />
+                            <Select
+                                label={'Projeto *'}
+                                input={projetoTitulo}
+                                alterarInput={handleProjetoChange}
+                                options={['Escolha um projeto', ...projetos.map(p => p.titulo)]}
+                            />
                         )}
                     </div>
                     <div className={"col-md-6 col-12"}>
-                        <Input label={'Texto (opcional)'} type={'text'} placeholder={'Texto da atualização'} input={texto} alterarInput={(e) => setTexto(e.target.value)} textarea={true} tamanho={'Big'} apenasTexto={true} />
+                        <Input
+                            label={'Texto (opcional)'}
+                            type={'text'}
+                            placeholder={'Texto da atualização'}
+                            input={texto}
+                            alterarInput={(e) => setTexto(e.target.value)}
+                            textarea={true}
+                            tamanho={'Big'}
+                            apenasTexto={true}
+                        />
                     </div>
                     <div className={"col-md-6 col-12"}>
-                        <InputArquivo tamanho={'big'} tipo={'normaledicao'} label={'Foto da atualização'} required={true} alterarInput={(e) => setFoto(e.target.files[0])} />
+                        <InputArquivo
+                            tamanho={'big'}
+                            tipo={'normaledicao'}
+                            label={'Foto da atualização'}
+                            required={true}
+                            alterarInput={(e) => setFoto(e.target.files[0])}
+                        />
                     </div>
                 </div>
                 <div className={css.botaoContainer}>

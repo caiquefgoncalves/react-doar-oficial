@@ -229,9 +229,9 @@ export default function DashboardDoador1({ api }) {
                 </div>
 
                 {loadingAtividades ? <p style={{ textAlign: 'center', color: '#999', padding: '20px' }}>Carregando...</p> : atividades.length === 0 ? (
-                    <div style={{ textAlign: 'center', padding: '40px', background: '#f9f9f9', borderRadius: '16px' }}>
+
                         <p style={{ fontSize: '16px', color: 'color-mix(in srgb, var(--cor-texto) 75%, #ffffff' }}>Você ainda não realizou nenhuma doação ou voluntariado</p>
-                    </div>
+
                 ) : atividadesFiltradas.length === 0 ? (
                     <div style={{ textAlign: 'center', padding: '40px', background: '#f9f9f9', borderRadius: '16px' }}>
                         <p style={{ fontSize: '16px', color: 'color-mix(in srgb, var(--cor-texto) 75%, #ffffff)' }}>Nenhuma doação encontrada para este filtro.</p>

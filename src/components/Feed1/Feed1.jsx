@@ -137,32 +137,23 @@ export default function Feed({ api }) {
 
     // Abrir story de uma ONG específica
     const abrirStory = (story, index = 0) => {
-        // Marcar esta ONG como visualizada
         setStoriesVisualizados(prev => ({ ...prev, [story.ong_id]: true }));
-
-        // Encontrar o índice desta ONG na lista completa
         const ongIndex = storiesList.findIndex(s => s.ong_id === story.ong_id);
         setCurrentOngIndex(ongIndex);
         setStorySelecionado(story);
         setStoryIndex(index);
         setProgressoAtivo(true);
-
-        // Limpar timeout anterior se existir
         if (timeoutId) clearTimeout(timeoutId);
     };
 
-    // Próximo story (dentro da mesma ONG ou próxima ONG)
+    // Próximo story
     const nextStory = () => {
-        // Pausar timer ao navegar manualmente
         if (timeoutId) clearTimeout(timeoutId);
-
         if (storySelecionado) {
-            // Se ainda tem stories na mesma ONG
             if (storyIndex < storySelecionado.stories.length - 1) {
                 setStoryIndex(storyIndex + 1);
                 setProgressoAtivo(true);
             } else {
-                // Vai para a próxima ONG
                 nextOng();
             }
         }
@@ -170,16 +161,12 @@ export default function Feed({ api }) {
 
     // Story anterior
     const prevStory = () => {
-        // Pausar timer ao navegar manualmente
         if (timeoutId) clearTimeout(timeoutId);
-
         if (storySelecionado) {
-            // Se não está no primeiro story da ONG atual
             if (storyIndex > 0) {
                 setStoryIndex(storyIndex - 1);
                 setProgressoAtivo(true);
             } else {
-                // Vai para a ONG anterior
                 prevOng();
             }
         }
@@ -238,8 +225,11 @@ export default function Feed({ api }) {
         }
     }, [storySelecionado, storyIndex, progressoAtivo]);
 
-    // Verificar se deve mostrar os botões de navegação
     const mostrarBotoesNavegacao = storiesList.length > 1 || (storySelecionado && storySelecionado.stories.length > 1);
+
+    // ============================================
+    // FUNÇÕES CORRIGIDAS - ENVIANDO TOKEN VIA URL
+    // ============================================
 
     async function buscarAtualizacoes(novaPagina = 0, append = false) {
         try {
@@ -255,14 +245,13 @@ export default function Feed({ api }) {
                     setLoading(false);
                     return;
                 }
-                url = `${api_url}/feed_favoritas?filtro=${filtro}&pagina=${novaPagina}&limite=4`;
+                url = `${api_url}/feed_favoritas?filtro=${filtro}&pagina=${novaPagina}&limite=4&token=${token}`;
             } else {
                 url = `${api_url}/feed_atualizacoes?filtro=${filtro}&pagina=${novaPagina}&limite=4&token=${token || ''}`;
             }
 
             const response = await fetch(url, {
-                credentials: 'include',
-                headers: { 'Authorization': `Bearer ${token || ''}` }
+                credentials: 'include'
             });
 
             if (response.status === 401) {
@@ -311,7 +300,10 @@ export default function Feed({ api }) {
         const token = localStorage.getItem('token');
         for (const item of atualizacoesLista) {
             try {
-                const response = await fetch(`${api_url}/comentarios/${item.id}`, { headers: { 'Authorization': `Bearer ${token || ''}` } });
+                const response = await fetch(`${api_url}/comentarios/${item.id}?token=${token || ''}`, {
+                    method: 'GET',
+                    credentials: 'include'
+                });
                 if (response.ok) {
                     const data = await response.json();
                     const qtd = data.total || data.comentarios?.length || 0;
@@ -339,7 +331,10 @@ export default function Feed({ api }) {
     async function carregarComentarios(idAtualizacao) {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`${api_url}/comentarios/${idAtualizacao}`, { headers: { 'Authorization': `Bearer ${token || ''}` } });
+            const response = await fetch(`${api_url}/comentarios/${idAtualizacao}?token=${token || ''}`, {
+                method: 'GET',
+                credentials: 'include'
+            });
             if (response.ok) {
                 const data = await response.json();
                 setComentarios(prev => ({ ...prev, [idAtualizacao]: data.comentarios || [] }));
@@ -355,18 +350,28 @@ export default function Feed({ api }) {
         if (!texto) return;
         try {
             const token = localStorage.getItem('token');
-            if (!token) { setMsgTexto('Faça login como doador para comentar.'); setMsgTipo('erro'); return; }
-            if (tokenExpirado(token)) {
-                localStorage.removeItem('token'); localStorage.setItem('sessaoExpirada', 'Sua sessão expirou. Faça login novamente.');
-                navigate('/login'); return;
+            if (!token) {
+                setMsgTexto('Faça login como doador para comentar.');
+                setMsgTipo('erro');
+                return;
             }
-            const response = await fetch(`${api_url}/comentar/${idAtualizacao}`, {
-                method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+            if (tokenExpirado(token)) {
+                localStorage.removeItem('token');
+                localStorage.setItem('sessaoExpirada', 'Sua sessão expirou. Faça login novamente.');
+                navigate('/login');
+                return;
+            }
+            const response = await fetch(`${api_url}/comentar/${idAtualizacao}?token=${token}`, {
+                method: 'POST',
+                credentials: 'include',
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ texto })
             });
             if (response.status === 401) {
-                localStorage.removeItem('token'); localStorage.setItem('sessaoExpirada', 'Sua sessão expirou. Faça login novamente.');
-                navigate('/login'); return;
+                localStorage.removeItem('token');
+                localStorage.setItem('sessaoExpirada', 'Sua sessão expirou. Faça login novamente.');
+                navigate('/login');
+                return;
             }
             if (response.ok) {
                 const data = await response.json();
@@ -377,12 +382,18 @@ export default function Feed({ api }) {
                     setModalPostagem(prev => ({ ...prev, qtd_comentarios: (prev.qtd_comentarios || 0) + 1 }));
                 }
                 setNovoComentario(prev => ({ ...prev, [idAtualizacao]: '' }));
-                setMsgTexto('Comentário enviado com sucesso!'); setMsgTipo('sucesso');
+                setMsgTexto('Comentário enviado com sucesso!');
+                setMsgTipo('sucesso');
             } else {
                 const error = await response.json();
-                setMsgTexto(error.error || 'Erro ao comentar'); setMsgTipo('erro');
+                setMsgTexto(error.error || 'Erro ao comentar');
+                setMsgTipo('erro');
             }
-        } catch (error) { console.error('Erro ao enviar comentário:', error); setMsgTexto('Erro ao conectar com o servidor'); setMsgTipo('erro'); }
+        } catch (error) {
+            console.error('Erro ao enviar comentário:', error);
+            setMsgTexto('Erro ao conectar com o servidor');
+            setMsgTipo('erro');
+        }
     }
 
     function handleCurtidaChange(idAtualizacao, novoStatus) {
@@ -421,7 +432,6 @@ export default function Feed({ api }) {
             {storySelecionado && (
                 <div className={css.storyModal}>
                     <div className={css.storyModalContent}>
-                        {/* Barra de progresso dos stories da ONG atual */}
                         <div className={css.storyProgress}>
                             {storySelecionado.stories.map((_, idx) => (
                                 <div
@@ -430,9 +440,7 @@ export default function Feed({ api }) {
                                 >
                                     <div
                                         key={`${storyIndex}-${idx}`}
-                                        className={`${css.storyProgressFill} ${
-                                            idx === storyIndex && progressoAtivo ? css.animate : ''
-                                        }`}
+                                        className={`${css.storyProgressFill} ${idx === storyIndex && progressoAtivo ? css.animate : ''}`}
                                         onAnimationEnd={() => {
                                             if (idx === storyIndex && progressoAtivo) {
                                                 nextStory();
@@ -443,31 +451,13 @@ export default function Feed({ api }) {
                             ))}
                         </div>
 
-                        {/* Botões de navegação - AGORA FUNCIONA CORRETAMENTE */}
                         {mostrarBotoesNavegacao && (
                             <>
-                                <button
-                                    className={css.storyPrev}
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        prevStory();
-                                    }}
-                                >
-                                    ‹
-                                </button>
-                                <button
-                                    className={css.storyNext}
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        nextStory();
-                                    }}
-                                >
-                                    ›
-                                </button>
+                                <button className={css.storyPrev} onClick={(e) => { e.stopPropagation(); prevStory(); }}>‹</button>
+                                <button className={css.storyNext} onClick={(e) => { e.stopPropagation(); nextStory(); }}>›</button>
                             </>
                         )}
 
-                        {/* Cabeçalho */}
                         <div className={css.storyHeader}>
                             <img
                                 src={`${api_url}/uploads/Usuarios/${storySelecionado.ong_foto}`}
@@ -481,7 +471,6 @@ export default function Feed({ api }) {
                             <button className={css.storyClose} onClick={fecharStory}>✕</button>
                         </div>
 
-                        {/* Conteúdo do story atual */}
                         <div className={css.storyBody}>
                             {storySelecionado.stories[storyIndex].arquivo && (
                                 storySelecionado.stories[storyIndex].arquivo.match(/\.(mp4|webm|ogg)$/i) ? (
@@ -513,7 +502,6 @@ export default function Feed({ api }) {
                 <section className={css.secao}>
                     <MenuLateral />
                     <div className={css.conteudo}>
-                        {/* Stories */}
                         <div className={css.storiesWrapper}>
                             <div className={css.stories}>
                                 {Array.isArray(storiesList) && storiesList.length > 0 ? (
@@ -584,11 +572,7 @@ export default function Feed({ api }) {
                                             }, 1500);
                                         }}
                                         hasMore={temMais}
-                                        loader={
-                                            <div className={css.fim}>
-                                                <p>Carregando próximos posts...</p>
-                                            </div>
-                                        }
+                                        loader={<div className={css.fim}><p>Carregando próximos posts...</p></div>}
                                         endMessage={<div className={css.fim}><p>Você chegou ao fim das atualizações!</p></div>}
                                         className="d-flex flex-column gap-4"
                                         style={{ overflow: 'visible' }}

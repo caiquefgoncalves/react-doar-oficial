@@ -10,8 +10,6 @@ export default function BotaoProjetos({ status = 1, projetoId, usuarioTipo, apiU
 
     const api_url = apiUrl;
 
-
-
     useEffect(() => {
         if (status === 1 && usuarioTipo === 1 && projetoId) {
             verificarVoluntariado();
@@ -23,8 +21,14 @@ export default function BotaoProjetos({ status = 1, projetoId, usuarioTipo, apiU
     async function verificarVoluntariado() {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`${api_url}/verificar_voluntario_projeto/${projetoId}`, {
-                headers: { 'Authorization': `Bearer ${token || ''}` }
+            if (!token) {
+                setLoading(false);
+                return;
+            }
+            // CORRIGIDO: envia token como parâmetro na URL
+            const response = await fetch(`${api_url}/verificar_voluntario_projeto/${projetoId}?token=${token}`, {
+                method: 'GET',
+                credentials: 'include'
             });
             if (response.ok) {
                 const data = await response.json();
@@ -41,15 +45,15 @@ export default function BotaoProjetos({ status = 1, projetoId, usuarioTipo, apiU
         e.preventDefault();
         e.stopPropagation();
 
-        if (usuarioTipo === 0 || usuarioTipo === 2) return;
+        if (usuarioTipo !== 1) return;
 
         if (status === 0) {
             navigate(`/doar/${projetoId}`);
         } else if (status === 1 && !jaVoluntariou) {
+            // CORRIGIDO: navega para a página de voluntariado
             navigate(`/voluntario/${projetoId}`);
         }
     }
-
 
     if (loading) {
         return (
@@ -68,13 +72,14 @@ export default function BotaoProjetos({ status = 1, projetoId, usuarioTipo, apiU
     }
 
     return (
-        <button type="button" className={status === 0 ? css.doacao : css.voluntario} onClick={handleClick}
-                disabled={loading || usuarioTipo !== 1}
-                title={usuarioTipo === 1
-                    ? 'Contribuir'
-                    : (usuarioTipo === 0 || usuarioTipo === 2)
-                        ? 'Apenas doadores podem contribuir'
-                        : 'Logue como doador para contribuir'}
+        <button
+            type="button"
+            className={status === 0 ? css.doacao : css.voluntario}
+            onClick={handleClick}
+            disabled={loading || usuarioTipo !== 1}
+            title={usuarioTipo === 1
+                ? (status === 0 ? "Fazer doação" : "Ser voluntário")
+                : "Apenas doadores podem contribuir"}
         >
             {status === 0 ? "Faça sua doação" : "Seja um voluntário"}
         </button>

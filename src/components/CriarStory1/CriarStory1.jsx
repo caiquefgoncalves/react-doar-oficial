@@ -83,12 +83,10 @@ export default function CriarStory1({api}) {
         setEnviando(true);
 
         try {
-            const response = await fetch(`${api_url}/criar_story`, {
+            // CORREÇÃO: Usa api_url em vez de URL fixa e envia token como parâmetro
+            const response = await fetch(`${api_url}/criar_story?token=${token}`, {
                 method: 'POST',
                 credentials: 'include',
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                },
                 body: formData
             });
 
@@ -170,7 +168,12 @@ export default function CriarStory1({api}) {
                     </div>
                 </div>
                 <div className={css.botaoContainer}>
-                    <Botao acao={criarStory} texto={enviando ? 'Criando...' : 'Criar Story'} cor={'azul'} desabilitado={enviando}/>
+                    <Botao
+                        acao={criarStory}
+                        texto={enviando ? 'Criando...' : 'Criar Story'}
+                        cor={'azul'}
+                        desabilitado={enviando}
+                    />
                 </div>
             </div>
         </section>

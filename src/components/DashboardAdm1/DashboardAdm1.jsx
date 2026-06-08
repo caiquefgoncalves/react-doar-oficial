@@ -134,7 +134,7 @@ export default function DashboardAdm1({ api }) {
     }
 
     function confirmarExcluir(tipo, item) {
-       
+
         const token = localStorage.getItem('token');
         const tokenData = decodificarToken(token);
 

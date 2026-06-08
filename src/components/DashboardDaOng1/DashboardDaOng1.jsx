@@ -146,25 +146,62 @@ export default function DashboardDaOng1({api}) {
 
     async function executarExclusao() {
         setModalExcluirAberto(false);
-        if (tipoExclusao === 'projeto') {
+
+        if (tipoExclusao === 'projeto' && itemParaExcluir) {
             try {
                 const token = localStorage.getItem('token');
-                const response = await fetch(`${api_url}/deletar_projeto/${itemParaExcluir.id}?token=${token}`, { method: 'DELETE', credentials: 'include' });
+                const response = await fetch(`${api_url}/deletar_projeto/${itemParaExcluir.id}?token=${token}`, {
+                    method: 'DELETE',
+                    credentials: 'include'
+                });
                 const data = await response.json();
                 setMensagem(data.message || data.error);
                 setTipoMensagem(response.ok ? 'sucesso' : 'erro');
-                if (response.ok) buscarProjetos();
-            } catch (error) { setMensagem('Erro de conexão'); setTipoMensagem('erro'); }
-        } else if (tipoExclusao === 'atualizacao') {
-            try {
-                const token = localStorage.getItem('token');
-                const response = await fetch(`${api_url}/deletar_atualizacao/${itemParaExcluir.id}?token=${token}`, { method: 'DELETE', credentials: 'include' });
-                const data = await response.json();
-                setMensagem(data.message || data.error);
-                setTipoMensagem(response.ok ? 'sucesso' : 'erro');
-                if (response.ok) buscarAtualizacoes();
-            } catch (error) { setMensagem('Erro de conexão'); setTipoMensagem('erro'); }
+
+                if (response.ok) {
+                    // CORREÇÃO: Remover o projeto da lista localmente
+                    setProjetos(prevProjetos => prevProjetos.filter(projeto => projeto.id !== itemParaExcluir.id));
+
+                    // Se a página atual ficou vazia, voltar uma página
+                    const novosProjetos = projetos.filter(p => p.id !== itemParaExcluir.id);
+                    const novaPagina = Math.min(paginaProjetos, Math.ceil(novosProjetos.length / itensPorPagina) - 1);
+                    if (novaPagina >= 0 && novaPagina !== paginaProjetos) {
+                        setPaginaProjetos(novaPagina);
+                    }
+                }
+            } catch (error) {
+                setMensagem('Erro de conexão');
+                setTipoMensagem('erro');
+            }
         }
+        else if (tipoExclusao === 'atualizacao' && itemParaExcluir) {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`${api_url}/deletar_atualizacao/${itemParaExcluir.id}?token=${token}`, {
+                    method: 'DELETE',
+                    credentials: 'include'
+                });
+                const data = await response.json();
+                setMensagem(data.message || data.error);
+                setTipoMensagem(response.ok ? 'sucesso' : 'erro');
+
+                if (response.ok) {
+                    // CORREÇÃO: Remover a atualização da lista localmente
+                    setAtualizacoes(prevAtualizacoes => prevAtualizacoes.filter(att => att.id !== itemParaExcluir.id));
+
+                    // Se a página atual ficou vazia, voltar uma página
+                    const novasAtualizacoes = atualizacoes.filter(a => a.id !== itemParaExcluir.id);
+                    const novaPagina = Math.min(paginaAtualizacoes, Math.ceil(novasAtualizacoes.length / itensPorPagina) - 1);
+                    if (novaPagina >= 0 && novaPagina !== paginaAtualizacoes) {
+                        setPaginaAtualizacoes(novaPagina);
+                    }
+                }
+            } catch (error) {
+                setMensagem('Erro de conexão');
+                setTipoMensagem('erro');
+            }
+        }
+
         setItemParaExcluir(null);
         setTipoExclusao('');
     }
